@@ -4,9 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.slieb</groupId>
+    <name>throwable-interfaces</name>
     <artifactId>throwable-interfaces</artifactId>
     <version>1.0-SNAPSHOT</version>
     <description>A collection of standard interfaces that throw exceptions</description>
+    <packaging>jar</packaging>
+    <url>https://stefanliebenberg.github.io/throwable-interfaces</url>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -27,8 +30,6 @@
         <plugin.maven-source-plugin>2.4</plugin.maven-source-plugin>
         <plugin.site-maven-plugin>0.12</plugin.site-maven-plugin>
         <plugin.maven-resources-plugin>2.7</plugin.maven-resources-plugin>
-
-
         <plugin.maven-project-info-reports-plugin>2.8</plugin.maven-project-info-reports-plugin>
         <plugin.maven-shared-jar>1.1</plugin.maven-shared-jar>
         <plugin.bcel-findbugs>6.0</plugin.bcel-findbugs>
@@ -40,6 +41,45 @@
         <dep.commons-codec>1.10</dep.commons-codec>
     </properties>
 
+    <prerequisites>
+        <maven>${dep.maven}</maven>
+    </prerequisites>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
+    <scm>
+        <url>https://github.com/StefanLiebenberg/throwable-interfaces</url>
+        <connection>
+            scm:git:git://github.com/StefanLiebenberg/throwable-interfaces.git
+        </connection>
+        <developerConnection>
+            scm:git:git@github.com:StefanLiebenberg/throwable-interfaces.git
+        </developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <email>siga.fredo@gmail.com</email>
+            <name>Stefan Liebenberg</name>
+            <url>https://github.com/StefanLiebenberg</url>
+            <id>s.liebenberg</id>
+        </developer>
+    </developers>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -50,6 +90,109 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${plugin.maven-release-plugin}</version>
+                <configuration>
+                    <arguments>-Dgpg.passphrase="${gpg.passphrase}"</arguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>${plugin.nexus-staging-maven-plugin}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${plugin.maven-gpg-plugin}</version>
+                <configuration>
+                    <gpgArguments>
+                        <arg>--pinentry-mode</arg>
+                        <arg>loopback</arg>
+                    </gpgArguments>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${plugin.maven-deploy-plugin}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <version>${plugin.maven-install-plugin}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${plugin.maven-jar-plugin}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${plugin.maven-resources-plugin}</version>
+                <executions>
+                    <execution>
+                        <id>default-resources</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>${plugin.maven-site-plugin}</version>
+                <configuration>
+                    <skipDeploy>true</skipDeploy>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>stage</id>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>site-maven-plugin</artifactId>
+                <version>${plugin.site-maven-plugin}</version>
+                <configuration>
+                    <message>Creating site for ${project.version}</message>
+                    <noJekyll>true</noJekyll>
+                    <merge>false</merge>
+                    <repositoryOwner>StefanLiebenberg</repositoryOwner>
+                    <repositoryName>throwable-interfaces</repositoryName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>github-site</id>
+                        <goals>
+                            <goal>site</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
