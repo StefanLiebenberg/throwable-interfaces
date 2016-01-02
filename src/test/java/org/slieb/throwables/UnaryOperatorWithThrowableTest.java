@@ -3,34 +3,33 @@ package org.slieb.throwables;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.slieb.throwables.FunctionWithThrowable.castFunctionWithThrowable;
+import static org.slieb.throwables.UnaryOperatorWithThrowable.castUnaryOperatorWithThrowable;
 
-
-public class FunctionWithThrowableTest implements FunctionInterfaceTestInterface {
+public class UnaryOperatorWithThrowableTest implements FunctionInterfaceTestInterface {
     @Test(expected = SuppressedException.class)
     public void testThrowCheckedException() {
-        castFunctionWithThrowable((a) -> {
+        castUnaryOperatorWithThrowable((a) -> {
             throw new Exception("");
         }).apply(null);
     }
 
     @Test(expected = RuntimeException.class)
     public void testThrowRuntimeException() {
-        castFunctionWithThrowable((a) -> {
+        castUnaryOperatorWithThrowable((a) -> {
             throw new RuntimeException("");
         }).apply(null);
     }
 
     @Test(expected = Error.class)
     public void testThrowError() {
-        castFunctionWithThrowable((a) -> {
+        castUnaryOperatorWithThrowable((a) -> {
             throw new Error("");
         }).apply(null);
     }
 
     @Test(expected = Throwable.class)
     public void testThrowThrowable() {
-        castFunctionWithThrowable((a) -> {
+        castUnaryOperatorWithThrowable((a) -> {
             throw new Throwable("");
         }).apply(null);
     }
@@ -38,14 +37,12 @@ public class FunctionWithThrowableTest implements FunctionInterfaceTestInterface
     @Test
     public void testNormalOperation() {
         assertEquals(Integer.valueOf(2),
-                castFunctionWithThrowable((Integer a) -> a + 1).apply(1));
+                castUnaryOperatorWithThrowable((Integer a) -> a + 1).apply(1));
     }
 
     @Override
     @Test
     public void testAnnotatedWithFunctionalInterface() {
-        FunctionWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
+        UnaryOperatorWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
     }
-
-
 }

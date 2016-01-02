@@ -8,7 +8,7 @@ import static org.slieb.throwables.BiFunctionWithThrowable.castBiFunctionWithThr
 /**
  * This tests the BiFunctionWithThrowable class to ensure that it behaves as expected.
  */
-public class BiFunctionWithThrowableTest {
+public class BiFunctionWithThrowableTest implements FunctionInterfaceTestInterface {
 
 
     @Test(expected = SuppressedException.class)
@@ -43,6 +43,11 @@ public class BiFunctionWithThrowableTest {
     public void testNormalOperation() {
         assertEquals(Integer.valueOf(3),
                 castBiFunctionWithThrowable((Integer a, Integer b) -> a + b).apply(1, 2));
+    }
+
+    @Override
+    public void testAnnotatedWithFunctionalInterface() {
+        BiFunctionWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
     }
 
 

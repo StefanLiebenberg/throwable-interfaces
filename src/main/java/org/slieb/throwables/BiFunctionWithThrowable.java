@@ -3,6 +3,14 @@ package org.slieb.throwables;
 import java.io.Serializable;
 import java.util.function.BiFunction;
 
+/**
+ * Represents a BiFunction that also throws an Exception.
+ *
+ * @param <T> The type of first parameter
+ * @param <U> The type of second parameter
+ * @param <F> The return result type.
+ * @param <E> The throwable type.
+ */
 @FunctionalInterface
 public interface BiFunctionWithThrowable<T, U, F, E extends Throwable> extends BiFunction<T, U, F>, Serializable {
 

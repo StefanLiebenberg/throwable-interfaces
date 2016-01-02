@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.slieb.throwables.ConsumerWithThrowable.castConsumerWithThrowable;
 
 
-public class ConsumerWithThrowableTest {
+public class ConsumerWithThrowableTest implements FunctionInterfaceTestInterface {
 
     @Test(expected = SuppressedException.class)
     public void testThrowCheckedException() {
@@ -40,5 +40,10 @@ public class ConsumerWithThrowableTest {
     @Test
     public void testNormalOperation() {
         castConsumerWithThrowable((Integer a) -> Assert.assertEquals(a, a)).accept(1);
+    }
+
+    @Override
+    public void testAnnotatedWithFunctionalInterface() {
+        ConsumerWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
     }
 }

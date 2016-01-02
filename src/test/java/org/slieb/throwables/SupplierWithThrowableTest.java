@@ -6,7 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.slieb.throwables.SupplierWithThrowable.castSupplierWithThrowable;
 
 
-public class SupplierWithThrowableTest {
+public class SupplierWithThrowableTest implements FunctionInterfaceTestInterface {
 
     @Test(expected = SuppressedException.class)
     public void testThrowCheckedException() {
@@ -40,6 +40,11 @@ public class SupplierWithThrowableTest {
     @Test
     public void testNormalOperation() {
         assertEquals(Integer.valueOf(100), castSupplierWithThrowable(() -> 100).get());
+    }
+
+    @Override
+    public void testAnnotatedWithFunctionalInterface() {
+        SupplierWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
     }
 
 }

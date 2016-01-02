@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.slieb.throwables.PredicateWithThrowable.castPredicateWithThrowable;
 
 
-public class PredicateWithThrowableTest {
+public class PredicateWithThrowableTest implements FunctionInterfaceTestInterface {
 
     @Test(expected = SuppressedException.class)
     public void testThrowCheckedException() {
@@ -41,6 +41,11 @@ public class PredicateWithThrowableTest {
     public void testNormalOperation() {
         assertTrue(castPredicateWithThrowable((Integer a) -> a > 5).test(10));
         assertFalse(castPredicateWithThrowable((Integer a) -> a > 5).test(0));
+    }
+
+    @Override
+    public void testAnnotatedWithFunctionalInterface() {
+        PredicateWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
     }
 
 

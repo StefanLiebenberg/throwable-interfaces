@@ -1,51 +1,48 @@
 package org.slieb.throwables;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.slieb.throwables.FunctionWithThrowable.castFunctionWithThrowable;
+import static org.slieb.throwables.IntSupplierWithThrowable.castIntSupplierWithThrowable;
 
+public class IntSupplierWithThrowableTest implements FunctionInterfaceTestInterface {
 
-public class FunctionWithThrowableTest implements FunctionInterfaceTestInterface {
     @Test(expected = SuppressedException.class)
     public void testThrowCheckedException() {
-        castFunctionWithThrowable((a) -> {
+        castIntSupplierWithThrowable(() -> {
             throw new Exception("");
-        }).apply(null);
+        }).getAsInt();
     }
 
     @Test(expected = RuntimeException.class)
     public void testThrowRuntimeException() {
-        castFunctionWithThrowable((a) -> {
+        castIntSupplierWithThrowable(() -> {
             throw new RuntimeException("");
-        }).apply(null);
+        }).getAsInt();
     }
 
     @Test(expected = Error.class)
     public void testThrowError() {
-        castFunctionWithThrowable((a) -> {
+        castIntSupplierWithThrowable(() -> {
             throw new Error("");
-        }).apply(null);
+        }).getAsInt();
     }
 
     @Test(expected = Throwable.class)
     public void testThrowThrowable() {
-        castFunctionWithThrowable((a) -> {
+        castIntSupplierWithThrowable(() -> {
             throw new Throwable("");
-        }).apply(null);
+        }).getAsInt();
     }
+
 
     @Test
     public void testNormalOperation() {
-        assertEquals(Integer.valueOf(2),
-                castFunctionWithThrowable((Integer a) -> a + 1).apply(1));
+        Assert.assertEquals(100, castIntSupplierWithThrowable(() -> 100).getAsInt());
     }
 
     @Override
-    @Test
     public void testAnnotatedWithFunctionalInterface() {
-        FunctionWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
+        IntSupplierWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
     }
-
-
 }
