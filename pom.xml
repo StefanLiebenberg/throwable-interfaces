@@ -32,11 +32,7 @@
         <plugin.maven-shared-jar>1.1</plugin.maven-shared-jar>
         <plugin.bcel-findbugs>6.0</plugin.bcel-findbugs>
         <dep.maven>3.3.1</dep.maven>
-        <dep.commons-io>2.4</dep.commons-io>
-        <dep.guava>19.0-rc3</dep.guava>
         <dep.junit>4.12</dep.junit>
-        <dep.mockito>2.0.2-beta</dep.mockito>
-        <dep.commons-codec>1.10</dep.commons-codec>
     </properties>
 
     <prerequisites>
