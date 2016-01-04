@@ -1,54 +1,45 @@
 package org.slieb.throwables;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.*;
 import static org.slieb.throwables.BiFunctionWithThrowable.castBiFunctionWithThrowable;
+public class BiFunctionWithThrowableTest {
+ @Test(expected = SuppressedException.class)
+ public void testThrowCheckedException() {
+    castBiFunctionWithThrowable((v1, v2) -> {
+      throw new Exception("expected error");
+    }).apply(null, null);
+ }
 
-/**
- * This tests the BiFunctionWithThrowable class to ensure that it behaves as expected.
- */
-public class BiFunctionWithThrowableTest implements FunctionInterfaceTestInterface {
+ @Test(expected = RuntimeException.class)
+ public void testThrowRuntimeException() {
+    castBiFunctionWithThrowable((v1, v2) -> {
+      throw new RuntimeException("expected error");
+    }).apply(null, null);
+ }
 
+ @Test(expected = Error.class)
+ public void testThrowError() {
+    castBiFunctionWithThrowable((v1, v2) -> {
+      throw new Error("expected error");
+    }).apply(null, null);
+ }
 
-    @Test(expected = SuppressedException.class)
-    public void testThrowCheckedException() {
-        castBiFunctionWithThrowable((a, b) -> {
-            throw new Exception("");
-        }).apply(null, null);
-    }
+ @Test(expected = Throwable.class)
+ public void testThrowThrowable() {
+    castBiFunctionWithThrowable((v1, v2) -> {
+       throw new Throwable("expected throwable");
+    }).apply(null, null);
+ }
 
-    @Test(expected = RuntimeException.class)
-    public void testThrowRuntimeException() {
-        castBiFunctionWithThrowable((a, b) -> {
-            throw new RuntimeException("");
-        }).apply(null, null);
-    }
+ @Test
+ public void testAnnotatedWithFunctionalInterface() {
+    BiFunctionWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
+ }
 
-    @Test(expected = Error.class)
-    public void testThrowError() {
-        castBiFunctionWithThrowable((a, b) -> {
-            throw new Error("");
-        }).apply(null, null);
-    }
-
-    @Test(expected = Throwable.class)
-    public void testThrowThrowable() {
-        castBiFunctionWithThrowable((a, b) -> {
-            throw new Throwable("");
-        }).apply(null, null);
-    }
-
-    @Test
-    public void testNormalOperation() {
-        assertEquals(Integer.valueOf(3),
-                castBiFunctionWithThrowable((Integer a, Integer b) -> a + b).apply(1, 2));
-    }
-
-    @Override
-    public void testAnnotatedWithFunctionalInterface() {
-        BiFunctionWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
-    }
-
+ @Test
+ public void testNormalOperation() {
+    castBiFunctionWithThrowable((v1, v2) -> {
+ return null;
+    }).apply(null, null);
+ }
 
 }

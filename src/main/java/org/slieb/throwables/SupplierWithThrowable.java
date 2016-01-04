@@ -1,25 +1,44 @@
 package org.slieb.throwables;
 
-import java.io.Serializable;
-import java.util.function.Supplier;
-
+/**
+ * Generated from java.util.function.Supplier
+ *
+ * @param <T> some generic flag
+ * @param <E> The extension
+ */
 @FunctionalInterface
-public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<T>, Serializable {
+public interface SupplierWithThrowable<T, E extends Throwable> extends java.util.function.Supplier<T> {
+    /**
+     * @param supplierwiththrowable object
+     * @param <T> some generic flag
+     * @param <E> The extension
+     * @return the cast interface
+     */
+    static <T, E extends Throwable> SupplierWithThrowable<T, E> castSupplierWithThrowable(SupplierWithThrowable<T, E> supplierwiththrowable) {
+        return supplierwiththrowable;
+    }
 
+    /** 
+     * Overridden method of SupplierWithThrowable that will call getWithThrowable, but catching any exceptions.
+     *
+     * @return the value
+     */
     @Override
     default T get() {
         try {
             return getWithThrowable();
-        } catch (final RuntimeException | Error e) {
-            throw e;
-        } catch (final Throwable e) {
-            throw new SuppressedException(e);
+        } catch (final RuntimeException | Error exception) {
+            throw exception;
+        } catch (final Throwable throwable) {
+            throw new org.slieb.throwables.SuppressedException(throwable);
         }
     }
 
+    /** 
+     * Functional method that will throw exceptions.
+     *
+     * @return the value
+     * @throws E some exception
+     */
     T getWithThrowable() throws E;
-
-    static <A, E extends Throwable> SupplierWithThrowable<A, E> castSupplierWithThrowable(final SupplierWithThrowable<A, E> function) {
-        return function;
-    }
 }

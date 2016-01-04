@@ -1,51 +1,45 @@
 package org.slieb.throwables;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import org.junit.*;
 import static org.slieb.throwables.FunctionWithThrowable.castFunctionWithThrowable;
+public class FunctionWithThrowableTest {
+ @Test(expected = SuppressedException.class)
+ public void testThrowCheckedException() {
+    castFunctionWithThrowable((v1) -> {
+      throw new Exception("expected error");
+    }).apply(null);
+ }
 
+ @Test(expected = RuntimeException.class)
+ public void testThrowRuntimeException() {
+    castFunctionWithThrowable((v1) -> {
+      throw new RuntimeException("expected error");
+    }).apply(null);
+ }
 
-public class FunctionWithThrowableTest implements FunctionInterfaceTestInterface {
-    @Test(expected = SuppressedException.class)
-    public void testThrowCheckedException() {
-        castFunctionWithThrowable((a) -> {
-            throw new Exception("");
-        }).apply(null);
-    }
+ @Test(expected = Error.class)
+ public void testThrowError() {
+    castFunctionWithThrowable((v1) -> {
+      throw new Error("expected error");
+    }).apply(null);
+ }
 
-    @Test(expected = RuntimeException.class)
-    public void testThrowRuntimeException() {
-        castFunctionWithThrowable((a) -> {
-            throw new RuntimeException("");
-        }).apply(null);
-    }
+ @Test(expected = Throwable.class)
+ public void testThrowThrowable() {
+    castFunctionWithThrowable((v1) -> {
+       throw new Throwable("expected throwable");
+    }).apply(null);
+ }
 
-    @Test(expected = Error.class)
-    public void testThrowError() {
-        castFunctionWithThrowable((a) -> {
-            throw new Error("");
-        }).apply(null);
-    }
+ @Test
+ public void testAnnotatedWithFunctionalInterface() {
+    FunctionWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
+ }
 
-    @Test(expected = Throwable.class)
-    public void testThrowThrowable() {
-        castFunctionWithThrowable((a) -> {
-            throw new Throwable("");
-        }).apply(null);
-    }
-
-    @Test
-    public void testNormalOperation() {
-        assertEquals(Integer.valueOf(2),
-                castFunctionWithThrowable((Integer a) -> a + 1).apply(1));
-    }
-
-    @Override
-    @Test
-    public void testAnnotatedWithFunctionalInterface() {
-        FunctionWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
-    }
-
+ @Test
+ public void testNormalOperation() {
+    castFunctionWithThrowable((v1) -> {
+ return null;
+    }).apply(null);
+ }
 
 }

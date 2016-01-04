@@ -1,34 +1,52 @@
 package org.slieb.throwables;
 
-import java.io.Serializable;
-import java.util.function.BiFunction;
-
 /**
- * Represents a BiFunction that also throws an Exception.
+ * Generated from java.util.function.BiFunction
  *
- * @param <T> The type of first parameter
- * @param <U> The type of second parameter
- * @param <F> The return result type.
- * @param <E> The throwable type.
+ * @param <T> some generic flag
+ * @param <U> some generic flag
+ * @param <R> some generic flag
+ * @param <E> The extension
  */
 @FunctionalInterface
-public interface BiFunctionWithThrowable<T, U, F, E extends Throwable> extends BiFunction<T, U, F>, Serializable {
-
-    static <A, B, C, E extends Throwable> BiFunctionWithThrowable<A, B, C, E> castBiFunctionWithThrowable(
-            final BiFunctionWithThrowable<A, B, C, E> function) {
-        return function;
+public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends java.util.function.BiFunction<T, U, R> {
+    /**
+     * @param bifunctionwiththrowable object
+     * @param <T> some generic flag
+     * @param <U> some generic flag
+     * @param <R> some generic flag
+     * @param <E> The extension
+     * @return the cast interface
+     */
+    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {
+        return bifunctionwiththrowable;
     }
 
+    /** 
+     * Overridden method of BiFunctionWithThrowable that will call applyWithThrowable, but catching any exceptions.
+     *
+     * @param v1 parameter to overridden method
+     * @param v2 parameter to overridden method
+     * @return the value
+     */
     @Override
-    default F apply(final T first, final U second) {
+    default R apply(T v1, U v2) {
         try {
-            return applyWithThrowable(first, second);
+            return applyWithThrowable(v1, v2);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new SuppressedException(throwable);
+            throw new org.slieb.throwables.SuppressedException(throwable);
         }
     }
 
-    F applyWithThrowable(final T first, final U second) throws E;
+    /** 
+     * Functional method that will throw exceptions.
+     *
+     * @param v1 parameter to overridden method
+     * @param v2 parameter to overridden method
+     * @return the value
+     * @throws E some exception
+     */
+    R applyWithThrowable(T v1, U v2) throws E;
 }

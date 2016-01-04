@@ -1,11 +1,26 @@
 package org.slieb.throwables;
 
-
-import java.util.function.IntSupplier;
-
+/**
+ * Generated from java.util.function.IntSupplier
+ *
+ * @param <E> The extension
+ */
 @FunctionalInterface
-public interface IntSupplierWithThrowable<E extends Throwable> extends IntSupplier {
+public interface IntSupplierWithThrowable<E extends Throwable> extends java.util.function.IntSupplier {
+    /**
+     * @param intsupplierwiththrowable object
+     * @param <E> The extension
+     * @return the cast interface
+     */
+    static <E extends Throwable> IntSupplierWithThrowable<E> castIntSupplierWithThrowable(IntSupplierWithThrowable<E> intsupplierwiththrowable) {
+        return intsupplierwiththrowable;
+    }
 
+    /** 
+     * Overridden method of IntSupplierWithThrowable that will call getAsIntWithThrowable, but catching any exceptions.
+     *
+     * @return the value
+     */
     @Override
     default int getAsInt() {
         try {
@@ -13,13 +28,15 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new SuppressedException(throwable);
+            throw new org.slieb.throwables.SuppressedException(throwable);
         }
     }
 
+    /** 
+     * Functional method that will throw exceptions.
+     *
+     * @return the value
+     * @throws E some exception
+     */
     int getAsIntWithThrowable() throws E;
-
-    static <E extends Throwable> IntSupplierWithThrowable<E> castIntSupplierWithThrowable(final IntSupplierWithThrowable<E> predicate) {
-        return predicate;
-    }
 }

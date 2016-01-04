@@ -1,52 +1,45 @@
 package org.slieb.throwables;
-
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.*;
 import static org.slieb.throwables.PredicateWithThrowable.castPredicateWithThrowable;
+public class PredicateWithThrowableTest {
+ @Test(expected = SuppressedException.class)
+ public void testThrowCheckedException() {
+    castPredicateWithThrowable((v1) -> {
+      throw new Exception("expected error");
+    }).test(null);
+ }
 
+ @Test(expected = RuntimeException.class)
+ public void testThrowRuntimeException() {
+    castPredicateWithThrowable((v1) -> {
+      throw new RuntimeException("expected error");
+    }).test(null);
+ }
 
-public class PredicateWithThrowableTest implements FunctionInterfaceTestInterface {
+ @Test(expected = Error.class)
+ public void testThrowError() {
+    castPredicateWithThrowable((v1) -> {
+      throw new Error("expected error");
+    }).test(null);
+ }
 
-    @Test(expected = SuppressedException.class)
-    public void testThrowCheckedException() {
-        castPredicateWithThrowable((a) -> {
-            throw new Exception("");
-        }).test(null);
-    }
+ @Test(expected = Throwable.class)
+ public void testThrowThrowable() {
+    castPredicateWithThrowable((v1) -> {
+       throw new Throwable("expected throwable");
+    }).test(null);
+ }
 
-    @Test(expected = RuntimeException.class)
-    public void testThrowRuntimeException() {
-        castPredicateWithThrowable((a) -> {
-            throw new RuntimeException("");
-        }).test(null);
-    }
+ @Test
+ public void testAnnotatedWithFunctionalInterface() {
+    PredicateWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
+ }
 
-    @Test(expected = Error.class)
-    public void testThrowError() {
-        castPredicateWithThrowable((a) -> {
-            throw new Error("");
-        }).test(null);
-    }
-
-    @Test(expected = Throwable.class)
-    public void testThrowThrowable() {
-        castPredicateWithThrowable((a) -> {
-            throw new Throwable("");
-        }).test(null);
-    }
-
-    @Test
-    public void testNormalOperation() {
-        assertTrue(castPredicateWithThrowable((Integer a) -> a > 5).test(10));
-        assertFalse(castPredicateWithThrowable((Integer a) -> a > 5).test(0));
-    }
-
-    @Override
-    public void testAnnotatedWithFunctionalInterface() {
-        PredicateWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
-    }
-
+ @Test
+ public void testNormalOperation() {
+    castPredicateWithThrowable((v1) -> {
+ return false;
+    }).test(null);
+ }
 
 }

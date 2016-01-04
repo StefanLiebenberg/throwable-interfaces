@@ -1,48 +1,45 @@
 package org.slieb.throwables;
-
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.junit.*;
 import static org.slieb.throwables.IntSupplierWithThrowable.castIntSupplierWithThrowable;
+public class IntSupplierWithThrowableTest {
+ @Test(expected = SuppressedException.class)
+ public void testThrowCheckedException() {
+    castIntSupplierWithThrowable(() -> {
+      throw new Exception("expected error");
+    }).getAsInt();
+ }
 
-public class IntSupplierWithThrowableTest implements FunctionInterfaceTestInterface {
+ @Test(expected = RuntimeException.class)
+ public void testThrowRuntimeException() {
+    castIntSupplierWithThrowable(() -> {
+      throw new RuntimeException("expected error");
+    }).getAsInt();
+ }
 
-    @Test(expected = SuppressedException.class)
-    public void testThrowCheckedException() {
-        castIntSupplierWithThrowable(() -> {
-            throw new Exception("");
-        }).getAsInt();
-    }
+ @Test(expected = Error.class)
+ public void testThrowError() {
+    castIntSupplierWithThrowable(() -> {
+      throw new Error("expected error");
+    }).getAsInt();
+ }
 
-    @Test(expected = RuntimeException.class)
-    public void testThrowRuntimeException() {
-        castIntSupplierWithThrowable(() -> {
-            throw new RuntimeException("");
-        }).getAsInt();
-    }
+ @Test(expected = Throwable.class)
+ public void testThrowThrowable() {
+    castIntSupplierWithThrowable(() -> {
+       throw new Throwable("expected throwable");
+    }).getAsInt();
+ }
 
-    @Test(expected = Error.class)
-    public void testThrowError() {
-        castIntSupplierWithThrowable(() -> {
-            throw new Error("");
-        }).getAsInt();
-    }
+ @Test
+ public void testAnnotatedWithFunctionalInterface() {
+    IntSupplierWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
+ }
 
-    @Test(expected = Throwable.class)
-    public void testThrowThrowable() {
-        castIntSupplierWithThrowable(() -> {
-            throw new Throwable("");
-        }).getAsInt();
-    }
+ @Test
+ public void testNormalOperation() {
+    castIntSupplierWithThrowable(() -> {
+ return 0;
+    }).getAsInt();
+ }
 
-
-    @Test
-    public void testNormalOperation() {
-        Assert.assertEquals(100, castIntSupplierWithThrowable(() -> 100).getAsInt());
-    }
-
-    @Override
-    public void testAnnotatedWithFunctionalInterface() {
-        IntSupplierWithThrowable.class.isAnnotationPresent(FunctionalInterface.class);
-    }
 }

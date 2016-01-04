@@ -1,27 +1,46 @@
 package org.slieb.throwables;
 
-
-import java.util.function.UnaryOperator;
-
+/**
+ * Generated from java.util.function.UnaryOperator
+ *
+ * @param <T> some generic flag
+ * @param <E> The extension
+ */
 @FunctionalInterface
-public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends UnaryOperator<T> {
-    
+public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java.util.function.UnaryOperator<T> {
+    /**
+     * @param unaryoperatorwiththrowable object
+     * @param <T> some generic flag
+     * @param <E> The extension
+     * @return the cast interface
+     */
+    static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> castUnaryOperatorWithThrowable(UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) {
+        return unaryoperatorwiththrowable;
+    }
+
+    /** 
+     * Overridden method of UnaryOperatorWithThrowable that will call applyWithThrowable, but catching any exceptions.
+     *
+     * @param v1 parameter to overridden method
+     * @return the value
+     */
     @Override
-    default T apply(final T value) {
+    default T apply(T v1) {
         try {
-            return applyWithThrowable(value);
-        } catch (final RuntimeException | Error e) {
-            throw e;
-        } catch (final Throwable e) {
-            throw new SuppressedException(e);
+            return applyWithThrowable(v1);
+        } catch (final RuntimeException | Error exception) {
+            throw exception;
+        } catch (final Throwable throwable) {
+            throw new org.slieb.throwables.SuppressedException(throwable);
         }
     }
 
-    T applyWithThrowable(T value) throws E;
-
-    static <A, E extends Throwable> UnaryOperatorWithThrowable<A, E> castUnaryOperatorWithThrowable(
-            final UnaryOperatorWithThrowable<A, E> function) {
-        return function;
-    }
-
+    /** 
+     * Functional method that will throw exceptions.
+     *
+     * @param v1 parameter to overridden method
+     * @return the value
+     * @throws E some exception
+     */
+    T applyWithThrowable(T v1) throws E;
 }
