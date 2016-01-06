@@ -1,5 +1,5 @@
 package org.slieb.throwables;
-import org.junit.*;
+import org.junit.Test;
 import static org.slieb.throwables.LongToDoubleFunctionWithThrowable.castLongToDoubleFunctionWithThrowable;
 public class LongToDoubleFunctionWithThrowableTest {
  @Test(expected = SuppressedException.class)

@@ -1,5 +1,5 @@
 package org.slieb.throwables;
-import org.junit.*;
+import org.junit.Test;
 import static org.slieb.throwables.DoublePredicateWithThrowable.castDoublePredicateWithThrowable;
 public class DoublePredicateWithThrowableTest {
  @Test(expected = SuppressedException.class)

@@ -1,5 +1,5 @@
 package org.slieb.throwables;
-import org.junit.*;
+import org.junit.Test;
 import static org.slieb.throwables.LongSupplierWithThrowable.castLongSupplierWithThrowable;
 public class LongSupplierWithThrowableTest {
  @Test(expected = SuppressedException.class)

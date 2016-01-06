@@ -64,7 +64,7 @@ public class Generator {
     private String getTestContent(Class<?> funcInterface, String className, String testName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("package ").append(packageName).append(";\n");
-        stringBuilder.append("import org.junit.*;\n");
+        stringBuilder.append("import org.junit.Test;\n");
 
         stringBuilder.append("import static ").append(packageName).append(".").append(className).append(".cast").append(className).append(";\n");
 
