@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.DoubleUnaryOperator
+ * Extends java.util.function.DoubleUnaryOperator to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends java.util.function.DoubleUnaryOperator {
     /**
-     * @param doubleunaryoperatorwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type DoubleUnaryOperatorWithThrowable
+     * @param doubleunaryoperatorwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) {

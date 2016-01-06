@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.LongConsumer
+ * Extends java.util.function.LongConsumer to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface LongConsumerWithThrowable<E extends Throwable> extends java.util.function.LongConsumer {
     /**
-     * @param longconsumerwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type LongConsumerWithThrowable
+     * @param longconsumerwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongConsumerWithThrowable<E> castLongConsumerWithThrowable(LongConsumerWithThrowable<E> longconsumerwiththrowable) {

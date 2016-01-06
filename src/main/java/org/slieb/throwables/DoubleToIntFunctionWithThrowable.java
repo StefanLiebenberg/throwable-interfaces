@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.DoubleToIntFunction
+ * Extends java.util.function.DoubleToIntFunction to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends java.util.function.DoubleToIntFunction {
     /**
-     * @param doubletointfunctionwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type DoubleToIntFunctionWithThrowable
+     * @param doubletointfunctionwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> castDoubleToIntFunctionWithThrowable(DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) {

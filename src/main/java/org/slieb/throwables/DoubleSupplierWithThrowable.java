@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.DoubleSupplier
+ * Extends java.util.function.DoubleSupplier to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.util.function.DoubleSupplier {
     /**
-     * @param doublesupplierwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type DoubleSupplierWithThrowable
+     * @param doublesupplierwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {

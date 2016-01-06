@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.ObjDoubleConsumer
+ * Extends java.util.function.ObjDoubleConsumer to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface ObjDoubleConsumerWithThrowable<T, E extends Throwable> extends java.util.function.ObjDoubleConsumer<T> {
     /**
-     * @param objdoubleconsumerwiththrowable object
-     * @param <T> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type ObjDoubleConsumerWithThrowable
+     * @param objdoubleconsumerwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on ObjDoubleConsumer  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ObjDoubleConsumerWithThrowable<T, E> castObjDoubleConsumerWithThrowable(ObjDoubleConsumerWithThrowable<T, E> objdoubleconsumerwiththrowable) {

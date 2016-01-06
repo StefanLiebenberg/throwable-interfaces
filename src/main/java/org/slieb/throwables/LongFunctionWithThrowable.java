@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.LongFunction
+ * Extends java.util.function.LongFunction to allow for a checked exception.
  *
  * @param <R> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.util.function.LongFunction<R> {
     /**
-     * @param longfunctionwiththrowable object
-     * @param <R> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type LongFunctionWithThrowable
+     * @param longfunctionwiththrowable The interface instance
+     * @param <R> Generic that corresponds to the same generic on LongFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(LongFunctionWithThrowable<R, E> longfunctionwiththrowable) {

@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.Supplier
+ * Extends java.util.function.Supplier to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface SupplierWithThrowable<T, E extends Throwable> extends java.util.function.Supplier<T> {
     /**
-     * @param supplierwiththrowable object
-     * @param <T> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type SupplierWithThrowable
+     * @param supplierwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on Supplier  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> SupplierWithThrowable<T, E> castSupplierWithThrowable(SupplierWithThrowable<T, E> supplierwiththrowable) {

@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.BiConsumer
+ * Extends java.util.function.BiConsumer to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <U> some generic flag
@@ -10,10 +11,11 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends java.util.function.BiConsumer<T, U> {
     /**
-     * @param biconsumerwiththrowable object
-     * @param <T> some generic flag
-     * @param <U> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type BiConsumerWithThrowable
+     * @param biconsumerwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on BiConsumer  
+     * @param <U> Generic that corresponds to the same generic on BiConsumer  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, U, E extends Throwable> BiConsumerWithThrowable<T, U, E> castBiConsumerWithThrowable(BiConsumerWithThrowable<T, U, E> biconsumerwiththrowable) {

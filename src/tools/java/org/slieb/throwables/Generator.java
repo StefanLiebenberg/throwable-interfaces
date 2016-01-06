@@ -179,6 +179,7 @@ public class Generator {
         stringBuilder.append("\n");
         stringBuilder.append("/**\n");
         stringBuilder.append(" * Generated from ").append(funcInterface.getName()).append("\n");
+        stringBuilder.append(" * Extends ").append(funcInterface.getName()).append(" to allow for a checked exception.\n");
         stringBuilder.append(" *\n");
         generics.forEach(gen -> stringBuilder.append(" * @param <").append(gen).append("> some generic flag\n"));
         stringBuilder.append(" * @param <E> The extension\n");
@@ -198,9 +199,10 @@ public class Generator {
 
         String objectName = className.toLowerCase();
         stringBuilder.append("    /**\n");
-        stringBuilder.append("     * @param ").append(objectName).append(" object\n");
-        generics.forEach(gen -> stringBuilder.append("     * @param <").append(gen).append("> some generic flag\n"));
-        stringBuilder.append("     * @param <E> The extension\n");
+        stringBuilder.append("     * Utility method to mark lambdas of type ").append(className).append("\n");
+        stringBuilder.append("     * @param ").append(objectName).append(" The interface instance\n");
+        generics.forEach(gen -> stringBuilder.append("     * @param <").append(gen).append("> Generic that corresponds to the same generic on ").append(funcInterface.getSimpleName()).append("  \n"));
+        stringBuilder.append("     * @param <E> The type this interface is allowed to throw\n");
         stringBuilder.append("     * @return the cast interface\n");
         stringBuilder.append("     */\n");
         stringBuilder.append("    static ")

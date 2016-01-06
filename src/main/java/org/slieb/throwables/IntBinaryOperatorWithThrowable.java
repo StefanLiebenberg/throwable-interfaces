@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.IntBinaryOperator
+ * Extends java.util.function.IntBinaryOperator to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends java.util.function.IntBinaryOperator {
     /**
-     * @param intbinaryoperatorwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type IntBinaryOperatorWithThrowable
+     * @param intbinaryoperatorwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {

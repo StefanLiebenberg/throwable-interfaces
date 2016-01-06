@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.BiFunction
+ * Extends java.util.function.BiFunction to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <U> some generic flag
@@ -11,11 +12,12 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends java.util.function.BiFunction<T, U, R> {
     /**
-     * @param bifunctionwiththrowable object
-     * @param <T> some generic flag
-     * @param <U> some generic flag
-     * @param <R> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type BiFunctionWithThrowable
+     * @param bifunctionwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on BiFunction  
+     * @param <U> Generic that corresponds to the same generic on BiFunction  
+     * @param <R> Generic that corresponds to the same generic on BiFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {

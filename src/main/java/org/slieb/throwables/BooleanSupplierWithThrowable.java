@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.BooleanSupplier
+ * Extends java.util.function.BooleanSupplier to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.util.function.BooleanSupplier {
     /**
-     * @param booleansupplierwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type BooleanSupplierWithThrowable
+     * @param booleansupplierwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> BooleanSupplierWithThrowable<E> castBooleanSupplierWithThrowable(BooleanSupplierWithThrowable<E> booleansupplierwiththrowable) {

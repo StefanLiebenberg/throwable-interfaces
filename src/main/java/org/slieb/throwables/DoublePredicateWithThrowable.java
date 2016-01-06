@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.DoublePredicate
+ * Extends java.util.function.DoublePredicate to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface DoublePredicateWithThrowable<E extends Throwable> extends java.util.function.DoublePredicate {
     /**
-     * @param doublepredicatewiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type DoublePredicateWithThrowable
+     * @param doublepredicatewiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoublePredicateWithThrowable<E> castDoublePredicateWithThrowable(DoublePredicateWithThrowable<E> doublepredicatewiththrowable) {

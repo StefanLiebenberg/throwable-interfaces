@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.Consumer
+ * Extends java.util.function.Consumer to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util.function.Consumer<T> {
     /**
-     * @param consumerwiththrowable object
-     * @param <T> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type ConsumerWithThrowable
+     * @param consumerwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on Consumer  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ConsumerWithThrowable<T, E> castConsumerWithThrowable(ConsumerWithThrowable<T, E> consumerwiththrowable) {

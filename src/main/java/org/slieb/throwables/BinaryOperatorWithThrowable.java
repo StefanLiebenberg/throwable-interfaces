@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.BinaryOperator
+ * Extends java.util.function.BinaryOperator to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends java.util.function.BinaryOperator<T> {
     /**
-     * @param binaryoperatorwiththrowable object
-     * @param <T> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type BinaryOperatorWithThrowable
+     * @param binaryoperatorwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on BinaryOperator  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) {

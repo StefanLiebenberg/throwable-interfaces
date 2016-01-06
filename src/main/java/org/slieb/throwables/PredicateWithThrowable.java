@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.Predicate
+ * Extends java.util.function.Predicate to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface PredicateWithThrowable<T, E extends Throwable> extends java.util.function.Predicate<T> {
     /**
-     * @param predicatewiththrowable object
-     * @param <T> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type PredicateWithThrowable
+     * @param predicatewiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on Predicate  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> PredicateWithThrowable<T, E> castPredicateWithThrowable(PredicateWithThrowable<T, E> predicatewiththrowable) {

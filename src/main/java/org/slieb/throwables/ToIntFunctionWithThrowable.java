@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.ToIntFunction
+ * Extends java.util.function.ToIntFunction to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends java.util.function.ToIntFunction<T> {
     /**
-     * @param tointfunctionwiththrowable object
-     * @param <T> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type ToIntFunctionWithThrowable
+     * @param tointfunctionwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on ToIntFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ToIntFunctionWithThrowable<T, E> castToIntFunctionWithThrowable(ToIntFunctionWithThrowable<T, E> tointfunctionwiththrowable) {

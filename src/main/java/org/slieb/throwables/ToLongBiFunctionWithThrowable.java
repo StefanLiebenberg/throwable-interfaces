@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.ToLongBiFunction
+ * Extends java.util.function.ToLongBiFunction to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <U> some generic flag
@@ -10,10 +11,11 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extends java.util.function.ToLongBiFunction<T, U> {
     /**
-     * @param tolongbifunctionwiththrowable object
-     * @param <T> some generic flag
-     * @param <U> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type ToLongBiFunctionWithThrowable
+     * @param tolongbifunctionwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <U> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) {

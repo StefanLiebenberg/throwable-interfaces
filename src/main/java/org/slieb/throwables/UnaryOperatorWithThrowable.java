@@ -2,6 +2,7 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.UnaryOperator
+ * Extends java.util.function.UnaryOperator to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
@@ -9,9 +10,10 @@ package org.slieb.throwables;
 @FunctionalInterface
 public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java.util.function.UnaryOperator<T> {
     /**
-     * @param unaryoperatorwiththrowable object
-     * @param <T> some generic flag
-     * @param <E> The extension
+     * Utility method to mark lambdas of type UnaryOperatorWithThrowable
+     * @param unaryoperatorwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on UnaryOperator  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> castUnaryOperatorWithThrowable(UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) {

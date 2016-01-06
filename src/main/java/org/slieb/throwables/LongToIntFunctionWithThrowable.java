@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.LongToIntFunction
+ * Extends java.util.function.LongToIntFunction to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface LongToIntFunctionWithThrowable<E extends Throwable> extends java.util.function.LongToIntFunction {
     /**
-     * @param longtointfunctionwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type LongToIntFunctionWithThrowable
+     * @param longtointfunctionwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {

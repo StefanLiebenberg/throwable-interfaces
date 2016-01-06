@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.LongPredicate
+ * Extends java.util.function.LongPredicate to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface LongPredicateWithThrowable<E extends Throwable> extends java.util.function.LongPredicate {
     /**
-     * @param longpredicatewiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type LongPredicateWithThrowable
+     * @param longpredicatewiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongPredicateWithThrowable<E> castLongPredicateWithThrowable(LongPredicateWithThrowable<E> longpredicatewiththrowable) {

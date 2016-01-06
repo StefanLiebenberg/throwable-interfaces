@@ -2,14 +2,16 @@ package org.slieb.throwables;
 
 /**
  * Generated from java.util.function.LongUnaryOperator
+ * Extends java.util.function.LongUnaryOperator to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends java.util.function.LongUnaryOperator {
     /**
-     * @param longunaryoperatorwiththrowable object
-     * @param <E> The extension
+     * Utility method to mark lambdas of type LongUnaryOperatorWithThrowable
+     * @param longunaryoperatorwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) {
