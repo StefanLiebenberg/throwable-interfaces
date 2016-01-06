@@ -1,7 +1,7 @@
 # Throwable interfaces
 
-In an attempt to reduce try/catch blocks inside lambda statements, this project extends all the major functional 
-interfaces found in java.util.function.* with new functional interfaces that allow checked exceptions.
+In an attempt to reduce `try/catch` blocks inside lambda statements, this project extends all the major functional 
+interfaces found in `java.util.function.*` with new functional interfaces that allow checked exceptions.
  
 ## Basic usage
 
