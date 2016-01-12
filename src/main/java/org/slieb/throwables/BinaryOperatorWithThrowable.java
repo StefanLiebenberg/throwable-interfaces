@@ -65,7 +65,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.BinaryOperator<T> thatReturnsDefaultValue(T defaultReturnValue) {
+    default java.util.function.BinaryOperator<T> thatReturnsOnCatch(T defaultReturnValue) {
       return (v1, v2) -> {
         try {
           return applyWithThrowable(v1, v2);

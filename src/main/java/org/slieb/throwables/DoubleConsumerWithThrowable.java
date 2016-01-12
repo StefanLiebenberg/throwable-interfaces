@@ -56,7 +56,8 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends java.u
 
 
     /**
-     * @return A interface that ignores some exceptions.
+     * @param throwableClasses A varargs of throwable types to ignore.
+     * @return An interface that ignores some exceptions.
      */
     @SuppressWarnings("Duplicates")
     default DoubleConsumerWithThrowable thatIgnores(Class<? extends Throwable> ... throwableClasses) {
@@ -73,7 +74,7 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends java.u
 
 
     /**
-     * @return A interface that completely ignores exceptions. Consider using this method withLogging() as well.
+     * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
     default java.util.function.DoubleConsumer thatIgnoresThrowables() {
         return (v1) -> {

@@ -69,9 +69,9 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
 
 
     /**
-     * @return A interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.BiFunction<T, U, java.util.Optional<R>>    thatReturnsOptional() {
+    default java.util.function.BiFunction<T, U, java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
       return (v1, v2)     -> {
         try {
           return java.util.Optional.of(applyWithThrowable(v1, v2));
@@ -85,7 +85,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.BiFunction<T, U, R> thatReturnsDefaultValue(R defaultReturnValue) {
+    default java.util.function.BiFunction<T, U, R> thatReturnsOnCatch(R defaultReturnValue) {
       return (v1, v2) -> {
         try {
           return applyWithThrowable(v1, v2);

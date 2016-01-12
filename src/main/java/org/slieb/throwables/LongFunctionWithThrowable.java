@@ -61,9 +61,9 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
 
 
     /**
-     * @return A interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.LongFunction<java.util.Optional<R>>    thatReturnsOptional() {
+    default java.util.function.LongFunction<java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
       return (v1)     -> {
         try {
           return java.util.Optional.of(applyWithThrowable(v1));
@@ -77,7 +77,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.LongFunction<R> thatReturnsDefaultValue(R defaultReturnValue) {
+    default java.util.function.LongFunction<R> thatReturnsOnCatch(R defaultReturnValue) {
       return (v1) -> {
         try {
           return applyWithThrowable(v1);

@@ -59,9 +59,9 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
 
 
     /**
-     * @return A interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.Supplier<java.util.Optional<T>>    thatReturnsOptional() {
+    default java.util.function.Supplier<java.util.Optional<T>>    thatReturnsOptionalOnCatch() {
       return ()     -> {
         try {
           return java.util.Optional.of(getWithThrowable());
@@ -75,7 +75,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.Supplier<T> thatReturnsDefaultValue(T defaultReturnValue) {
+    default java.util.function.Supplier<T> thatReturnsOnCatch(T defaultReturnValue) {
       return () -> {
         try {
           return getWithThrowable();

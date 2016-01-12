@@ -64,9 +64,9 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
 
 
     /**
-     * @return A interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.Function<T, java.util.Optional<R>>    thatReturnsOptional() {
+    default java.util.function.Function<T, java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
       return (v1)     -> {
         try {
           return java.util.Optional.of(applyWithThrowable(v1));
@@ -80,7 +80,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.Function<T, R> thatReturnsDefaultValue(R defaultReturnValue) {
+    default java.util.function.Function<T, R> thatReturnsOnCatch(R defaultReturnValue) {
       return (v1) -> {
         try {
           return applyWithThrowable(v1);

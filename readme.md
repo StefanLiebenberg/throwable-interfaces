@@ -133,13 +133,13 @@ Returns an interface that does nothing on exceptions. Only applicable on interfa
        }
     }).thatIgnores(IOException.class); 
 
-### thatReturnsOptional()
+### thatReturnsOptionalOnCatch()
 
 
 Returns an interface that will return Optional of the return type, which will be empty if there has been an error.
 Only applicable on interfaces that return non-primitive types.
 
-### thatReturnsDefaultValue(defaultValue)
+### thatReturnsOnCatch(defaultValue)
 
 Returns an interface that will return some defaultValue if an exception occurs. Only applicable on interfaces that specify a return type.
     

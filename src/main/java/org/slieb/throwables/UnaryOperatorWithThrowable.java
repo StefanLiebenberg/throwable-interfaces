@@ -63,7 +63,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.UnaryOperator<T> thatReturnsDefaultValue(T defaultReturnValue) {
+    default java.util.function.UnaryOperator<T> thatReturnsOnCatch(T defaultReturnValue) {
       return (v1) -> {
         try {
           return applyWithThrowable(v1);

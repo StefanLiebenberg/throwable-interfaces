@@ -518,7 +518,7 @@ public class InterfaceGenerator {
 //                    if (!generics.isEmpty()) {
 //                        stringBuilder.append(generateGenerics(genericsWithOptionalReturn, false, false));
 //                    }
-//                    stringBuilder.append(" thatReturnsOptional() {\n");
+//                    stringBuilder.append(" thatReturnsOptionalOnCatch() {\n");
 //                    stringBuilder.append("  return ").append(getMethodParams(funcInterface, method, false));
 //                    stringBuilder.append(" -> {\n");
 //                    stringBuilder.append("    try {\n");
@@ -541,13 +541,13 @@ public class InterfaceGenerator {
 
                     stringBuilder.newlines(2).setIndent(4);
                     stringBuilder.indent().append("/**").newline();
-                    stringBuilder.indent().append(" * @return A interface that will wrap the result in an optional, and return an empty optional when an exception occurs.").newline();
+                    stringBuilder.indent().append(" * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.").newline();
                     stringBuilder.indent().append(" */").newline();
                     stringBuilder.indent().append("default ").append(funcInterface.getName());
                     if (!generics.isEmpty()) {
                         stringBuilder.append(generateGenerics(genericsWithOptionalReturn, false, false));
                     }
-                    stringBuilder.indent().append("thatReturnsOptional() {\n");
+                    stringBuilder.indent().append("thatReturnsOptionalOnCatch() {\n");
                     stringBuilder.indent().append("  return ").append(getMethodParams(funcInterface, method, false));
                     stringBuilder.indent().append(" -> {\n");
                     stringBuilder.indent().append("    try {\n");
@@ -569,7 +569,7 @@ public class InterfaceGenerator {
                 if (!generics.isEmpty()) {
                     stringBuilder.append(generateGenerics(generics, false, false));
                 }
-                stringBuilder.append(" thatReturnsDefaultValue(").append(returnTypeName).append(" defaultReturnValue) {\n");
+                stringBuilder.append(" thatReturnsOnCatch(").append(returnTypeName).append(" defaultReturnValue) {\n");
                 stringBuilder.indent().append("  return ").append(getMethodParams(funcInterface, method, false));
                 stringBuilder.append(" -> {\n");
                 stringBuilder.indent().append("    try {\n");
@@ -587,7 +587,8 @@ public class InterfaceGenerator {
 
             stringBuilder.newlines(2).setIndent(4);
             stringBuilder.indent().append("/**").newline();
-            stringBuilder.indent().append(" * @return A interface that ignores some exceptions.").newline();
+            stringBuilder.indent().append(" * @param throwableClasses A varargs of throwable types to ignore.").newline();
+            stringBuilder.indent().append(" * @return An interface that ignores some exceptions.").newline();
             stringBuilder.indent().append(" */").newline();
             stringBuilder.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
             stringBuilder.indent().append("default ").append(className);
@@ -621,7 +622,7 @@ public class InterfaceGenerator {
 
             stringBuilder.newlines(2).setIndent(4);
             stringBuilder.indent().append("/**").newline();
-            stringBuilder.indent().append(" * @return A interface that completely ignores exceptions. Consider using this method withLogging() as well.").newline();
+            stringBuilder.indent().append(" * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.").newline();
             stringBuilder.indent().append(" */").newline();
             stringBuilder.indent().append("default ").append(funcInterface.getName());
             if (!generics.isEmpty()) {
