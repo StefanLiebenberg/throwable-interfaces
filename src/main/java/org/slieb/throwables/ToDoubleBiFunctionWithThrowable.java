@@ -21,6 +21,17 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
     static <T, U, E extends Throwable> ToDoubleBiFunctionWithThrowable<T, U, E> castToDoubleBiFunctionWithThrowable(ToDoubleBiFunctionWithThrowable<T, U, E> todoublebifunctionwiththrowable) {
         return todoublebifunctionwiththrowable;
     }
+    /**
+     * Utility method to convert ToDoubleBiFunctionWithThrowable
+     * @param todoublebifunction The interface instance
+     * @param <T> Generic that corresponds to the same generic on ToDoubleBiFunction  
+     * @param <U> Generic that corresponds to the same generic on ToDoubleBiFunction  
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <T, U, E extends Throwable> ToDoubleBiFunctionWithThrowable<T, U, E> asToDoubleBiFunctionWithThrowable(java.util.function.ToDoubleBiFunction<T, U> todoublebifunction) {
+        return todoublebifunction::applyAsDouble;
+    }
 
     /** 
      * Overridden method of ToDoubleBiFunctionWithThrowable that will call applyAsDoubleWithThrowable, but catching any exceptions.
@@ -52,14 +63,18 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1, v2) -> {
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in ToDoubleBiFunctionWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -67,14 +82,21 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in ToDoubleBiFunctionWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

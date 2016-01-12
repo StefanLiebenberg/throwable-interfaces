@@ -17,6 +17,15 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
     static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) {
         return longbinaryoperatorwiththrowable;
     }
+    /**
+     * Utility method to convert LongBinaryOperatorWithThrowable
+     * @param longbinaryoperator The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> asLongBinaryOperatorWithThrowable(java.util.function.LongBinaryOperator longbinaryoperator) {
+        return longbinaryoperator::applyAsLong;
+    }
 
     /** 
      * Overridden method of LongBinaryOperatorWithThrowable that will call applyAsLongWithThrowable, but catching any exceptions.
@@ -48,14 +57,18 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default LongBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default LongBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1, v2) -> {
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in LongBinaryOperatorWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -63,14 +76,21 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default LongBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in LongBinaryOperatorWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default LongBinaryOperatorWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

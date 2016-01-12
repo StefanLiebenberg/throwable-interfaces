@@ -21,6 +21,17 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
     static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> castFunctionWithThrowable(FunctionWithThrowable<T, R, E> functionwiththrowable) {
         return functionwiththrowable;
     }
+    /**
+     * Utility method to convert FunctionWithThrowable
+     * @param function The interface instance
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> asFunctionWithThrowable(java.util.function.Function<T, R> function) {
+        return function::apply;
+    }
 
     /** 
      * Overridden method of FunctionWithThrowable that will call applyWithThrowable, but catching any exceptions.
@@ -47,35 +58,49 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @throws E some exception
      */
     R applyWithThrowable(T v1) throws E;
-default java.util.function.Function<T, java.util.Optional<R>> thatReturnsOptional() {
-  return (v1) -> {
-    try {
-      return java.util.Optional.of(applyWithThrowable(v1));
-    } catch(Throwable throwable) {
-      return java.util.Optional.empty();
-    }
-  };
-}
-default java.util.function.Function<T, R> thatReturnsDefaultValue(R defaultReturnValue) {
-  return (v1) -> {
-    try {
-      return applyWithThrowable(v1);
-    } catch(Throwable throwable) {
-      return defaultReturnValue;
-    }
-  };
-}
 
 
     /**
-     * 
+     * @return A interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default FunctionWithThrowable<T, R, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    default java.util.function.Function<T, java.util.Optional<R>>    thatReturnsOptional() {
+      return (v1)     -> {
+        try {
+          return java.util.Optional.of(applyWithThrowable(v1));
+        } catch(Throwable throwable) {
+          return java.util.Optional.empty();
+        }
+      };
+    }
+
+
+    /**
+     * @return An interface that returns a default value if any exception occurs.
+     */
+    default java.util.function.Function<T, R> thatReturnsDefaultValue(R defaultReturnValue) {
+      return (v1) -> {
+        try {
+          return applyWithThrowable(v1);
+        } catch(Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default FunctionWithThrowable<T, R, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1) -> {
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in FunctionWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -83,14 +108,21 @@ default java.util.function.Function<T, R> thatReturnsDefaultValue(R defaultRetur
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default FunctionWithThrowable<T, R, E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in FunctionWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default FunctionWithThrowable<T, R, E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

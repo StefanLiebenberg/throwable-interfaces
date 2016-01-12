@@ -17,6 +17,15 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
     static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> castDoubleToIntFunctionWithThrowable(DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) {
         return doubletointfunctionwiththrowable;
     }
+    /**
+     * Utility method to convert DoubleToIntFunctionWithThrowable
+     * @param doubletointfunction The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> asDoubleToIntFunctionWithThrowable(java.util.function.DoubleToIntFunction doubletointfunction) {
+        return doubletointfunction::applyAsInt;
+    }
 
     /** 
      * Overridden method of DoubleToIntFunctionWithThrowable that will call applyAsIntWithThrowable, but catching any exceptions.
@@ -46,14 +55,18 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default DoubleToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default DoubleToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in DoubleToIntFunctionWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -61,14 +74,21 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default DoubleToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in DoubleToIntFunctionWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default DoubleToIntFunctionWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

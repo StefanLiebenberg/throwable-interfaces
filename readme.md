@@ -89,6 +89,48 @@ as a type, but with the internal of the new "WithThrowable" interface.
        return IOUtils.readFile(file);
     });
     
+### Convert Method
+   
+If you wanted to convert the original interface to the "WithThrowable" interface:
+    
+    Function<File, String> someFunction = ...;
+    Function<File, String> readingFunction = FunctionWithThrowable.asFunctionWithThrowable(someFunction);
+        
+        
+## Exception Handling
+
+The interfaces come with some handy methods:
+
+### withLogging(), withLogging(logger, level, message), withLogging(logger)
+
+Returns an interface that will log messages when a exception has occurred.
+
+    FunctionWithThrowable.castFunctionWithThrowable((file) -> {
+       return IOUtils.readFile(file);
+    }).withLogging();
+    
+
+### thatDoesNothing()
+
+Returns an interface that does nothing on exceptions. Only applicable on interfaces that specify no return type.
+
+    // no exception will be thrown
+    ConsumerWithThrowable.castConsumerWithThrowable((file) -> {
+       if(!file.exists()) {
+          throw new IOException("file does not exist");
+       }
+    }).thatDoesNothing(); 
+
+### thatReturnsOptional()
+
+
+Returns an interface that will return Optional of the return type, which will be empty if there has been an error.
+Only applicable on interfaces that return non-primitive types.
+
+### thatReturnsDefaultValue(defaultValue)
+
+Returns an interface that will return some defaultValue if an exception occurs. Only applicable on interfaces that specify a return type.
+    
     
 ## About the library
 

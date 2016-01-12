@@ -1,4 +1,4 @@
-package org.slieb.throwables;
+package org.slieb.generate;
 
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -6,26 +6,8 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
 
 public class TypeResolver {
-
-    public static Type getOptionalTypeForPrimitive(Type type) {
-        switch (((Class) type).getName()) {
-            case "double":
-                return OptionalDouble.class;
-            case "int":
-                return OptionalInt.class;
-            case "long":
-                return OptionalLong.class;
-            case "boolean":
-            default:
-                return null;
-        }
-    }
-
 
     public static boolean isTypePrimitive(Type type) {
         return type instanceof Class && ((Class) type).isPrimitive();

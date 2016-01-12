@@ -17,6 +17,15 @@ public interface IntConsumerWithThrowable<E extends Throwable> extends java.util
     static <E extends Throwable> IntConsumerWithThrowable<E> castIntConsumerWithThrowable(IntConsumerWithThrowable<E> intconsumerwiththrowable) {
         return intconsumerwiththrowable;
     }
+    /**
+     * Utility method to convert IntConsumerWithThrowable
+     * @param intconsumer The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> IntConsumerWithThrowable<E> asIntConsumerWithThrowable(java.util.function.IntConsumer intconsumer) {
+        return intconsumer::accept;
+    }
 
     /** 
      * Overridden method of IntConsumerWithThrowable that will call acceptWithThrowable, but catching any exceptions.
@@ -41,24 +50,33 @@ public interface IntConsumerWithThrowable<E extends Throwable> extends java.util
      * @throws E some exception
      */
     void acceptWithThrowable(int v1) throws E;
-default java.util.function.IntConsumer thatDoesNothing() {
-   return (v1) -> {
-    try {
-      acceptWithThrowable(v1);
-    } catch(Throwable ignored) {}
-  };
-}
 
 
     /**
-     * 
+     * @return A interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
-    default IntConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    default java.util.function.IntConsumer thatDoesNothing() {
+        return (v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch(Throwable ignored) {}
+        };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default IntConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1) -> {
             try {
                 acceptWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in IntConsumerWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -66,14 +84,21 @@ default java.util.function.IntConsumer thatDoesNothing() {
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default IntConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in IntConsumerWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default IntConsumerWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

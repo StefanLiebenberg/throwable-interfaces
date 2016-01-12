@@ -17,6 +17,15 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
     static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> castDoubleBinaryOperatorWithThrowable(DoubleBinaryOperatorWithThrowable<E> doublebinaryoperatorwiththrowable) {
         return doublebinaryoperatorwiththrowable;
     }
+    /**
+     * Utility method to convert DoubleBinaryOperatorWithThrowable
+     * @param doublebinaryoperator The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> asDoubleBinaryOperatorWithThrowable(java.util.function.DoubleBinaryOperator doublebinaryoperator) {
+        return doublebinaryoperator::applyAsDouble;
+    }
 
     /** 
      * Overridden method of DoubleBinaryOperatorWithThrowable that will call applyAsDoubleWithThrowable, but catching any exceptions.
@@ -48,14 +57,18 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default DoubleBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default DoubleBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1, v2) -> {
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in DoubleBinaryOperatorWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -63,14 +76,21 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default DoubleBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in DoubleBinaryOperatorWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default DoubleBinaryOperatorWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

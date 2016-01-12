@@ -17,6 +17,15 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
     static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
         return longtointfunctionwiththrowable;
     }
+    /**
+     * Utility method to convert LongToIntFunctionWithThrowable
+     * @param longtointfunction The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> LongToIntFunctionWithThrowable<E> asLongToIntFunctionWithThrowable(java.util.function.LongToIntFunction longtointfunction) {
+        return longtointfunction::applyAsInt;
+    }
 
     /** 
      * Overridden method of LongToIntFunctionWithThrowable that will call applyAsIntWithThrowable, but catching any exceptions.
@@ -46,14 +55,18 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default LongToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default LongToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in LongToIntFunctionWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -61,14 +74,21 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default LongToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in LongToIntFunctionWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default LongToIntFunctionWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

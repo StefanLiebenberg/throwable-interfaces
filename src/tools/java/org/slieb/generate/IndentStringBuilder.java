@@ -1,4 +1,4 @@
-package org.slieb.throwables;
+package org.slieb.generate;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -7,7 +7,6 @@ public class IndentStringBuilder implements Appendable {
 
     private final AtomicInteger atomicInteger;
     private final StringBuilder stringBuilder;
-
 
     public IndentStringBuilder() {
         atomicInteger = new AtomicInteger(0);

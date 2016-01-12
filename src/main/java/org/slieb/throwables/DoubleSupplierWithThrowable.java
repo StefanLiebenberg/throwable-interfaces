@@ -17,6 +17,15 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
     static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {
         return doublesupplierwiththrowable;
     }
+    /**
+     * Utility method to convert DoubleSupplierWithThrowable
+     * @param doublesupplier The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> DoubleSupplierWithThrowable<E> asDoubleSupplierWithThrowable(java.util.function.DoubleSupplier doublesupplier) {
+        return doublesupplier::getAsDouble;
+    }
 
     /** 
      * Overridden method of DoubleSupplierWithThrowable that will call getAsDoubleWithThrowable, but catching any exceptions.
@@ -44,14 +53,18 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default DoubleSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default DoubleSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return () -> {
             try {
                 return getAsDoubleWithThrowable();
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in DoubleSupplierWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -59,14 +72,21 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default DoubleSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in DoubleSupplierWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default DoubleSupplierWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

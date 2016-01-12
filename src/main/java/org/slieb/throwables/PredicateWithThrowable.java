@@ -19,6 +19,16 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
     static <T, E extends Throwable> PredicateWithThrowable<T, E> castPredicateWithThrowable(PredicateWithThrowable<T, E> predicatewiththrowable) {
         return predicatewiththrowable;
     }
+    /**
+     * Utility method to convert PredicateWithThrowable
+     * @param predicate The interface instance
+     * @param <T> Generic that corresponds to the same generic on Predicate  
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <T, E extends Throwable> PredicateWithThrowable<T, E> asPredicateWithThrowable(java.util.function.Predicate<T> predicate) {
+        return predicate::test;
+    }
 
     /** 
      * Overridden method of PredicateWithThrowable that will call testWithThrowable, but catching any exceptions.
@@ -48,14 +58,18 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default PredicateWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default PredicateWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1) -> {
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in PredicateWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -63,14 +77,21 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default PredicateWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in PredicateWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default PredicateWithThrowable<T, E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

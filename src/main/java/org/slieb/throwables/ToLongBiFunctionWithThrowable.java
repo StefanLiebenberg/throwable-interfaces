@@ -21,6 +21,17 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
     static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) {
         return tolongbifunctionwiththrowable;
     }
+    /**
+     * Utility method to convert ToLongBiFunctionWithThrowable
+     * @param tolongbifunction The interface instance
+     * @param <T> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <U> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> asToLongBiFunctionWithThrowable(java.util.function.ToLongBiFunction<T, U> tolongbifunction) {
+        return tolongbifunction::applyAsLong;
+    }
 
     /** 
      * Overridden method of ToLongBiFunctionWithThrowable that will call applyAsLongWithThrowable, but catching any exceptions.
@@ -52,14 +63,18 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default ToLongBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default ToLongBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return (v1, v2) -> {
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in ToLongBiFunctionWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -67,14 +82,21 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default ToLongBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in ToLongBiFunctionWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default ToLongBiFunctionWithThrowable<T, U, E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

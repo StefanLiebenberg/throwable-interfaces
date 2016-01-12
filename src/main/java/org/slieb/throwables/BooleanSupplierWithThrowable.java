@@ -17,6 +17,15 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
     static <E extends Throwable> BooleanSupplierWithThrowable<E> castBooleanSupplierWithThrowable(BooleanSupplierWithThrowable<E> booleansupplierwiththrowable) {
         return booleansupplierwiththrowable;
     }
+    /**
+     * Utility method to convert BooleanSupplierWithThrowable
+     * @param booleansupplier The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> BooleanSupplierWithThrowable<E> asBooleanSupplierWithThrowable(java.util.function.BooleanSupplier booleansupplier) {
+        return booleansupplier::getAsBoolean;
+    }
 
     /** 
      * Overridden method of BooleanSupplierWithThrowable that will call getAsBooleanWithThrowable, but catching any exceptions.
@@ -44,14 +53,18 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default BooleanSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default BooleanSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return () -> {
             try {
                 return getAsBooleanWithThrowable();
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in BooleanSupplierWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -59,14 +72,21 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default BooleanSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in BooleanSupplierWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default BooleanSupplierWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }

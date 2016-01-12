@@ -17,6 +17,15 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
     static <E extends Throwable> IntSupplierWithThrowable<E> castIntSupplierWithThrowable(IntSupplierWithThrowable<E> intsupplierwiththrowable) {
         return intsupplierwiththrowable;
     }
+    /**
+     * Utility method to convert IntSupplierWithThrowable
+     * @param intsupplier The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @return the cast interface
+     */
+    static <E extends Throwable> IntSupplierWithThrowable<E> asIntSupplierWithThrowable(java.util.function.IntSupplier intsupplier) {
+        return intsupplier::getAsInt;
+    }
 
     /** 
      * Overridden method of IntSupplierWithThrowable that will call getAsIntWithThrowable, but catching any exceptions.
@@ -44,14 +53,18 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
 
 
     /**
-     * 
+     * @param logger The logger to log exceptions on
+     * @param level The log level to use when logging exceptions
+     * @param message A message to use for logging exceptions
+     * @return An interface that will log all exceptions to given logger
      */
-    default IntSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+    @SuppressWarnings("Duplicates")
+    default IntSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
         return () -> {
             try {
                 return getAsIntWithThrowable();
             } catch (final Throwable throwable) {
-                logger.log(level, "exception in IntSupplierWithThrowable", throwable);
+                logger.log(level, message, throwable);
                 throw throwable;
             }
         };
@@ -59,14 +72,21 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
 
 
     /**
-     * 
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @param logger The logger instance to log exceptions on
+     * @return An interface that will log exceptions on given logger
      */
     default IntSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-  return withLogging(logger, java.util.logging.Level.WARNING);
-}
+        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in IntSupplierWithThrowable");
+    }
 
+
+    /**
+     * Will log WARNING level exceptions on logger if they occur within the interface
+     * @return An interface that will log exceptions on global logger
+     */
     default IntSupplierWithThrowable<E> withLogging() {
-  return withLogging(java.util.logging.Logger.getGlobal());
-}
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
 
 }
