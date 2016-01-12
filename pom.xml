@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.slieb</groupId>
     <name>throwable-interfaces</name>
     <artifactId>throwable-interfaces</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
     <description>A collection of standard interfaces that throw exceptions</description>
     <packaging>jar</packaging>
     <url>https://stefanliebenberg.github.io/throwable-interfaces</url>
@@ -36,7 +35,7 @@
         <developerConnection>
             scm:git:git@github.com:StefanLiebenberg/throwable-interfaces.git
         </developerConnection>
-        <tag>HEAD</tag>
+        <tag>throwable-interfaces-1.5</tag>
     </scm>
 
     <licenses>
