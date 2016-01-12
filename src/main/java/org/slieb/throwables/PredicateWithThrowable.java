@@ -9,8 +9,11 @@ package org.slieb.throwables;
  */
 @FunctionalInterface
 public interface PredicateWithThrowable<T, E extends Throwable> extends java.util.function.Predicate<T> {
+
+
     /**
      * Utility method to mark lambdas of type PredicateWithThrowable
+     *
      * @param predicatewiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on Predicate  
      * @param <E> The type this interface is allowed to throw
@@ -59,17 +62,16 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
 
     /**
      * @param logger The logger to log exceptions on
-     * @param level The log level to use when logging exceptions
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default PredicateWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
+    default PredicateWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
         return (v1) -> {
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, message, throwable);
+                logger.error(message, throwable);
                 throw throwable;
             }
         };
@@ -81,8 +83,8 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default PredicateWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
-        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in PredicateWithThrowable");
+    default PredicateWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
+        return withLogging(logger, "Exception in PredicateWithThrowable");
     }
 
 
@@ -91,7 +93,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @return An interface that will log exceptions on global logger
      */
     default PredicateWithThrowable<T, E> withLogging() {
-        return withLogging(java.util.logging.Logger.getGlobal());
+        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
 }

@@ -101,16 +101,16 @@ If you wanted to convert the original interface to the "WithThrowable" interface
 
 The interfaces come with some handy methods:
 
-### withLogging(), withLogging(logger, level, message), withLogging(logger)
+### withLogging(), withLogging(logger,  message), withLogging(logger)
 
-Returns an interface that will log messages when a exception has occurred.
+Returns an interface that will log messages when a exception has occurred. Uses slf4j loggers.
 
     FunctionWithThrowable.castFunctionWithThrowable((file) -> {
        return IOUtils.readFile(file);
     }).withLogging();
     
 
-### thatDoesNothing()
+### thatIgnoresThrowables()
 
 Returns an interface that does nothing on exceptions. Only applicable on interfaces that specify no return type.
 
@@ -119,7 +119,19 @@ Returns an interface that does nothing on exceptions. Only applicable on interfa
        if(!file.exists()) {
           throw new IOException("file does not exist");
        }
-    }).thatDoesNothing(); 
+    }).thatIgnoresThrowables();
+    
+    
+### thatIgnores(Class<? extends Throwable> ... throwableClasses)
+
+Returns an interface that does nothing on exceptions. Only applicable on interfaces that specify no return type.
+
+    // no exception will be thrown
+    ConsumerWithThrowable.castConsumerWithThrowable((file) -> {
+       if(!file.exists()) {
+          throw new IOException("file does not exist");
+       }
+    }).thatIgnores(IOException.class); 
 
 ### thatReturnsOptional()
 

@@ -9,8 +9,11 @@ package org.slieb.throwables;
  */
 @FunctionalInterface
 public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends java.util.function.DoubleFunction<R> {
+
+
     /**
      * Utility method to mark lambdas of type DoubleFunctionWithThrowable
+     *
      * @param doublefunctionwiththrowable The interface instance
      * @param <R> Generic that corresponds to the same generic on DoubleFunction  
      * @param <E> The type this interface is allowed to throw
@@ -87,17 +90,16 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends jav
 
     /**
      * @param logger The logger to log exceptions on
-     * @param level The log level to use when logging exceptions
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoubleFunctionWithThrowable<R, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
+    default DoubleFunctionWithThrowable<R, E> withLogging(org.slf4j.Logger logger, String message) {
         return (v1) -> {
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, message, throwable);
+                logger.error(message, throwable);
                 throw throwable;
             }
         };
@@ -109,8 +111,8 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends jav
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoubleFunctionWithThrowable<R, E> withLogging(java.util.logging.Logger logger) {
-        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in DoubleFunctionWithThrowable");
+    default DoubleFunctionWithThrowable<R, E> withLogging(org.slf4j.Logger logger) {
+        return withLogging(logger, "Exception in DoubleFunctionWithThrowable");
     }
 
 
@@ -119,7 +121,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends jav
      * @return An interface that will log exceptions on global logger
      */
     default DoubleFunctionWithThrowable<R, E> withLogging() {
-        return withLogging(java.util.logging.Logger.getGlobal());
+        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
 }

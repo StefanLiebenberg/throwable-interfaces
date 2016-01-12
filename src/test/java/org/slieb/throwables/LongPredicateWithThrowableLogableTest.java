@@ -13,7 +13,7 @@ public class LongPredicateWithThrowableLogableTest {
     @org.junit.Before
     public void setup() {
         tHandler = new ThrownHandler();
-        globalLogger = java.util.logging.Logger.getGlobal();
+        globalLogger = java.util.logging.Logger.getLogger("");
         globalLogger.addHandler(tHandler);
     }
 

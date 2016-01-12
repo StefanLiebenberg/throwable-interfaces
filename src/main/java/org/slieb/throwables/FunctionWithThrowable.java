@@ -10,8 +10,11 @@ package org.slieb.throwables;
  */
 @FunctionalInterface
 public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.util.function.Function<T, R> {
+
+
     /**
      * Utility method to mark lambdas of type FunctionWithThrowable
+     *
      * @param functionwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on Function  
      * @param <R> Generic that corresponds to the same generic on Function  
@@ -90,17 +93,16 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
 
     /**
      * @param logger The logger to log exceptions on
-     * @param level The log level to use when logging exceptions
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default FunctionWithThrowable<T, R, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
+    default FunctionWithThrowable<T, R, E> withLogging(org.slf4j.Logger logger, String message) {
         return (v1) -> {
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.log(level, message, throwable);
+                logger.error(message, throwable);
                 throw throwable;
             }
         };
@@ -112,8 +114,8 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default FunctionWithThrowable<T, R, E> withLogging(java.util.logging.Logger logger) {
-        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in FunctionWithThrowable");
+    default FunctionWithThrowable<T, R, E> withLogging(org.slf4j.Logger logger) {
+        return withLogging(logger, "Exception in FunctionWithThrowable");
     }
 
 
@@ -122,7 +124,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @return An interface that will log exceptions on global logger
      */
     default FunctionWithThrowable<T, R, E> withLogging() {
-        return withLogging(java.util.logging.Logger.getGlobal());
+        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
 }

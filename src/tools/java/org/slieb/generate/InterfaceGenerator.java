@@ -1,5 +1,7 @@
 package org.slieb.generate;
 
+import org.slf4j.Logger;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,7 +35,9 @@ public class InterfaceGenerator {
         try {
             String className = funcInterface.getSimpleName() + "WithThrowable";
             generateImplementation(funcInterface, className);
-            generateTest(funcInterface, className, className + "Test");
+            generateCastTest(funcInterface, className, className + "CastTest");
+            generateConvertTest(funcInterface, className, className + "ConvertTest");
+            generateIgnoresTest(funcInterface, className, className + "IgnoresTest");
             generateLogableTest(funcInterface, className, className + "LogableTest");
         } catch (Exception ignore) {
             ignore.printStackTrace();
@@ -44,8 +48,17 @@ public class InterfaceGenerator {
         generateFile(directory, packageName, className, getImplementationContent(funcInterface, className));
     }
 
-    public void generateTest(Class<?> funcInterface, String className, String testName) throws IOException {
-        generateFile(testDirectory, packageName, testName, getTestContent(funcInterface, className, testName));
+    public void generateCastTest(Class<?> funcInterface, String className, String testName) throws IOException {
+        generateFile(testDirectory, packageName, testName, getCastTestContent(funcInterface, className, testName));
+    }
+
+    public void generateConvertTest(Class<?> funcInterface, String className, String testName) throws IOException {
+        generateFile(testDirectory, packageName, testName, getConvertTestContent(funcInterface, className, testName));
+    }
+
+
+    public void generateIgnoresTest(Class<?> funcInterface, String className, String testName) throws IOException {
+        generateFile(testDirectory, packageName, testName, getIgnoresTestContent(funcInterface, className, testName));
     }
 
     public void generateLogableTest(Class<?> funcInterface, String className, String testName) throws IOException {
@@ -66,7 +79,7 @@ public class InterfaceGenerator {
         return new File(new File(directory, pkg.replaceAll("\\.", "/")), className + ".java");
     }
 
-    private String getTestContent(Class<?> funcInterface, String className, String testName) {
+    private String getCastTestContent(Class<?> funcInterface, String className, String testName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("package ").append(packageName).append(";\n");
         stringBuilder.append("import org.junit.Test;\n");
@@ -131,10 +144,153 @@ public class InterfaceGenerator {
         stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
         stringBuilder.append(" }\n\n");
 
-//        @Test
-//        public void testNormalOperation() {
 
-//        }
+        stringBuilder.append("}\n");
+
+        return stringBuilder.toString();
+    }
+
+    private String getConvertTestContent(Class<?> funcInterface, String className, String testName) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("package ").append(packageName).append(";\n");
+        stringBuilder.append("import org.junit.Test;\n");
+
+        stringBuilder.append("import static ").append(packageName).append(".").append(className).append(".as").append(className).append(";\n");
+
+        stringBuilder.append("public class ").append(testName);
+        stringBuilder.append(" {\n");
+
+        Method method = getMethod(funcInterface);
+        String params = getMethodParams(funcInterface, method, false);
+
+        stringBuilder.append(" @Test(expected = RuntimeException.class)\n");
+        stringBuilder.append(" public void testThrowRuntimeException() {\n");
+
+        stringBuilder.append("    as").append(className).append("(").append(params).append(" -> {\n");
+        stringBuilder.append("      throw new RuntimeException(\"expected error\");\n");
+        stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
+        stringBuilder.append(" }\n\n");
+
+
+        stringBuilder.append(" @Test(expected = Error.class)\n");
+        stringBuilder.append(" public void testThrowError() {\n");
+
+        stringBuilder.append("    as").append(className).append("(").append(params).append(" -> {\n");
+        stringBuilder.append("      throw new Error(\"expected error\");\n");
+        stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
+        stringBuilder.append(" }\n\n");
+
+        stringBuilder.append(" @Test\n");
+        stringBuilder.append(" public void testAnnotatedWithFunctionalInterface() {\n");
+        stringBuilder.append("    ").append(className).append(".class.isAnnotationPresent(FunctionalInterface.class);\n");
+        stringBuilder.append(" }\n\n");
+
+        stringBuilder.append(" @Test\n");
+        stringBuilder.append(" public void testNormalOperation() {\n");
+        stringBuilder.append("    as").append(className).append("(").append(params).append(" -> {\n");
+
+        final Class<?> returnType = method.getReturnType();
+        if (!returnType.equals(Void.TYPE)) {
+            stringBuilder.append(" return ").append(TypeResolver.getNullTypeFor(returnType)).append(";\n");
+        }
+        stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
+        stringBuilder.append(" }\n\n");
+
+
+        stringBuilder.append("}\n");
+
+        return stringBuilder.toString();
+    }
+
+
+    private String getIgnoresTestContent(Class<?> funcInterface, String className, String testName) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("package ").append(packageName).append(";\n");
+        stringBuilder.append("import org.junit.Test;\n");
+
+        stringBuilder.append("import static ").append(packageName).append(".").append(className).append(".cast").append(className).append(";\n");
+
+        stringBuilder.append("public class ").append(testName);
+        stringBuilder.append(" {\n");
+
+        Method method = getMethod(funcInterface);
+        String params = getMethodParams(funcInterface, method, false);
+
+        Type returnType = TypeResolver.resolveType(funcInterface, method.getGenericReturnType());
+        boolean hasReturnType = !returnType.equals(Void.TYPE);
+
+        if (!hasReturnType) {
+
+            stringBuilder.append(" @Test(expected = Exception.class)\n");
+            stringBuilder.append(" public void testThrowExceptionWithNoIgnores() {\n");
+
+            stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
+            stringBuilder.append("      throw new Exception(\"expected error\");\n");
+            stringBuilder.append("    }).thatIgnores().").append(getMethodCall(funcInterface, method)).append(";\n");
+            stringBuilder.append(" }\n\n");
+
+            stringBuilder.append(" @Test\n");
+            stringBuilder.append(" public void testThrowCheckedWithIgnore() {\n");
+            stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
+            stringBuilder.append("      throw new Exception(\"expected error\");\n");
+            stringBuilder.append("    }).thatIgnores(Exception.class).").append(getMethodCall(funcInterface, method)).append(";\n");
+            stringBuilder.append(" }\n\n");
+
+
+            stringBuilder.append(" @Test\n");
+            stringBuilder.append(" public void testThrowIgnoreThrowables() {\n");
+            stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
+            stringBuilder.append("      throw new Exception(\"expected error\");\n");
+            stringBuilder.append("    }).thatIgnoresThrowables().").append(getMethodCall(funcInterface, method)).append(";\n");
+            stringBuilder.append(" }\n\n");
+
+
+        }
+
+
+        stringBuilder.append(" @Test(expected = RuntimeException.class)\n");
+        stringBuilder.append(" public void testThrowRuntimeException() {\n");
+
+        stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
+        stringBuilder.append("      throw new RuntimeException(\"expected error\");\n");
+        stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
+        stringBuilder.append(" }\n\n");
+
+
+        stringBuilder.append(" @Test(expected = Error.class)\n");
+        stringBuilder.append(" public void testThrowError() {\n");
+
+        stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
+        stringBuilder.append("      throw new Error(\"expected error\");\n");
+        stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
+        stringBuilder.append(" }\n\n");
+
+
+        stringBuilder.append(" @Test(expected = Throwable.class)\n");
+        stringBuilder.append(" public void testThrowThrowable() {\n");
+
+        stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
+        stringBuilder.append("       throw new Throwable(\"expected throwable\");\n");
+        stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
+        stringBuilder.append(" }\n\n");
+
+
+        stringBuilder.append(" @Test\n");
+        stringBuilder.append(" public void testAnnotatedWithFunctionalInterface() {\n");
+        stringBuilder.append("    ").append(className).append(".class.isAnnotationPresent(FunctionalInterface.class);\n");
+        stringBuilder.append(" }\n\n");
+
+        stringBuilder.append(" @Test\n");
+        stringBuilder.append(" public void testNormalOperation() {\n");
+        stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
+
+        if (!returnType.equals(Void.TYPE)) {
+            stringBuilder.append(" return ").append(TypeResolver.getNullTypeFor(returnType)).append(";\n");
+        }
+        stringBuilder.append("    }).").append(getMethodCall(funcInterface, method)).append(";\n");
+        stringBuilder.append(" }\n\n");
+
 
         stringBuilder.append("}\n");
 
@@ -168,7 +324,7 @@ public class InterfaceGenerator {
 
         logableTest.setIndent(8);
         logableTest.indent().append("tHandler = new ThrownHandler();").newline();
-        logableTest.indent().append("globalLogger = java.util.logging.Logger.getGlobal();").newline();
+        logableTest.indent().append("globalLogger = java.util.logging.Logger.getLogger(\"\");").newline();
         logableTest.indent().append("globalLogger.addHandler(tHandler);").newline();
 
         logableTest.indents(4).append("}").newline();
@@ -297,7 +453,6 @@ public class InterfaceGenerator {
 
 
         Type returnType = TypeResolver.resolveType(funcInterface, method.getGenericReturnType());
-
         boolean hasReturnType = !returnType.equals(Void.TYPE);
         String returnTypeName = hasReturnType ? returnType.getTypeName() : "void";
         stringBuilder.append("\n");
@@ -429,6 +584,41 @@ public class InterfaceGenerator {
             }
         } else {
 
+
+            stringBuilder.newlines(2).setIndent(4);
+            stringBuilder.indent().append("/**").newline();
+            stringBuilder.indent().append(" * @return A interface that ignores some exceptions.").newline();
+            stringBuilder.indent().append(" */").newline();
+            stringBuilder.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
+            stringBuilder.indent().append("default ").append(className);
+            if (!generics.isEmpty()) {
+                stringBuilder.append(generateGenerics(generics, true, false));
+            }
+            stringBuilder.append(" thatIgnores(Class<? extends Throwable> ... throwableClasses) {").newline();
+
+            stringBuilder.setIndent(8);
+            stringBuilder.indent().append("return ").append(getMethodParams(funcInterface, method, false))
+                    .append(" -> {").newline();
+            stringBuilder.setIndent(12);
+            stringBuilder.indent().append("try {").newline();
+            stringBuilder.setIndent(16);
+            stringBuilder.indent().append(methodName).append("WithThrowable")
+                    .append(getMethodParams(funcInterface, method, false))
+                    .append(";").newline();
+            stringBuilder.setIndent(12);
+            stringBuilder.indent().append("} catch(Throwable throwable) {").newline();
+            stringBuilder.setIndent(16);
+            stringBuilder.indent().append("if(").append(Arrays.class.getCanonicalName()).append(".stream(throwableClasses).noneMatch((Class<? extends Throwable> klass) -> klass.isInstance(throwable))) {").newline();
+            stringBuilder.indents(20).append("throw throwable;").newline();
+            stringBuilder.indent().append("}").newline();
+            stringBuilder.setIndent(12);
+            stringBuilder.indent().append("}").newline();
+            stringBuilder.setIndent(8);
+            stringBuilder.indent().append("};").newline();
+            stringBuilder.setIndent(4);
+            stringBuilder.indent().append("}").newline();
+
+
             stringBuilder.newlines(2).setIndent(4);
             stringBuilder.indent().append("/**").newline();
             stringBuilder.indent().append(" * @return A interface that completely ignores exceptions. Consider using this method withLogging() as well.").newline();
@@ -437,7 +627,7 @@ public class InterfaceGenerator {
             if (!generics.isEmpty()) {
                 stringBuilder.append(generateGenerics(generics, false, false));
             }
-            stringBuilder.append(" thatDoesNothing() {").newline();
+            stringBuilder.append(" thatIgnoresThrowables() {").newline();
 
             stringBuilder.setIndent(8);
             stringBuilder.indent().append("return ").append(getMethodParams(funcInterface, method, false))
@@ -460,16 +650,14 @@ public class InterfaceGenerator {
         stringBuilder.setIndent(4);
         stringBuilder.indent().append("/**").newline();
         stringBuilder.indent().append(" * @param logger The logger to log exceptions on").newline();
-        stringBuilder.indent().append(" * @param level The log level to use when logging exceptions").newline();
         stringBuilder.indent().append(" * @param message A message to use for logging exceptions").newline();
         stringBuilder.indent().append(" * @return An interface that will log all exceptions to given logger").newline();
         stringBuilder.indent().append(" */").newline();
         stringBuilder.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
         stringBuilder.indent().append("default")
                 .append(" ").append(className).append(generateGenerics(generics, true, false))
-                .append(" withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {")
+                .append(" withLogging(").append(Logger.class.getCanonicalName()).append(" logger, String message) {")
                 .newline();
-
         stringBuilder.setIndent(8);
 
         stringBuilder.indent().append("return ").append(getMethodParams(funcInterface, method, false));
@@ -488,7 +676,7 @@ public class InterfaceGenerator {
 
         stringBuilder.indents(12).append("} catch (final Throwable throwable) {").newline();
         stringBuilder.setIndent(16);
-        stringBuilder.indent().append("logger.log(level, message, throwable);").newline();
+        stringBuilder.indent().append("logger.error(message, throwable);").newline();
         stringBuilder.indent().append("throw throwable;").newline();
 
         stringBuilder.setIndent(12);
@@ -506,9 +694,8 @@ public class InterfaceGenerator {
         stringBuilder.indent().append(" */").newline();
         stringBuilder.indent().append("default")
                 .append(" ").append(className).append(generateGenerics(generics, true, false))
-                .append(" withLogging(java.util.logging.Logger logger) {").newline();
-        stringBuilder.indents(8).append("return withLogging(logger, java.util.logging.Level.WARNING, \"Exception in ")
-                .append(className).append("\");").newline();
+                .append(" withLogging(").append(Logger.class.getCanonicalName()).append(" logger) {").newline();
+        stringBuilder.indents(8).append("return withLogging(logger, \"Exception in ").append(className).append("\");").newline();
         stringBuilder.indent().append("}").newline();
 
         stringBuilder.newlines(2);
@@ -519,7 +706,7 @@ public class InterfaceGenerator {
         stringBuilder.indent().append(" */").newline();
         stringBuilder.indent().append("default ").append(className).append(generateGenerics(generics, true, false))
                 .append(" withLogging() {").newline();
-        stringBuilder.indents(8).append("return withLogging(java.util.logging.Logger.getGlobal());\n");
+        stringBuilder.indents(8).append("return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));\n");
         stringBuilder.indent().append("}\n");
 
         stringBuilder.append("\n");
@@ -614,6 +801,7 @@ public class InterfaceGenerator {
 
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator("org.slieb.throwables", new File("src/main/java"), new File("src/test/java"));
         interfaceGenerator.generate(java.util.function.BiConsumer.class);
+
         interfaceGenerator.generate(java.util.function.BiFunction.class);
         interfaceGenerator.generate(java.util.function.BinaryOperator.class);
         interfaceGenerator.generate(java.util.function.BooleanSupplier.class);

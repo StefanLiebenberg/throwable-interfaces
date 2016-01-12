@@ -8,8 +8,11 @@ package org.slieb.throwables;
  */
 @FunctionalInterface
 public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends java.util.function.DoubleBinaryOperator {
+
+
     /**
      * Utility method to mark lambdas of type DoubleBinaryOperatorWithThrowable
+     *
      * @param doublebinaryoperatorwiththrowable The interface instance
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
@@ -58,17 +61,16 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
 
     /**
      * @param logger The logger to log exceptions on
-     * @param level The log level to use when logging exceptions
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoubleBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
+    default DoubleBinaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
         return (v1, v2) -> {
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.log(level, message, throwable);
+                logger.error(message, throwable);
                 throw throwable;
             }
         };
@@ -80,8 +82,8 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoubleBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in DoubleBinaryOperatorWithThrowable");
+    default DoubleBinaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger) {
+        return withLogging(logger, "Exception in DoubleBinaryOperatorWithThrowable");
     }
 
 
@@ -90,7 +92,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @return An interface that will log exceptions on global logger
      */
     default DoubleBinaryOperatorWithThrowable<E> withLogging() {
-        return withLogging(java.util.logging.Logger.getGlobal());
+        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
 }

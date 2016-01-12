@@ -8,8 +8,11 @@ package org.slieb.throwables;
  */
 @FunctionalInterface
 public interface IntSupplierWithThrowable<E extends Throwable> extends java.util.function.IntSupplier {
+
+
     /**
      * Utility method to mark lambdas of type IntSupplierWithThrowable
+     *
      * @param intsupplierwiththrowable The interface instance
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
@@ -54,17 +57,16 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
 
     /**
      * @param logger The logger to log exceptions on
-     * @param level The log level to use when logging exceptions
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default IntSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level, String message) {
+    default IntSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
         return () -> {
             try {
                 return getAsIntWithThrowable();
             } catch (final Throwable throwable) {
-                logger.log(level, message, throwable);
+                logger.error(message, throwable);
                 throw throwable;
             }
         };
@@ -76,8 +78,8 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default IntSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
-        return withLogging(logger, java.util.logging.Level.WARNING, "Exception in IntSupplierWithThrowable");
+    default IntSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger) {
+        return withLogging(logger, "Exception in IntSupplierWithThrowable");
     }
 
 
@@ -86,7 +88,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
      * @return An interface that will log exceptions on global logger
      */
     default IntSupplierWithThrowable<E> withLogging() {
-        return withLogging(java.util.logging.Logger.getGlobal());
+        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
 }
