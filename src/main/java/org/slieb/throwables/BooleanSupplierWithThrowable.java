@@ -41,4 +41,32 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
      * @throws E some exception
      */
     boolean getAsBooleanWithThrowable() throws E;
+
+
+    /**
+     * 
+     */
+    default BooleanSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return () -> {
+            try {
+                return getAsBooleanWithThrowable();
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in BooleanSupplierWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default BooleanSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default BooleanSupplierWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

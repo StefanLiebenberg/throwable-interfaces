@@ -47,4 +47,41 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
      * @throws E some exception
      */
     T applyWithThrowable(T v1, T v2) throws E;
+default java.util.function.BinaryOperator<T> thatReturnsDefaultValue(T defaultReturnValue) {
+  return (v1, v2) -> {
+    try {
+      return applyWithThrowable(v1, v2);
+    } catch(Throwable throwable) {
+      return defaultReturnValue;
+    }
+  };
+}
+
+
+    /**
+     * 
+     */
+    default BinaryOperatorWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in BinaryOperatorWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default BinaryOperatorWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default BinaryOperatorWithThrowable<T, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

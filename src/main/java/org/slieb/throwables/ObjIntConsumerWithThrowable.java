@@ -11,16 +11,17 @@ package org.slieb.throwables;
 public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends java.util.function.ObjIntConsumer<T> {
     /**
      * Utility method to mark lambdas of type ObjIntConsumerWithThrowable
+     *
      * @param objintconsumerwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on ObjIntConsumer  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                         Generic that corresponds to the same generic on ObjIntConsumer
+     * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ObjIntConsumerWithThrowable<T, E> castObjIntConsumerWithThrowable(ObjIntConsumerWithThrowable<T, E> objintconsumerwiththrowable) {
         return objintconsumerwiththrowable;
     }
 
-    /** 
+    /**
      * Overridden method of ObjIntConsumerWithThrowable that will call acceptWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -37,7 +38,7 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends jav
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -45,4 +46,41 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends jav
      * @throws E some exception
      */
     void acceptWithThrowable(T v1, int v2) throws E;
+
+    default java.util.function.ObjIntConsumer<T> thatDoesNothing() {
+        return (v1, v2) -> {
+            try {
+                acceptWithThrowable(v1, v2);
+            } catch (Throwable ignored) {
+            }
+        };
+    }
+
+
+    /**
+     *
+     */
+    default ObjIntConsumerWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                acceptWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in ObjIntConsumerWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     *
+     */
+    default ObjIntConsumerWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+        return withLogging(logger, java.util.logging.Level.WARNING);
+    }
+
+    default ObjIntConsumerWithThrowable<T, E> withLogging() {
+        return withLogging(java.util.logging.Logger.getGlobal());
+    }
+
 }

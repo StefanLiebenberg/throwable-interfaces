@@ -43,4 +43,32 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends java.uti
      * @throws E some exception
      */
     boolean testWithThrowable(int v1) throws E;
+
+
+    /**
+     * 
+     */
+    default IntPredicateWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in IntPredicateWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default IntPredicateWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default IntPredicateWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

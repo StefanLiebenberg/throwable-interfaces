@@ -45,4 +45,32 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(T v1) throws E;
+
+
+    /**
+     * 
+     */
+    default ToDoubleFunctionWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in ToDoubleFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default ToDoubleFunctionWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default ToDoubleFunctionWithThrowable<T, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

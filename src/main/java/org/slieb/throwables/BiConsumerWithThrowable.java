@@ -47,4 +47,39 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends java
      * @throws E some exception
      */
     void acceptWithThrowable(T v1, U v2) throws E;
+default java.util.function.BiConsumer<T, U> thatDoesNothing() {
+   return (v1, v2) -> {
+    try {
+      acceptWithThrowable(v1, v2);
+    } catch(Throwable ignored) {}
+  };
+}
+
+
+    /**
+     * 
+     */
+    default BiConsumerWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                acceptWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in BiConsumerWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default BiConsumerWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default BiConsumerWithThrowable<T, U, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

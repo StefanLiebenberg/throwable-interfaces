@@ -49,4 +49,32 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(T v1, U v2) throws E;
+
+
+    /**
+     * 
+     */
+    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in ToDoubleBiFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

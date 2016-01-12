@@ -43,4 +43,32 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends java.
      * @throws E some exception
      */
     boolean testWithThrowable(double v1) throws E;
+
+
+    /**
+     * 
+     */
+    default DoublePredicateWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in DoublePredicateWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default DoublePredicateWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default DoublePredicateWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

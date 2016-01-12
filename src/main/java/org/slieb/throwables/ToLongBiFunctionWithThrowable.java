@@ -49,4 +49,32 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @throws E some exception
      */
     long applyAsLongWithThrowable(T v1, U v2) throws E;
+
+
+    /**
+     * 
+     */
+    default ToLongBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyAsLongWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in ToLongBiFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default ToLongBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default ToLongBiFunctionWithThrowable<T, U, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

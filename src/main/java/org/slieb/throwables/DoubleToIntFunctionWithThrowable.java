@@ -43,4 +43,32 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
      * @throws E some exception
      */
     int applyAsIntWithThrowable(double v1) throws E;
+
+
+    /**
+     * 
+     */
+    default DoubleToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsIntWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in DoubleToIntFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default DoubleToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default DoubleToIntFunctionWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

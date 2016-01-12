@@ -43,4 +43,32 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
      * @throws E some exception
      */
     int applyAsIntWithThrowable(long v1) throws E;
+
+
+    /**
+     * 
+     */
+    default LongToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsIntWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongToIntFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongToIntFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongToIntFunctionWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

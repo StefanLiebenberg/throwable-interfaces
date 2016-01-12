@@ -43,4 +43,32 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(long v1) throws E;
+
+
+    /**
+     * 
+     */
+    default LongToDoubleFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongToDoubleFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongToDoubleFunctionWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongToDoubleFunctionWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

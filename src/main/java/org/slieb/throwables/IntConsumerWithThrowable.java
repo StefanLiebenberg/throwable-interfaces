@@ -41,4 +41,39 @@ public interface IntConsumerWithThrowable<E extends Throwable> extends java.util
      * @throws E some exception
      */
     void acceptWithThrowable(int v1) throws E;
+default java.util.function.IntConsumer thatDoesNothing() {
+   return (v1) -> {
+    try {
+      acceptWithThrowable(v1);
+    } catch(Throwable ignored) {}
+  };
+}
+
+
+    /**
+     * 
+     */
+    default IntConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in IntConsumerWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default IntConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default IntConsumerWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

@@ -45,4 +45,50 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends jav
      * @throws E some exception
      */
     R applyWithThrowable(double v1) throws E;
+default java.util.function.DoubleFunction<java.util.Optional<R>> thatReturnsOptional() {
+  return (v1) -> {
+    try {
+      return java.util.Optional.of(applyWithThrowable(v1));
+    } catch(Throwable throwable) {
+      return java.util.Optional.empty();
+    }
+  };
+}
+default java.util.function.DoubleFunction<R> thatReturnsDefaultValue(R defaultReturnValue) {
+  return (v1) -> {
+    try {
+      return applyWithThrowable(v1);
+    } catch(Throwable throwable) {
+      return defaultReturnValue;
+    }
+  };
+}
+
+
+    /**
+     * 
+     */
+    default DoubleFunctionWithThrowable<R, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in DoubleFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default DoubleFunctionWithThrowable<R, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default DoubleFunctionWithThrowable<R, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

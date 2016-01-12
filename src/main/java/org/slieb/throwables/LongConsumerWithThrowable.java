@@ -41,4 +41,39 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends java.uti
      * @throws E some exception
      */
     void acceptWithThrowable(long v1) throws E;
+default java.util.function.LongConsumer thatDoesNothing() {
+   return (v1) -> {
+    try {
+      acceptWithThrowable(v1);
+    } catch(Throwable ignored) {}
+  };
+}
+
+
+    /**
+     * 
+     */
+    default LongConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongConsumerWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongConsumerWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

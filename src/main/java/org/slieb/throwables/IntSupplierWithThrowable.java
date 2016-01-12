@@ -41,4 +41,32 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
      * @throws E some exception
      */
     int getAsIntWithThrowable() throws E;
+
+
+    /**
+     * 
+     */
+    default IntSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return () -> {
+            try {
+                return getAsIntWithThrowable();
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in IntSupplierWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default IntSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default IntSupplierWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

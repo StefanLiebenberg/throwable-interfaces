@@ -43,4 +43,32 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends j
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(double v1) throws E;
+
+
+    /**
+     * 
+     */
+    default DoubleUnaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in DoubleUnaryOperatorWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default DoubleUnaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default DoubleUnaryOperatorWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

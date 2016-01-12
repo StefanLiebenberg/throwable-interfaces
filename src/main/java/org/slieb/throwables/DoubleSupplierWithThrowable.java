@@ -41,4 +41,32 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
      * @throws E some exception
      */
     double getAsDoubleWithThrowable() throws E;
+
+
+    /**
+     * 
+     */
+    default DoubleSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return () -> {
+            try {
+                return getAsDoubleWithThrowable();
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in DoubleSupplierWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default DoubleSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default DoubleSupplierWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

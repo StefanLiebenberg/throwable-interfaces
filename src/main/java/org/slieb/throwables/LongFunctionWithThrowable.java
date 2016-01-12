@@ -45,4 +45,50 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
      * @throws E some exception
      */
     R applyWithThrowable(long v1) throws E;
+default java.util.function.LongFunction<java.util.Optional<R>> thatReturnsOptional() {
+  return (v1) -> {
+    try {
+      return java.util.Optional.of(applyWithThrowable(v1));
+    } catch(Throwable throwable) {
+      return java.util.Optional.empty();
+    }
+  };
+}
+default java.util.function.LongFunction<R> thatReturnsDefaultValue(R defaultReturnValue) {
+  return (v1) -> {
+    try {
+      return applyWithThrowable(v1);
+    } catch(Throwable throwable) {
+      return defaultReturnValue;
+    }
+  };
+}
+
+
+    /**
+     * 
+     */
+    default LongFunctionWithThrowable<R, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongFunctionWithThrowable<R, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongFunctionWithThrowable<R, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

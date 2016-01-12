@@ -45,4 +45,41 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
      * @throws E some exception
      */
     T applyWithThrowable(T v1) throws E;
+default java.util.function.UnaryOperator<T> thatReturnsDefaultValue(T defaultReturnValue) {
+  return (v1) -> {
+    try {
+      return applyWithThrowable(v1);
+    } catch(Throwable throwable) {
+      return defaultReturnValue;
+    }
+  };
+}
+
+
+    /**
+     * 
+     */
+    default UnaryOperatorWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in UnaryOperatorWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default UnaryOperatorWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default UnaryOperatorWithThrowable<T, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

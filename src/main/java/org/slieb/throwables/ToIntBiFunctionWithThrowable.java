@@ -49,4 +49,32 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @throws E some exception
      */
     int applyAsIntWithThrowable(T v1, U v2) throws E;
+
+
+    /**
+     * 
+     */
+    default ToIntBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyAsIntWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in ToIntBiFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default ToIntBiFunctionWithThrowable<T, U, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default ToIntBiFunctionWithThrowable<T, U, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

@@ -43,4 +43,32 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
      * @throws E some exception
      */
     long applyAsLongWithThrowable(long v1) throws E;
+
+
+    /**
+     * 
+     */
+    default LongUnaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsLongWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongUnaryOperatorWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongUnaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongUnaryOperatorWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

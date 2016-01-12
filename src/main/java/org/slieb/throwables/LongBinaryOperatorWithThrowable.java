@@ -45,4 +45,32 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
      * @throws E some exception
      */
     long applyAsLongWithThrowable(long v1, long v2) throws E;
+
+
+    /**
+     * 
+     */
+    default LongBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyAsLongWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongBinaryOperatorWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongBinaryOperatorWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

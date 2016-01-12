@@ -43,4 +43,32 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
      * @throws E some exception
      */
     boolean testWithThrowable(long v1) throws E;
+
+
+    /**
+     * 
+     */
+    default LongPredicateWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongPredicateWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongPredicateWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongPredicateWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

@@ -43,4 +43,50 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
      * @throws E some exception
      */
     T getWithThrowable() throws E;
+default java.util.function.Supplier<java.util.Optional<T>> thatReturnsOptional() {
+  return () -> {
+    try {
+      return java.util.Optional.of(getWithThrowable());
+    } catch(Throwable throwable) {
+      return java.util.Optional.empty();
+    }
+  };
+}
+default java.util.function.Supplier<T> thatReturnsDefaultValue(T defaultReturnValue) {
+  return () -> {
+    try {
+      return getWithThrowable();
+    } catch(Throwable throwable) {
+      return defaultReturnValue;
+    }
+  };
+}
+
+
+    /**
+     * 
+     */
+    default SupplierWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return () -> {
+            try {
+                return getWithThrowable();
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in SupplierWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default SupplierWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default SupplierWithThrowable<T, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

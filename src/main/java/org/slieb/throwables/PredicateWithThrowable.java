@@ -45,4 +45,32 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @throws E some exception
      */
     boolean testWithThrowable(T v1) throws E;
+
+
+    /**
+     * 
+     */
+    default PredicateWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in PredicateWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default PredicateWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default PredicateWithThrowable<T, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

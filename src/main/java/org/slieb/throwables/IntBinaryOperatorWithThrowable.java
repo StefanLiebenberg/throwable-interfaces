@@ -45,4 +45,32 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
      * @throws E some exception
      */
     int applyAsIntWithThrowable(int v1, int v2) throws E;
+
+
+    /**
+     * 
+     */
+    default IntBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyAsIntWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in IntBinaryOperatorWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default IntBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default IntBinaryOperatorWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

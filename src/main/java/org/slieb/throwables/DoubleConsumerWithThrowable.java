@@ -41,4 +41,39 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends java.u
      * @throws E some exception
      */
     void acceptWithThrowable(double v1) throws E;
+default java.util.function.DoubleConsumer thatDoesNothing() {
+   return (v1) -> {
+    try {
+      acceptWithThrowable(v1);
+    } catch(Throwable ignored) {}
+  };
+}
+
+
+    /**
+     * 
+     */
+    default DoubleConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in DoubleConsumerWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default DoubleConsumerWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default DoubleConsumerWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

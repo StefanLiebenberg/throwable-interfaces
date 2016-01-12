@@ -45,4 +45,32 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends java
      * @throws E some exception
      */
     int applyAsIntWithThrowable(T v1) throws E;
+
+
+    /**
+     * 
+     */
+    default ToIntFunctionWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsIntWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in ToIntFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default ToIntFunctionWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default ToIntFunctionWithThrowable<T, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

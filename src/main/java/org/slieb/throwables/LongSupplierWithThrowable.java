@@ -41,4 +41,32 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends java.uti
      * @throws E some exception
      */
     long getAsLongWithThrowable() throws E;
+
+
+    /**
+     * 
+     */
+    default LongSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return () -> {
+            try {
+                return getAsLongWithThrowable();
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in LongSupplierWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default LongSupplierWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default LongSupplierWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

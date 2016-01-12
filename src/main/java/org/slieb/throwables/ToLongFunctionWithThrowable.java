@@ -45,4 +45,32 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends jav
      * @throws E some exception
      */
     long applyAsLongWithThrowable(T v1) throws E;
+
+
+    /**
+     * 
+     */
+    default ToLongFunctionWithThrowable<T, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1) -> {
+            try {
+                return applyAsLongWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in ToLongFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default ToLongFunctionWithThrowable<T, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default ToLongFunctionWithThrowable<T, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

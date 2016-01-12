@@ -45,4 +45,32 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(double v1, double v2) throws E;
+
+
+    /**
+     * 
+     */
+    default DoubleBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in DoubleBinaryOperatorWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default DoubleBinaryOperatorWithThrowable<E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default DoubleBinaryOperatorWithThrowable<E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }

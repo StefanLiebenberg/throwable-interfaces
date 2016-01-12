@@ -51,4 +51,50 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
      * @throws E some exception
      */
     R applyWithThrowable(T v1, U v2) throws E;
+default java.util.function.BiFunction<T, U, java.util.Optional<R>> thatReturnsOptional() {
+  return (v1, v2) -> {
+    try {
+      return java.util.Optional.of(applyWithThrowable(v1, v2));
+    } catch(Throwable throwable) {
+      return java.util.Optional.empty();
+    }
+  };
+}
+default java.util.function.BiFunction<T, U, R> thatReturnsDefaultValue(R defaultReturnValue) {
+  return (v1, v2) -> {
+    try {
+      return applyWithThrowable(v1, v2);
+    } catch(Throwable throwable) {
+      return defaultReturnValue;
+    }
+  };
+}
+
+
+    /**
+     * 
+     */
+    default BiFunctionWithThrowable<T, U, R, E> withLogging(java.util.logging.Logger logger, java.util.logging.Level level) {
+        return (v1, v2) -> {
+            try {
+                return applyWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                logger.log(level, "exception in BiFunctionWithThrowable", throwable);
+                throw throwable;
+            }
+        };
+    }
+
+
+    /**
+     * 
+     */
+    default BiFunctionWithThrowable<T, U, R, E> withLogging(java.util.logging.Logger logger) {
+  return withLogging(logger, java.util.logging.Level.WARNING);
+}
+
+    default BiFunctionWithThrowable<T, U, R, E> withLogging() {
+  return withLogging(java.util.logging.Logger.getGlobal());
+}
+
 }
