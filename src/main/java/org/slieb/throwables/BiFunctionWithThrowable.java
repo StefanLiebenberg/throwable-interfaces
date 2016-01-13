@@ -1,7 +1,11 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.BiFunction
+ * Generated from BiFunction
  * Extends java.util.function.BiFunction to allow for a checked exception.
  *
  * @param <T> some generic flag
@@ -10,7 +14,7 @@ package org.slieb.throwables;
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends java.util.function.BiFunction<T, U, R> {
+public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends BiFunction<T, U, R> {
 
 
     /**
@@ -23,7 +27,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {
+    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {
         return bifunctionwiththrowable;
     }
     /**
@@ -35,7 +39,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> asBiFunctionWithThrowable(java.util.function.BiFunction<T, U, R> bifunction) {
+    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> asBiFunctionWithThrowable(final BiFunction<T, U, R> bifunction) {
         return bifunction::apply;
     }
 
@@ -47,13 +51,13 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
      * @return the value
      */
     @Override
-    default R apply(T v1, U v2) {
+    default R apply(final T v1, final U v2) {
         try {
             return applyWithThrowable(v1, v2);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -65,13 +69,13 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
      * @return the value
      * @throws E some exception
      */
-    R applyWithThrowable(T v1, U v2) throws E;
+    R applyWithThrowable(final T v1, final U v2) throws E;
 
 
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.BiFunction<T, U, java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
+    default BiFunction<T, U, java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
       return (v1, v2)     -> {
         try {
           return java.util.Optional.of(applyWithThrowable(v1, v2));
@@ -85,7 +89,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.BiFunction<T, U, R> thatReturnsOnCatch(R defaultReturnValue) {
+    default BiFunction<T, U, R> thatReturnsOnCatch(R defaultReturnValue) {
       return (v1, v2) -> {
         try {
           return applyWithThrowable(v1, v2);
@@ -101,9 +105,8 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default BiFunctionWithThrowable<T, U, R, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1, v2) -> {
+    default BiFunctionWithThrowable<T, U, R, E> withLogging(Logger logger, String message) {
+        return (final T v1, final U v2) -> {
             try {
                 return applyWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
@@ -120,7 +123,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
      * @return An interface that will log exceptions on given logger
      */
     default BiFunctionWithThrowable<T, U, R, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in BiFunctionWithThrowable");
+        return withLogging(logger, "Exception in BiFunctionWithThrowable with arguments {} {}");
     }
 
 
@@ -132,4 +135,21 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends j
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default BiFunctionWithThrowable<T, U, R, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1, final U v2) -> {
+            try {
+                return applyWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

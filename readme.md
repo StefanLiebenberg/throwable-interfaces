@@ -110,7 +110,7 @@ Returns an interface that will log messages when a exception has occurred. Uses 
     }).withLogging();
     
 
-### thatIgnoresThrowables()
+### thatIgnoresExceptions()
 
 Returns an interface that does nothing on exceptions. Only applicable on interfaces that specify no return type.
 
@@ -119,7 +119,7 @@ Returns an interface that does nothing on exceptions. Only applicable on interfa
        if(!file.exists()) {
           throw new IOException("file does not exist");
        }
-    }).thatIgnoresThrowables();
+    }).thatIgnoresExceptions();
     
     
 ### thatIgnores(Class<? extends Throwable> ... throwableClasses)

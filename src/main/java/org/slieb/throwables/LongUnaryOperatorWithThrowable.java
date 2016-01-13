@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.LongUnaryOperator;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.LongUnaryOperator
+ * Generated from LongUnaryOperator
  * Extends java.util.function.LongUnaryOperator to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends java.util.function.LongUnaryOperator {
+public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends LongUnaryOperator {
 
 
     /**
@@ -17,7 +21,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) {
+    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(final LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) {
         return longunaryoperatorwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> asLongUnaryOperatorWithThrowable(java.util.function.LongUnaryOperator longunaryoperator) {
+    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> asLongUnaryOperatorWithThrowable(final LongUnaryOperator longunaryoperator) {
         return longunaryoperator::applyAsLong;
     }
 
@@ -37,13 +41,13 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
      * @return the value
      */
     @Override
-    default long applyAsLong(long v1) {
+    default long applyAsLong(final long v1) {
         try {
             return applyAsLongWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -54,7 +58,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
      * @return the value
      * @throws E some exception
      */
-    long applyAsLongWithThrowable(long v1) throws E;
+    long applyAsLongWithThrowable(final long v1) throws E;
 
 
     /**
@@ -62,9 +66,8 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default LongUnaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default LongUnaryOperatorWithThrowable<E> withLogging(Logger logger, String message) {
+        return (final long v1) -> {
             try {
                 return applyAsLongWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -81,7 +84,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
      * @return An interface that will log exceptions on given logger
      */
     default LongUnaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongUnaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in LongUnaryOperatorWithThrowable with arguments {}");
     }
 
 
@@ -93,4 +96,21 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends jav
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongUnaryOperatorWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return (final long v1) -> {
+            try {
+                return applyAsLongWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

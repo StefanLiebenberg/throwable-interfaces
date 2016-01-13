@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.ObjLongConsumer;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.ObjLongConsumer
+ * Generated from ObjLongConsumer
  * Extends java.util.function.ObjLongConsumer to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends java.util.function.ObjLongConsumer<T> {
+public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ObjLongConsumer<T> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ja
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) {
+    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(final ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) {
         return objlongconsumerwiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ja
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> asObjLongConsumerWithThrowable(java.util.function.ObjLongConsumer<T> objlongconsumer) {
+    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> asObjLongConsumerWithThrowable(final ObjLongConsumer<T> objlongconsumer) {
         return objlongconsumer::accept;
     }
 
@@ -40,13 +44,13 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ja
      * @param v2 parameter to overridden method
      */
     @Override
-    default void accept(T v1, long v2) {
+    default void accept(final T v1, final long v2) {
         try {
             acceptWithThrowable(v1, v2);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -57,32 +61,14 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ja
      * @param v2 parameter to overridden method
      * @throws E some exception
      */
-    void acceptWithThrowable(T v1, long v2) throws E;
-
-
-    /**
-     * @param throwableClasses A varargs of throwable types to ignore.
-     * @return An interface that ignores some exceptions.
-     */
-    @SuppressWarnings("Duplicates")
-    default ObjLongConsumerWithThrowable<T, E> thatIgnores(Class<? extends Throwable> ... throwableClasses) {
-        return (v1, v2) -> {
-            try {
-                acceptWithThrowable(v1, v2);
-            } catch(Throwable throwable) {
-                if(java.util.Arrays.stream(throwableClasses).noneMatch((Class<? extends Throwable> klass) -> klass.isInstance(throwable))) {
-                    throw throwable;
-                }
-            }
-        };
-    }
+    void acceptWithThrowable(final T v1, final long v2) throws E;
 
 
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
-    default java.util.function.ObjLongConsumer<T> thatIgnoresThrowables() {
-        return (v1, v2) -> {
+    default ObjLongConsumer<T> thatIgnoresExceptions() {
+        return (final T v1, final long v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
             } catch(Throwable ignored) {}
@@ -95,9 +81,8 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ja
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default ObjLongConsumerWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1, v2) -> {
+    default ObjLongConsumerWithThrowable<T, E> withLogging(Logger logger, String message) {
+        return (final T v1, final long v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
@@ -114,7 +99,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ja
      * @return An interface that will log exceptions on given logger
      */
     default ObjLongConsumerWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ObjLongConsumerWithThrowable");
+        return withLogging(logger, "Exception in ObjLongConsumerWithThrowable with arguments {} {}");
     }
 
 
@@ -126,4 +111,21 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends ja
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default ObjLongConsumerWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1, final long v2) -> {
+            try {
+                acceptWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

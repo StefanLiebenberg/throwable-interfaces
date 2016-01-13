@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.Supplier
+ * Generated from Supplier
  * Extends java.util.function.Supplier to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface SupplierWithThrowable<T, E extends Throwable> extends java.util.function.Supplier<T> {
+public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<T> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> SupplierWithThrowable<T, E> castSupplierWithThrowable(SupplierWithThrowable<T, E> supplierwiththrowable) {
+    static <T, E extends Throwable> SupplierWithThrowable<T, E> castSupplierWithThrowable(final SupplierWithThrowable<T, E> supplierwiththrowable) {
         return supplierwiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> SupplierWithThrowable<T, E> asSupplierWithThrowable(java.util.function.Supplier<T> supplier) {
+    static <T, E extends Throwable> SupplierWithThrowable<T, E> asSupplierWithThrowable(final Supplier<T> supplier) {
         return supplier::get;
     }
 
@@ -45,7 +49,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -61,7 +65,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.Supplier<java.util.Optional<T>>    thatReturnsOptionalOnCatch() {
+    default Supplier<java.util.Optional<T>>    thatReturnsOptionalOnCatch() {
       return ()     -> {
         try {
           return java.util.Optional.of(getWithThrowable());
@@ -75,7 +79,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.Supplier<T> thatReturnsOnCatch(T defaultReturnValue) {
+    default Supplier<T> thatReturnsOnCatch(T defaultReturnValue) {
       return () -> {
         try {
           return getWithThrowable();
@@ -91,8 +95,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default SupplierWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
+    default SupplierWithThrowable<T, E> withLogging(Logger logger, String message) {
         return () -> {
             try {
                 return getWithThrowable();
@@ -110,7 +113,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
      * @return An interface that will log exceptions on given logger
      */
     default SupplierWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in SupplierWithThrowable");
+        return withLogging(logger, "Exception in SupplierWithThrowable with arguments ");
     }
 
 
@@ -122,4 +125,21 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends java.util
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default SupplierWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+        return () -> {
+            try {
+                return getWithThrowable();
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.LongToDoubleFunction;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.LongToDoubleFunction
+ * Generated from LongToDoubleFunction
  * Extends java.util.function.LongToDoubleFunction to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends java.util.function.LongToDoubleFunction {
+public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends LongToDoubleFunction {
 
 
     /**
@@ -17,7 +21,7 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongToDoubleFunctionWithThrowable<E> castLongToDoubleFunctionWithThrowable(LongToDoubleFunctionWithThrowable<E> longtodoublefunctionwiththrowable) {
+    static <E extends Throwable> LongToDoubleFunctionWithThrowable<E> castLongToDoubleFunctionWithThrowable(final LongToDoubleFunctionWithThrowable<E> longtodoublefunctionwiththrowable) {
         return longtodoublefunctionwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongToDoubleFunctionWithThrowable<E> asLongToDoubleFunctionWithThrowable(java.util.function.LongToDoubleFunction longtodoublefunction) {
+    static <E extends Throwable> LongToDoubleFunctionWithThrowable<E> asLongToDoubleFunctionWithThrowable(final LongToDoubleFunction longtodoublefunction) {
         return longtodoublefunction::applyAsDouble;
     }
 
@@ -37,13 +41,13 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @return the value
      */
     @Override
-    default double applyAsDouble(long v1) {
+    default double applyAsDouble(final long v1) {
         try {
             return applyAsDoubleWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -54,7 +58,7 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @return the value
      * @throws E some exception
      */
-    double applyAsDoubleWithThrowable(long v1) throws E;
+    double applyAsDoubleWithThrowable(final long v1) throws E;
 
 
     /**
@@ -62,9 +66,8 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default LongToDoubleFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default LongToDoubleFunctionWithThrowable<E> withLogging(Logger logger, String message) {
+        return (final long v1) -> {
             try {
                 return applyAsDoubleWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -81,7 +84,7 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @return An interface that will log exceptions on given logger
      */
     default LongToDoubleFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongToDoubleFunctionWithThrowable");
+        return withLogging(logger, "Exception in LongToDoubleFunctionWithThrowable with arguments {}");
     }
 
 
@@ -93,4 +96,21 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongToDoubleFunctionWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return (final long v1) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

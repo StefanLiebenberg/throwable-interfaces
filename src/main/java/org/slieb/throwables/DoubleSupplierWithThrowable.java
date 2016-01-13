@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.DoubleSupplier
+ * Generated from DoubleSupplier
  * Extends java.util.function.DoubleSupplier to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.util.function.DoubleSupplier {
+public interface DoubleSupplierWithThrowable<E extends Throwable> extends DoubleSupplier {
 
 
     /**
@@ -17,7 +21,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {
+    static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(final DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {
         return doublesupplierwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleSupplierWithThrowable<E> asDoubleSupplierWithThrowable(java.util.function.DoubleSupplier doublesupplier) {
+    static <E extends Throwable> DoubleSupplierWithThrowable<E> asDoubleSupplierWithThrowable(final DoubleSupplier doublesupplier) {
         return doublesupplier::getAsDouble;
     }
 
@@ -42,7 +46,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -60,8 +64,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default DoubleSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
+    default DoubleSupplierWithThrowable<E> withLogging(Logger logger, String message) {
         return () -> {
             try {
                 return getAsDoubleWithThrowable();
@@ -79,7 +82,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
      * @return An interface that will log exceptions on given logger
      */
     default DoubleSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoubleSupplierWithThrowable");
+        return withLogging(logger, "Exception in DoubleSupplierWithThrowable with arguments ");
     }
 
 
@@ -91,4 +94,21 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends java.u
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default DoubleSupplierWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return () -> {
+            try {
+                return getAsDoubleWithThrowable();
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

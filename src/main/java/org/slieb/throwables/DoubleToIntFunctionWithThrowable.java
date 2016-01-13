@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.DoubleToIntFunction;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.DoubleToIntFunction
+ * Generated from DoubleToIntFunction
  * Extends java.util.function.DoubleToIntFunction to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends java.util.function.DoubleToIntFunction {
+public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends DoubleToIntFunction {
 
 
     /**
@@ -17,7 +21,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> castDoubleToIntFunctionWithThrowable(DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) {
+    static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> castDoubleToIntFunctionWithThrowable(final DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) {
         return doubletointfunctionwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> asDoubleToIntFunctionWithThrowable(java.util.function.DoubleToIntFunction doubletointfunction) {
+    static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> asDoubleToIntFunctionWithThrowable(final DoubleToIntFunction doubletointfunction) {
         return doubletointfunction::applyAsInt;
     }
 
@@ -37,13 +41,13 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
      * @return the value
      */
     @Override
-    default int applyAsInt(double v1) {
+    default int applyAsInt(final double v1) {
         try {
             return applyAsIntWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -54,7 +58,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
      * @return the value
      * @throws E some exception
      */
-    int applyAsIntWithThrowable(double v1) throws E;
+    int applyAsIntWithThrowable(final double v1) throws E;
 
 
     /**
@@ -62,9 +66,8 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default DoubleToIntFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default DoubleToIntFunctionWithThrowable<E> withLogging(Logger logger, String message) {
+        return (final double v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -81,7 +84,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
      * @return An interface that will log exceptions on given logger
      */
     default DoubleToIntFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoubleToIntFunctionWithThrowable");
+        return withLogging(logger, "Exception in DoubleToIntFunctionWithThrowable with arguments {}");
     }
 
 
@@ -93,4 +96,21 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends j
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default DoubleToIntFunctionWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return (final double v1) -> {
+            try {
+                return applyAsIntWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

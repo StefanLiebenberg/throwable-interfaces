@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.UnaryOperator
+ * Generated from UnaryOperator
  * Extends java.util.function.UnaryOperator to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java.util.function.UnaryOperator<T> {
+public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends UnaryOperator<T> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> castUnaryOperatorWithThrowable(UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) {
+    static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> castUnaryOperatorWithThrowable(final UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) {
         return unaryoperatorwiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> asUnaryOperatorWithThrowable(java.util.function.UnaryOperator<T> unaryoperator) {
+    static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> asUnaryOperatorWithThrowable(final UnaryOperator<T> unaryoperator) {
         return unaryoperator::apply;
     }
 
@@ -40,13 +44,13 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
      * @return the value
      */
     @Override
-    default T apply(T v1) {
+    default T apply(final T v1) {
         try {
             return applyWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -57,13 +61,13 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
      * @return the value
      * @throws E some exception
      */
-    T applyWithThrowable(T v1) throws E;
+    T applyWithThrowable(final T v1) throws E;
 
 
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.UnaryOperator<T> thatReturnsOnCatch(T defaultReturnValue) {
+    default UnaryOperator<T> thatReturnsOnCatch(T defaultReturnValue) {
       return (v1) -> {
         try {
           return applyWithThrowable(v1);
@@ -79,9 +83,8 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default UnaryOperatorWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default UnaryOperatorWithThrowable<T, E> withLogging(Logger logger, String message) {
+        return (final T v1) -> {
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -98,7 +101,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
      * @return An interface that will log exceptions on given logger
      */
     default UnaryOperatorWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in UnaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in UnaryOperatorWithThrowable with arguments {}");
     }
 
 
@@ -110,4 +113,21 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends java
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default UnaryOperatorWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1) -> {
+            try {
+                return applyWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.ToDoubleFunction;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.ToDoubleFunction
+ * Generated from ToDoubleFunction
  * Extends java.util.function.ToDoubleFunction to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends java.util.function.ToDoubleFunction<T> {
+public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends ToDoubleFunction<T> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToDoubleFunctionWithThrowable<T, E> castToDoubleFunctionWithThrowable(ToDoubleFunctionWithThrowable<T, E> todoublefunctionwiththrowable) {
+    static <T, E extends Throwable> ToDoubleFunctionWithThrowable<T, E> castToDoubleFunctionWithThrowable(final ToDoubleFunctionWithThrowable<T, E> todoublefunctionwiththrowable) {
         return todoublefunctionwiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToDoubleFunctionWithThrowable<T, E> asToDoubleFunctionWithThrowable(java.util.function.ToDoubleFunction<T> todoublefunction) {
+    static <T, E extends Throwable> ToDoubleFunctionWithThrowable<T, E> asToDoubleFunctionWithThrowable(final ToDoubleFunction<T> todoublefunction) {
         return todoublefunction::applyAsDouble;
     }
 
@@ -40,13 +44,13 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
      * @return the value
      */
     @Override
-    default double applyAsDouble(T v1) {
+    default double applyAsDouble(final T v1) {
         try {
             return applyAsDoubleWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -57,7 +61,7 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
      * @return the value
      * @throws E some exception
      */
-    double applyAsDoubleWithThrowable(T v1) throws E;
+    double applyAsDoubleWithThrowable(final T v1) throws E;
 
 
     /**
@@ -65,9 +69,8 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default ToDoubleFunctionWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default ToDoubleFunctionWithThrowable<T, E> withLogging(Logger logger, String message) {
+        return (final T v1) -> {
             try {
                 return applyAsDoubleWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -84,7 +87,7 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
      * @return An interface that will log exceptions on given logger
      */
     default ToDoubleFunctionWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ToDoubleFunctionWithThrowable");
+        return withLogging(logger, "Exception in ToDoubleFunctionWithThrowable with arguments {}");
     }
 
 
@@ -96,4 +99,21 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends j
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default ToDoubleFunctionWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

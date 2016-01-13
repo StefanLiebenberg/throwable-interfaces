@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.IntBinaryOperator;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.IntBinaryOperator
+ * Generated from IntBinaryOperator
  * Extends java.util.function.IntBinaryOperator to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends java.util.function.IntBinaryOperator {
+public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends IntBinaryOperator {
 
 
     /**
@@ -17,7 +21,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {
+    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {
         return intbinaryoperatorwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> asIntBinaryOperatorWithThrowable(java.util.function.IntBinaryOperator intbinaryoperator) {
+    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> asIntBinaryOperatorWithThrowable(final IntBinaryOperator intbinaryoperator) {
         return intbinaryoperator::applyAsInt;
     }
 
@@ -38,13 +42,13 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
      * @return the value
      */
     @Override
-    default int applyAsInt(int v1, int v2) {
+    default int applyAsInt(final int v1, final int v2) {
         try {
             return applyAsIntWithThrowable(v1, v2);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -56,7 +60,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
      * @return the value
      * @throws E some exception
      */
-    int applyAsIntWithThrowable(int v1, int v2) throws E;
+    int applyAsIntWithThrowable(final int v1, final int v2) throws E;
 
 
     /**
@@ -64,9 +68,8 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default IntBinaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1, v2) -> {
+    default IntBinaryOperatorWithThrowable<E> withLogging(Logger logger, String message) {
+        return (final int v1, final int v2) -> {
             try {
                 return applyAsIntWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
@@ -83,7 +86,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
      * @return An interface that will log exceptions on given logger
      */
     default IntBinaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in IntBinaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in IntBinaryOperatorWithThrowable with arguments {} {}");
     }
 
 
@@ -95,4 +98,21 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends jav
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default IntBinaryOperatorWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return (final int v1, final int v2) -> {
+            try {
+                return applyAsIntWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.BooleanSupplier
+ * Generated from BooleanSupplier
  * Extends java.util.function.BooleanSupplier to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.util.function.BooleanSupplier {
+public interface BooleanSupplierWithThrowable<E extends Throwable> extends BooleanSupplier {
 
 
     /**
@@ -17,7 +21,7 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> BooleanSupplierWithThrowable<E> castBooleanSupplierWithThrowable(BooleanSupplierWithThrowable<E> booleansupplierwiththrowable) {
+    static <E extends Throwable> BooleanSupplierWithThrowable<E> castBooleanSupplierWithThrowable(final BooleanSupplierWithThrowable<E> booleansupplierwiththrowable) {
         return booleansupplierwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> BooleanSupplierWithThrowable<E> asBooleanSupplierWithThrowable(java.util.function.BooleanSupplier booleansupplier) {
+    static <E extends Throwable> BooleanSupplierWithThrowable<E> asBooleanSupplierWithThrowable(final BooleanSupplier booleansupplier) {
         return booleansupplier::getAsBoolean;
     }
 
@@ -42,7 +46,7 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -60,8 +64,7 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default BooleanSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
+    default BooleanSupplierWithThrowable<E> withLogging(Logger logger, String message) {
         return () -> {
             try {
                 return getAsBooleanWithThrowable();
@@ -79,7 +82,7 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
      * @return An interface that will log exceptions on given logger
      */
     default BooleanSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in BooleanSupplierWithThrowable");
+        return withLogging(logger, "Exception in BooleanSupplierWithThrowable with arguments ");
     }
 
 
@@ -91,4 +94,21 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends java.
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default BooleanSupplierWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return () -> {
+            try {
+                return getAsBooleanWithThrowable();
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

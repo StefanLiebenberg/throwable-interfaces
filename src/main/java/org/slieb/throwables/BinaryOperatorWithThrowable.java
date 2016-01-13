@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.BinaryOperator
+ * Generated from BinaryOperator
  * Extends java.util.function.BinaryOperator to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends java.util.function.BinaryOperator<T> {
+public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends BinaryOperator<T> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) {
+    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(final BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) {
         return binaryoperatorwiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> asBinaryOperatorWithThrowable(java.util.function.BinaryOperator<T> binaryoperator) {
+    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> asBinaryOperatorWithThrowable(final BinaryOperator<T> binaryoperator) {
         return binaryoperator::apply;
     }
 
@@ -41,13 +45,13 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
      * @return the value
      */
     @Override
-    default T apply(T v1, T v2) {
+    default T apply(final T v1, final T v2) {
         try {
             return applyWithThrowable(v1, v2);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -59,13 +63,13 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
      * @return the value
      * @throws E some exception
      */
-    T applyWithThrowable(T v1, T v2) throws E;
+    T applyWithThrowable(final T v1, final T v2) throws E;
 
 
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.BinaryOperator<T> thatReturnsOnCatch(T defaultReturnValue) {
+    default BinaryOperator<T> thatReturnsOnCatch(T defaultReturnValue) {
       return (v1, v2) -> {
         try {
           return applyWithThrowable(v1, v2);
@@ -81,9 +85,8 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default BinaryOperatorWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1, v2) -> {
+    default BinaryOperatorWithThrowable<T, E> withLogging(Logger logger, String message) {
+        return (final T v1, final T v2) -> {
             try {
                 return applyWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
@@ -100,7 +103,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
      * @return An interface that will log exceptions on given logger
      */
     default BinaryOperatorWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in BinaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in BinaryOperatorWithThrowable with arguments {} {}");
     }
 
 
@@ -112,4 +115,21 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends jav
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default BinaryOperatorWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1, final T v2) -> {
+            try {
+                return applyWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

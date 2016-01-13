@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.LongToIntFunction;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.LongToIntFunction
+ * Generated from LongToIntFunction
  * Extends java.util.function.LongToIntFunction to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface LongToIntFunctionWithThrowable<E extends Throwable> extends java.util.function.LongToIntFunction {
+public interface LongToIntFunctionWithThrowable<E extends Throwable> extends LongToIntFunction {
 
 
     /**
@@ -17,7 +21,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
+    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
         return longtointfunctionwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongToIntFunctionWithThrowable<E> asLongToIntFunctionWithThrowable(java.util.function.LongToIntFunction longtointfunction) {
+    static <E extends Throwable> LongToIntFunctionWithThrowable<E> asLongToIntFunctionWithThrowable(final LongToIntFunction longtointfunction) {
         return longtointfunction::applyAsInt;
     }
 
@@ -37,13 +41,13 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
      * @return the value
      */
     @Override
-    default int applyAsInt(long v1) {
+    default int applyAsInt(final long v1) {
         try {
             return applyAsIntWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -54,7 +58,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
      * @return the value
      * @throws E some exception
      */
-    int applyAsIntWithThrowable(long v1) throws E;
+    int applyAsIntWithThrowable(final long v1) throws E;
 
 
     /**
@@ -62,9 +66,8 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default LongToIntFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default LongToIntFunctionWithThrowable<E> withLogging(Logger logger, String message) {
+        return (final long v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -81,7 +84,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
      * @return An interface that will log exceptions on given logger
      */
     default LongToIntFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongToIntFunctionWithThrowable");
+        return withLogging(logger, "Exception in LongToIntFunctionWithThrowable with arguments {}");
     }
 
 
@@ -93,4 +96,21 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends jav
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongToIntFunctionWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return (final long v1) -> {
+            try {
+                return applyAsIntWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

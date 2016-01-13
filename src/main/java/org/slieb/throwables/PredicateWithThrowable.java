@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.Predicate
+ * Generated from Predicate
  * Extends java.util.function.Predicate to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface PredicateWithThrowable<T, E extends Throwable> extends java.util.function.Predicate<T> {
+public interface PredicateWithThrowable<T, E extends Throwable> extends Predicate<T> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> PredicateWithThrowable<T, E> castPredicateWithThrowable(PredicateWithThrowable<T, E> predicatewiththrowable) {
+    static <T, E extends Throwable> PredicateWithThrowable<T, E> castPredicateWithThrowable(final PredicateWithThrowable<T, E> predicatewiththrowable) {
         return predicatewiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> PredicateWithThrowable<T, E> asPredicateWithThrowable(java.util.function.Predicate<T> predicate) {
+    static <T, E extends Throwable> PredicateWithThrowable<T, E> asPredicateWithThrowable(final Predicate<T> predicate) {
         return predicate::test;
     }
 
@@ -40,13 +44,13 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @return the value
      */
     @Override
-    default boolean test(T v1) {
+    default boolean test(final T v1) {
         try {
             return testWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -57,7 +61,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @return the value
      * @throws E some exception
      */
-    boolean testWithThrowable(T v1) throws E;
+    boolean testWithThrowable(final T v1) throws E;
 
 
     /**
@@ -65,9 +69,8 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default PredicateWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default PredicateWithThrowable<T, E> withLogging(Logger logger, String message) {
+        return (final T v1) -> {
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -84,7 +87,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
      * @return An interface that will log exceptions on given logger
      */
     default PredicateWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in PredicateWithThrowable");
+        return withLogging(logger, "Exception in PredicateWithThrowable with arguments {}");
     }
 
 
@@ -96,4 +99,21 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends java.uti
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default PredicateWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

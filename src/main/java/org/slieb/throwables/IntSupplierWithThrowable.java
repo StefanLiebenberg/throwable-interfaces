@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.IntSupplier;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.IntSupplier
+ * Generated from IntSupplier
  * Extends java.util.function.IntSupplier to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface IntSupplierWithThrowable<E extends Throwable> extends java.util.function.IntSupplier {
+public interface IntSupplierWithThrowable<E extends Throwable> extends IntSupplier {
 
 
     /**
@@ -17,7 +21,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> IntSupplierWithThrowable<E> castIntSupplierWithThrowable(IntSupplierWithThrowable<E> intsupplierwiththrowable) {
+    static <E extends Throwable> IntSupplierWithThrowable<E> castIntSupplierWithThrowable(final IntSupplierWithThrowable<E> intsupplierwiththrowable) {
         return intsupplierwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> IntSupplierWithThrowable<E> asIntSupplierWithThrowable(java.util.function.IntSupplier intsupplier) {
+    static <E extends Throwable> IntSupplierWithThrowable<E> asIntSupplierWithThrowable(final IntSupplier intsupplier) {
         return intsupplier::getAsInt;
     }
 
@@ -42,7 +46,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -60,8 +64,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default IntSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
+    default IntSupplierWithThrowable<E> withLogging(Logger logger, String message) {
         return () -> {
             try {
                 return getAsIntWithThrowable();
@@ -79,7 +82,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
      * @return An interface that will log exceptions on given logger
      */
     default IntSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in IntSupplierWithThrowable");
+        return withLogging(logger, "Exception in IntSupplierWithThrowable with arguments ");
     }
 
 
@@ -91,4 +94,21 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends java.util
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default IntSupplierWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return () -> {
+            try {
+                return getAsIntWithThrowable();
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

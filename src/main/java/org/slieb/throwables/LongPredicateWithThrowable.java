@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.LongPredicate;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.LongPredicate
+ * Generated from LongPredicate
  * Extends java.util.function.LongPredicate to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface LongPredicateWithThrowable<E extends Throwable> extends java.util.function.LongPredicate {
+public interface LongPredicateWithThrowable<E extends Throwable> extends LongPredicate {
 
 
     /**
@@ -17,7 +21,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongPredicateWithThrowable<E> castLongPredicateWithThrowable(LongPredicateWithThrowable<E> longpredicatewiththrowable) {
+    static <E extends Throwable> LongPredicateWithThrowable<E> castLongPredicateWithThrowable(final LongPredicateWithThrowable<E> longpredicatewiththrowable) {
         return longpredicatewiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongPredicateWithThrowable<E> asLongPredicateWithThrowable(java.util.function.LongPredicate longpredicate) {
+    static <E extends Throwable> LongPredicateWithThrowable<E> asLongPredicateWithThrowable(final LongPredicate longpredicate) {
         return longpredicate::test;
     }
 
@@ -37,13 +41,13 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
      * @return the value
      */
     @Override
-    default boolean test(long v1) {
+    default boolean test(final long v1) {
         try {
             return testWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -54,7 +58,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
      * @return the value
      * @throws E some exception
      */
-    boolean testWithThrowable(long v1) throws E;
+    boolean testWithThrowable(final long v1) throws E;
 
 
     /**
@@ -62,9 +66,8 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default LongPredicateWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default LongPredicateWithThrowable<E> withLogging(Logger logger, String message) {
+        return (final long v1) -> {
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -81,7 +84,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
      * @return An interface that will log exceptions on given logger
      */
     default LongPredicateWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongPredicateWithThrowable");
+        return withLogging(logger, "Exception in LongPredicateWithThrowable with arguments {}");
     }
 
 
@@ -93,4 +96,21 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends java.ut
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongPredicateWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return (final long v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

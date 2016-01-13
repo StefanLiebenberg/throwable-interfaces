@@ -1,7 +1,11 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.ToLongBiFunction;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.ToLongBiFunction
+ * Generated from ToLongBiFunction
  * Extends java.util.function.ToLongBiFunction to allow for a checked exception.
  *
  * @param <T> some generic flag
@@ -9,7 +13,7 @@ package org.slieb.throwables;
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extends java.util.function.ToLongBiFunction<T, U> {
+public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extends ToLongBiFunction<T, U> {
 
 
     /**
@@ -21,7 +25,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) {
+    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(final ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) {
         return tolongbifunctionwiththrowable;
     }
     /**
@@ -32,7 +36,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> asToLongBiFunctionWithThrowable(java.util.function.ToLongBiFunction<T, U> tolongbifunction) {
+    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> asToLongBiFunctionWithThrowable(final ToLongBiFunction<T, U> tolongbifunction) {
         return tolongbifunction::applyAsLong;
     }
 
@@ -44,13 +48,13 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @return the value
      */
     @Override
-    default long applyAsLong(T v1, U v2) {
+    default long applyAsLong(final T v1, final U v2) {
         try {
             return applyAsLongWithThrowable(v1, v2);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -62,7 +66,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @return the value
      * @throws E some exception
      */
-    long applyAsLongWithThrowable(T v1, U v2) throws E;
+    long applyAsLongWithThrowable(final T v1, final U v2) throws E;
 
 
     /**
@@ -70,9 +74,8 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default ToLongBiFunctionWithThrowable<T, U, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1, v2) -> {
+    default ToLongBiFunctionWithThrowable<T, U, E> withLogging(Logger logger, String message) {
+        return (final T v1, final U v2) -> {
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
@@ -89,7 +92,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @return An interface that will log exceptions on given logger
      */
     default ToLongBiFunctionWithThrowable<T, U, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ToLongBiFunctionWithThrowable");
+        return withLogging(logger, "Exception in ToLongBiFunctionWithThrowable with arguments {} {}");
     }
 
 
@@ -101,4 +104,21 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default ToLongBiFunctionWithThrowable<T, U, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1, final U v2) -> {
+            try {
+                return applyAsLongWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

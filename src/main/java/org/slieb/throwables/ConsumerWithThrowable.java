@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.Consumer;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.Consumer
+ * Generated from Consumer
  * Extends java.util.function.Consumer to allow for a checked exception.
  *
  * @param <T> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util.function.Consumer<T> {
+public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<T> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ConsumerWithThrowable<T, E> castConsumerWithThrowable(ConsumerWithThrowable<T, E> consumerwiththrowable) {
+    static <T, E extends Throwable> ConsumerWithThrowable<T, E> castConsumerWithThrowable(final ConsumerWithThrowable<T, E> consumerwiththrowable) {
         return consumerwiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ConsumerWithThrowable<T, E> asConsumerWithThrowable(java.util.function.Consumer<T> consumer) {
+    static <T, E extends Throwable> ConsumerWithThrowable<T, E> asConsumerWithThrowable(final Consumer<T> consumer) {
         return consumer::accept;
     }
 
@@ -39,13 +43,13 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util
      * @param v1 parameter to overridden method
      */
     @Override
-    default void accept(T v1) {
+    default void accept(final T v1) {
         try {
             acceptWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -55,32 +59,14 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util
      * @param v1 parameter to overridden method
      * @throws E some exception
      */
-    void acceptWithThrowable(T v1) throws E;
-
-
-    /**
-     * @param throwableClasses A varargs of throwable types to ignore.
-     * @return An interface that ignores some exceptions.
-     */
-    @SuppressWarnings("Duplicates")
-    default ConsumerWithThrowable<T, E> thatIgnores(Class<? extends Throwable> ... throwableClasses) {
-        return (v1) -> {
-            try {
-                acceptWithThrowable(v1);
-            } catch(Throwable throwable) {
-                if(java.util.Arrays.stream(throwableClasses).noneMatch((Class<? extends Throwable> klass) -> klass.isInstance(throwable))) {
-                    throw throwable;
-                }
-            }
-        };
-    }
+    void acceptWithThrowable(final T v1) throws E;
 
 
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
-    default java.util.function.Consumer<T> thatIgnoresThrowables() {
-        return (v1) -> {
+    default Consumer<T> thatIgnoresExceptions() {
+        return (final T v1) -> {
             try {
                 acceptWithThrowable(v1);
             } catch(Throwable ignored) {}
@@ -93,9 +79,8 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default ConsumerWithThrowable<T, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default ConsumerWithThrowable<T, E> withLogging(Logger logger, String message) {
+        return (final T v1) -> {
             try {
                 acceptWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -112,7 +97,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util
      * @return An interface that will log exceptions on given logger
      */
     default ConsumerWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ConsumerWithThrowable");
+        return withLogging(logger, "Exception in ConsumerWithThrowable with arguments {}");
     }
 
 
@@ -124,4 +109,21 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends java.util
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default ConsumerWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

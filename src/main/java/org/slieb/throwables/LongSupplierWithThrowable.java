@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.LongSupplier;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.LongSupplier
+ * Generated from LongSupplier
  * Extends java.util.function.LongSupplier to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface LongSupplierWithThrowable<E extends Throwable> extends java.util.function.LongSupplier {
+public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupplier {
 
 
     /**
@@ -17,7 +21,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends java.uti
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongSupplierWithThrowable<E> castLongSupplierWithThrowable(LongSupplierWithThrowable<E> longsupplierwiththrowable) {
+    static <E extends Throwable> LongSupplierWithThrowable<E> castLongSupplierWithThrowable(final LongSupplierWithThrowable<E> longsupplierwiththrowable) {
         return longsupplierwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends java.uti
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongSupplierWithThrowable<E> asLongSupplierWithThrowable(java.util.function.LongSupplier longsupplier) {
+    static <E extends Throwable> LongSupplierWithThrowable<E> asLongSupplierWithThrowable(final LongSupplier longsupplier) {
         return longsupplier::getAsLong;
     }
 
@@ -42,7 +46,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends java.uti
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -60,8 +64,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends java.uti
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default LongSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
+    default LongSupplierWithThrowable<E> withLogging(Logger logger, String message) {
         return () -> {
             try {
                 return getAsLongWithThrowable();
@@ -79,7 +82,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends java.uti
      * @return An interface that will log exceptions on given logger
      */
     default LongSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongSupplierWithThrowable");
+        return withLogging(logger, "Exception in LongSupplierWithThrowable with arguments ");
     }
 
 
@@ -91,4 +94,21 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends java.uti
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongSupplierWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return () -> {
+            try {
+                return getAsLongWithThrowable();
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

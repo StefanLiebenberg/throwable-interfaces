@@ -3,9 +3,8 @@ package org.slieb.generate;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
-import java.lang.reflect.AnnotatedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
+import java.util.Arrays;
 
 public class TypeResolver {
 
@@ -46,5 +45,10 @@ public class TypeResolver {
 
         }
         return genericReturnType;
+    }
+
+    public static Method getFunctionalMethod(Class<?> funcInterface) {
+        return Arrays.stream(funcInterface.getMethods())
+                .filter(m -> Modifier.isAbstract(m.getModifiers())).findFirst().get();
     }
 }

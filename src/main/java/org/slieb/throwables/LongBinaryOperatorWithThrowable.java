@@ -1,13 +1,17 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.LongBinaryOperator;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.LongBinaryOperator
+ * Generated from LongBinaryOperator
  * Extends java.util.function.LongBinaryOperator to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends java.util.function.LongBinaryOperator {
+public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends LongBinaryOperator {
 
 
     /**
@@ -17,7 +21,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) {
+    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(final LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) {
         return longbinaryoperatorwiththrowable;
     }
     /**
@@ -26,7 +30,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> asLongBinaryOperatorWithThrowable(java.util.function.LongBinaryOperator longbinaryoperator) {
+    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> asLongBinaryOperatorWithThrowable(final LongBinaryOperator longbinaryoperator) {
         return longbinaryoperator::applyAsLong;
     }
 
@@ -38,13 +42,13 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
      * @return the value
      */
     @Override
-    default long applyAsLong(long v1, long v2) {
+    default long applyAsLong(final long v1, final long v2) {
         try {
             return applyAsLongWithThrowable(v1, v2);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -56,7 +60,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
      * @return the value
      * @throws E some exception
      */
-    long applyAsLongWithThrowable(long v1, long v2) throws E;
+    long applyAsLongWithThrowable(final long v1, final long v2) throws E;
 
 
     /**
@@ -64,9 +68,8 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default LongBinaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1, v2) -> {
+    default LongBinaryOperatorWithThrowable<E> withLogging(Logger logger, String message) {
+        return (final long v1, final long v2) -> {
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
@@ -83,7 +86,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
      * @return An interface that will log exceptions on given logger
      */
     default LongBinaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongBinaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in LongBinaryOperatorWithThrowable with arguments {} {}");
     }
 
 
@@ -95,4 +98,21 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends ja
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongBinaryOperatorWithThrowable<E> onException(Consumer<Throwable> consumer) {
+        return (final long v1, final long v2) -> {
+            try {
+                return applyAsLongWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

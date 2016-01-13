@@ -1,14 +1,18 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.LongFunction;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.LongFunction
+ * Generated from LongFunction
  * Extends java.util.function.LongFunction to allow for a checked exception.
  *
  * @param <R> some generic flag
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.util.function.LongFunction<R> {
+public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongFunction<R> {
 
 
     /**
@@ -19,7 +23,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(LongFunctionWithThrowable<R, E> longfunctionwiththrowable) {
+    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) {
         return longfunctionwiththrowable;
     }
     /**
@@ -29,7 +33,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> asLongFunctionWithThrowable(java.util.function.LongFunction<R> longfunction) {
+    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> asLongFunctionWithThrowable(final LongFunction<R> longfunction) {
         return longfunction::apply;
     }
 
@@ -40,13 +44,13 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
      * @return the value
      */
     @Override
-    default R apply(long v1) {
+    default R apply(final long v1) {
         try {
             return applyWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -57,13 +61,13 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
      * @return the value
      * @throws E some exception
      */
-    R applyWithThrowable(long v1) throws E;
+    R applyWithThrowable(final long v1) throws E;
 
 
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.LongFunction<java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
+    default LongFunction<java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
       return (v1)     -> {
         try {
           return java.util.Optional.of(applyWithThrowable(v1));
@@ -77,7 +81,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.LongFunction<R> thatReturnsOnCatch(R defaultReturnValue) {
+    default LongFunction<R> thatReturnsOnCatch(R defaultReturnValue) {
       return (v1) -> {
         try {
           return applyWithThrowable(v1);
@@ -93,9 +97,8 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default LongFunctionWithThrowable<R, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default LongFunctionWithThrowable<R, E> withLogging(Logger logger, String message) {
+        return (final long v1) -> {
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -112,7 +115,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
      * @return An interface that will log exceptions on given logger
      */
     default LongFunctionWithThrowable<R, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongFunctionWithThrowable");
+        return withLogging(logger, "Exception in LongFunctionWithThrowable with arguments {}");
     }
 
 
@@ -124,4 +127,21 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends java.
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongFunctionWithThrowable<R, E> onException(Consumer<Throwable> consumer) {
+        return (final long v1) -> {
+            try {
+                return applyWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }

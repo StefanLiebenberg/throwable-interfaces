@@ -1,7 +1,11 @@
 package org.slieb.throwables;
 
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import org.slf4j.Logger;
 /**
- * Generated from java.util.function.Function
+ * Generated from Function
  * Extends java.util.function.Function to allow for a checked exception.
  *
  * @param <T> some generic flag
@@ -9,7 +13,7 @@ package org.slieb.throwables;
  * @param <E> The extension
  */
 @FunctionalInterface
-public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.util.function.Function<T, R> {
+public interface FunctionWithThrowable<T, R, E extends Throwable> extends Function<T, R> {
 
 
     /**
@@ -21,7 +25,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> castFunctionWithThrowable(FunctionWithThrowable<T, R, E> functionwiththrowable) {
+    static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> castFunctionWithThrowable(final FunctionWithThrowable<T, R, E> functionwiththrowable) {
         return functionwiththrowable;
     }
     /**
@@ -32,7 +36,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> asFunctionWithThrowable(java.util.function.Function<T, R> function) {
+    static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> asFunctionWithThrowable(final Function<T, R> function) {
         return function::apply;
     }
 
@@ -43,13 +47,13 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @return the value
      */
     @Override
-    default R apply(T v1) {
+    default R apply(final T v1) {
         try {
             return applyWithThrowable(v1);
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
-            throw new org.slieb.throwables.SuppressedException(throwable);
+            throw new SuppressedException(throwable);
         }
     }
 
@@ -60,13 +64,13 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @return the value
      * @throws E some exception
      */
-    R applyWithThrowable(T v1) throws E;
+    R applyWithThrowable(final T v1) throws E;
 
 
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.Function<T, java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
+    default Function<T, java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
       return (v1)     -> {
         try {
           return java.util.Optional.of(applyWithThrowable(v1));
@@ -80,7 +84,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default java.util.function.Function<T, R> thatReturnsOnCatch(R defaultReturnValue) {
+    default Function<T, R> thatReturnsOnCatch(R defaultReturnValue) {
       return (v1) -> {
         try {
           return applyWithThrowable(v1);
@@ -96,9 +100,8 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    @SuppressWarnings("Duplicates")
-    default FunctionWithThrowable<T, R, E> withLogging(org.slf4j.Logger logger, String message) {
-        return (v1) -> {
+    default FunctionWithThrowable<T, R, E> withLogging(Logger logger, String message) {
+        return (final T v1) -> {
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
@@ -115,7 +118,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
      * @return An interface that will log exceptions on given logger
      */
     default FunctionWithThrowable<T, R, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in FunctionWithThrowable");
+        return withLogging(logger, "Exception in FunctionWithThrowable with arguments {}");
     }
 
 
@@ -127,4 +130,21 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends java.u
         return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
     }
 
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default FunctionWithThrowable<T, R, E> onException(Consumer<Throwable> consumer) {
+        return (final T v1) -> {
+            try {
+                return applyWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable);
+                throw throwable;
+            }
+        };
+    }
 }
