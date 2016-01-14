@@ -88,6 +88,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
 
 
     /**
+     * @param defaultReturnValue A value to return if any throwable is catched.
      * @return An interface that returns a default value if any exception occurs.
      */
     default BiFunction<T, U, R> thatReturnsOnCatch(final R defaultReturnValue) {

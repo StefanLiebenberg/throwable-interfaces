@@ -68,6 +68,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
 
 
     /**
+     * @param defaultReturnValue A value to return if any throwable is catched.
      * @return An interface that returns a default value if any exception occurs.
      */
     default BinaryOperator<T> thatReturnsOnCatch(final T defaultReturnValue) {

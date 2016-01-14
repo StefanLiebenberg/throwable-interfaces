@@ -66,6 +66,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
 
 
     /**
+     * @param defaultReturnValue A value to return if any throwable is catched.
      * @return An interface that returns a default value if any exception occurs.
      */
     default UnaryOperator<T> thatReturnsOnCatch(final T defaultReturnValue) {

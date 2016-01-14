@@ -597,6 +597,7 @@ public class InterfaceGenerator {
 
                 isb.newlines(2).setIndent(4);
                 isb.indent().append("/**").newline();
+                isb.indent().append(" * @param defaultReturnValue A value to return if any throwable is catched.").newline();
                 isb.indent().append(" * @return An interface that returns a default value if any exception occurs.").newline();
                 isb.indent().append(" */").newline();
                 isb.indent().append("default ").appendClass(funcInterface);

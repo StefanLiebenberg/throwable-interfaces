@@ -80,6 +80,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
 
 
     /**
+     * @param defaultReturnValue A value to return if any throwable is catched.
      * @return An interface that returns a default value if any exception occurs.
      */
     default DoubleFunction<R> thatReturnsOnCatch(final R defaultReturnValue) {

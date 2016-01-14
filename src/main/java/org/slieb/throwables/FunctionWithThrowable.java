@@ -83,6 +83,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
 
 
     /**
+     * @param defaultReturnValue A value to return if any throwable is catched.
      * @return An interface that returns a default value if any exception occurs.
      */
     default Function<T, R> thatReturnsOnCatch(final R defaultReturnValue) {

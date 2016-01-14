@@ -78,6 +78,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
 
 
     /**
+     * @param defaultReturnValue A value to return if any throwable is catched.
      * @return An interface that returns a default value if any exception occurs.
      */
     default Supplier<T> thatReturnsOnCatch(final T defaultReturnValue) {

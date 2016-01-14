@@ -80,6 +80,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
 
 
     /**
+     * @param defaultReturnValue A value to return if any throwable is catched.
      * @return An interface that returns a default value if any exception occurs.
      */
     default LongFunction<R> thatReturnsOnCatch(final R defaultReturnValue) {
