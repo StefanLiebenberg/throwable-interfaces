@@ -123,4 +123,21 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
             }
         };
     }
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default ToDoubleBiFunctionWithThrowable<T, U, E> onException(final java.util.function.BiConsumer<Throwable, Object[]> consumer) {
+        return (final T v1, final U v2) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable, new Object[]{v1, v2});
+                throw throwable;
+            }
+        };
+    }
 }

@@ -125,4 +125,21 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
             }
         };
     }
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default LongConsumerWithThrowable<E> onException(final java.util.function.BiConsumer<Throwable, Object[]> consumer) {
+        return (final long v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable, new Object[]{v1});
+                throw throwable;
+            }
+        };
+    }
 }

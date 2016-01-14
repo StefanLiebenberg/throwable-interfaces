@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -686,6 +687,38 @@ public class InterfaceGenerator {
         isb.indents(12).append("}").newline();
         isb.indents(8).append("};").newline();
         isb.indents(4).append("}").newline();
+
+        boolean hasParams = method.getParameterCount() > 0;
+        if (hasParams) {
+
+            isb.newlines(2);
+            isb.indents(4).openComment().newline();
+            isb.indents(4).appendParam("consumer", "An exception consumer.").newline();
+            isb.indents(4).appendReturn("An interface that will log all exceptions to given logger").newline();
+            isb.indents(4).closeComment().newline();
+            isb.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
+            isb.indents(4).append("default")
+                    .append(" ").append(className).append(generateGenerics(generics, true, false))
+                    .append(" onException(final ").appendClass(BiConsumer.class).append("<").appendClass(Throwable.class)
+                    .append(", ").append("Object[]")
+                    .append(">").append(" consumer) {")
+                    .newline();
+            isb.indents(8).append("return ").append(getMethodParams(funcInterface, method, true)).append(" -> {").newline();
+            isb.indents(12).append("try {").newline();
+            isb.indents(16);
+            if (hasReturnType) {
+                isb.append("return ");
+            }
+            isb.append(methodName).append("WithThrowable").append(getMethodParams(funcInterface, method, false)).append(";").newline();
+            isb.indents(12).append("} catch (final Throwable throwable) {").newline();
+            isb.indents(16).append("consumer.accept(throwable, new Object[]{")
+                    .append(getMethodParamsStream(funcInterface, method, false).collect(Collectors.joining(", ")))
+                    .append("});").newline();
+            isb.indents(16).append("throw throwable;").newline();
+            isb.indents(12).append("}").newline();
+            isb.indents(8).append("};").newline();
+            isb.indents(4).append("}").newline();
+        }
 
 
     }

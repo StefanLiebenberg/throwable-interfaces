@@ -134,4 +134,21 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
             }
         };
     }
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default BinaryOperatorWithThrowable<T, E> onException(final java.util.function.BiConsumer<Throwable, Object[]> consumer) {
+        return (final T v1, final T v2) -> {
+            try {
+                return applyWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable, new Object[]{v1, v2});
+                throw throwable;
+            }
+        };
+    }
 }

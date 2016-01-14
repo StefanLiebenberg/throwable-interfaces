@@ -117,4 +117,21 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
             }
         };
     }
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default IntBinaryOperatorWithThrowable<E> onException(final java.util.function.BiConsumer<Throwable, Object[]> consumer) {
+        return (final int v1, final int v2) -> {
+            try {
+                return applyAsIntWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable, new Object[]{v1, v2});
+                throw throwable;
+            }
+        };
+    }
 }

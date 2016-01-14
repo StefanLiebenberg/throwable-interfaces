@@ -118,4 +118,21 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
             }
         };
     }
+
+
+    /**
+     * @param consumer An exception consumer.
+     * @return An interface that will log all exceptions to given logger
+     */
+    @SuppressWarnings("Duplicates")
+    default ToLongFunctionWithThrowable<T, E> onException(final java.util.function.BiConsumer<Throwable, Object[]> consumer) {
+        return (final T v1) -> {
+            try {
+                return applyAsLongWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                consumer.accept(throwable, new Object[]{v1});
+                throw throwable;
+            }
+        };
+    }
 }
