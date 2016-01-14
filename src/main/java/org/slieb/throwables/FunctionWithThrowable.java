@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from Function
  * Extends java.util.function.Function to allow for a checked exception.
@@ -70,10 +71,10 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default Function<T, java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
-      return (v1)     -> {
+    default Function<T, java.util.Optional<R>>    thatReturnsOptional() {
+      return (final T v1)     -> {
         try {
-          return java.util.Optional.of(applyWithThrowable(v1));
+          return java.util.Optional.ofNullable(applyWithThrowable(v1));
         } catch(Throwable throwable) {
           return java.util.Optional.empty();
         }
@@ -84,11 +85,11 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default Function<T, R> thatReturnsOnCatch(R defaultReturnValue) {
-      return (v1) -> {
+    default Function<T, R> thatReturnsOnCatch(final R defaultReturnValue) {
+      return (final T v1) -> {
         try {
           return applyWithThrowable(v1);
-        } catch(Throwable throwable) {
+        } catch(final Throwable throwable) {
           return defaultReturnValue;
         }
       };
@@ -100,7 +101,8 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default FunctionWithThrowable<T, R, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default FunctionWithThrowable<T, R, E> withLogging(final Logger logger, final String message) {
         return (final T v1) -> {
             try {
                 return applyWithThrowable(v1);
@@ -117,8 +119,8 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default FunctionWithThrowable<T, R, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in FunctionWithThrowable with arguments {}");
+    default FunctionWithThrowable<T, R, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in FunctionWithThrowable");
     }
 
 
@@ -127,7 +129,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * @return An interface that will log exceptions on global logger
      */
     default FunctionWithThrowable<T, R, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -137,7 +139,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default FunctionWithThrowable<T, R, E> onException(Consumer<Throwable> consumer) {
+    default FunctionWithThrowable<T, R, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1) -> {
             try {
                 return applyWithThrowable(v1);

@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.ToIntBiFunction;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from ToIntBiFunction
  * Extends java.util.function.ToIntBiFunction to allow for a checked exception.
@@ -74,7 +75,8 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default ToIntBiFunctionWithThrowable<T, U, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default ToIntBiFunctionWithThrowable<T, U, E> withLogging(final Logger logger, final String message) {
         return (final T v1, final U v2) -> {
             try {
                 return applyAsIntWithThrowable(v1, v2);
@@ -91,8 +93,8 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default ToIntBiFunctionWithThrowable<T, U, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ToIntBiFunctionWithThrowable with arguments {} {}");
+    default ToIntBiFunctionWithThrowable<T, U, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in ToIntBiFunctionWithThrowable");
     }
 
 
@@ -101,7 +103,7 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @return An interface that will log exceptions on global logger
      */
     default ToIntBiFunctionWithThrowable<T, U, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -111,7 +113,7 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default ToIntBiFunctionWithThrowable<T, U, E> onException(Consumer<Throwable> consumer) {
+    default ToIntBiFunctionWithThrowable<T, U, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1, final U v2) -> {
             try {
                 return applyAsIntWithThrowable(v1, v2);

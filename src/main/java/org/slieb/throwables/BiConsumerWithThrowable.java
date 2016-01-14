@@ -1,9 +1,10 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-
+import java.lang.Throwable;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from BiConsumer
  * Extends java.util.function.BiConsumer to allow for a checked exception.
@@ -70,7 +71,7 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
-    default BiConsumer<T, U> thatIgnoresExceptions() {
+    default BiConsumer<T, U> thatThrowsNothing() {
         return (final T v1, final U v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
@@ -84,7 +85,8 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default BiConsumerWithThrowable<T, U, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default BiConsumerWithThrowable<T, U, E> withLogging(final Logger logger, final String message) {
         return (final T v1, final U v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
@@ -101,8 +103,8 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default BiConsumerWithThrowable<T, U, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in BiConsumerWithThrowable with arguments {} {}");
+    default BiConsumerWithThrowable<T, U, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in BiConsumerWithThrowable");
     }
 
 
@@ -111,7 +113,7 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
      * @return An interface that will log exceptions on global logger
      */
     default BiConsumerWithThrowable<T, U, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -121,7 +123,7 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default BiConsumerWithThrowable<T, U, E> onException(Consumer<Throwable> consumer) {
+    default BiConsumerWithThrowable<T, U, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1, final U v2) -> {
             try {
                 acceptWithThrowable(v1, v2);

@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleSupplier
  * Extends java.util.function.DoubleSupplier to allow for a checked exception.
@@ -64,7 +65,8 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default DoubleSupplierWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default DoubleSupplierWithThrowable<E> withLogging(final Logger logger, final String message) {
         return () -> {
             try {
                 return getAsDoubleWithThrowable();
@@ -81,8 +83,8 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoubleSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoubleSupplierWithThrowable with arguments ");
+    default DoubleSupplierWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in DoubleSupplierWithThrowable");
     }
 
 
@@ -91,7 +93,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      * @return An interface that will log exceptions on global logger
      */
     default DoubleSupplierWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -101,7 +103,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoubleSupplierWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default DoubleSupplierWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return () -> {
             try {
                 return getAsDoubleWithThrowable();

@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from Predicate
  * Extends java.util.function.Predicate to allow for a checked exception.
@@ -69,7 +70,8 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default PredicateWithThrowable<T, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default PredicateWithThrowable<T, E> withLogging(final Logger logger, final String message) {
         return (final T v1) -> {
             try {
                 return testWithThrowable(v1);
@@ -86,8 +88,8 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default PredicateWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in PredicateWithThrowable with arguments {}");
+    default PredicateWithThrowable<T, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in PredicateWithThrowable");
     }
 
 
@@ -96,7 +98,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @return An interface that will log exceptions on global logger
      */
     default PredicateWithThrowable<T, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -106,7 +108,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default PredicateWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+    default PredicateWithThrowable<T, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1) -> {
             try {
                 return testWithThrowable(v1);

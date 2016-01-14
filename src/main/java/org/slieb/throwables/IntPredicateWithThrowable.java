@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from IntPredicate
  * Extends java.util.function.IntPredicate to allow for a checked exception.
@@ -66,7 +67,8 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default IntPredicateWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default IntPredicateWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final int v1) -> {
             try {
                 return testWithThrowable(v1);
@@ -83,8 +85,8 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default IntPredicateWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in IntPredicateWithThrowable with arguments {}");
+    default IntPredicateWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in IntPredicateWithThrowable");
     }
 
 
@@ -93,7 +95,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @return An interface that will log exceptions on global logger
      */
     default IntPredicateWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -103,7 +105,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default IntPredicateWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default IntPredicateWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final int v1) -> {
             try {
                 return testWithThrowable(v1);

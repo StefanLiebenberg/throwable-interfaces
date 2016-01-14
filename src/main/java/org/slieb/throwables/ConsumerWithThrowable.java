@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from Consumer
  * Extends java.util.function.Consumer to allow for a checked exception.
@@ -65,7 +66,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
-    default Consumer<T> thatIgnoresExceptions() {
+    default Consumer<T> thatThrowsNothing() {
         return (final T v1) -> {
             try {
                 acceptWithThrowable(v1);
@@ -79,7 +80,8 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default ConsumerWithThrowable<T, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default ConsumerWithThrowable<T, E> withLogging(final Logger logger, final String message) {
         return (final T v1) -> {
             try {
                 acceptWithThrowable(v1);
@@ -96,8 +98,8 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default ConsumerWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ConsumerWithThrowable with arguments {}");
+    default ConsumerWithThrowable<T, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in ConsumerWithThrowable");
     }
 
 
@@ -106,7 +108,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
      * @return An interface that will log exceptions on global logger
      */
     default ConsumerWithThrowable<T, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -116,7 +118,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default ConsumerWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+    default ConsumerWithThrowable<T, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1) -> {
             try {
                 acceptWithThrowable(v1);

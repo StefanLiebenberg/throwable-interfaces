@@ -76,11 +76,7 @@ public class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder>
     }
 
     public IndentStringBuilder appendClass(Class classType) {
-        if (imports.contains(classType)) {
-            stringBuilder.append(classType.getSimpleName());
-        } else {
-            stringBuilder.append(classType.getCanonicalName());
-        }
+        this.stringBuilder.append(this.getClassContent(classType));
         return this;
     }
 
@@ -141,5 +137,9 @@ public class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder>
     public IndentStringBuilder appendPackage(String packageName) {
         this.packageName = packageName;
         return this.append("package ").append(packageName).append(";").newlines(2);
+    }
+
+    public String getClassContent(Class classType) {
+        return imports.contains(classType) ? classType.getSimpleName() : classType.getCanonicalName();
     }
 }

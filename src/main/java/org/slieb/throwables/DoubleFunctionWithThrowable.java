@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleFunction;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleFunction
  * Extends java.util.function.DoubleFunction to allow for a checked exception.
@@ -67,10 +68,10 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default DoubleFunction<java.util.Optional<R>>    thatReturnsOptionalOnCatch() {
-      return (v1)     -> {
+    default DoubleFunction<java.util.Optional<R>>    thatReturnsOptional() {
+      return (final double v1)     -> {
         try {
-          return java.util.Optional.of(applyWithThrowable(v1));
+          return java.util.Optional.ofNullable(applyWithThrowable(v1));
         } catch(Throwable throwable) {
           return java.util.Optional.empty();
         }
@@ -81,11 +82,11 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default DoubleFunction<R> thatReturnsOnCatch(R defaultReturnValue) {
-      return (v1) -> {
+    default DoubleFunction<R> thatReturnsOnCatch(final R defaultReturnValue) {
+      return (final double v1) -> {
         try {
           return applyWithThrowable(v1);
-        } catch(Throwable throwable) {
+        } catch(final Throwable throwable) {
           return defaultReturnValue;
         }
       };
@@ -97,7 +98,8 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default DoubleFunctionWithThrowable<R, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default DoubleFunctionWithThrowable<R, E> withLogging(final Logger logger, final String message) {
         return (final double v1) -> {
             try {
                 return applyWithThrowable(v1);
@@ -114,8 +116,8 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoubleFunctionWithThrowable<R, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoubleFunctionWithThrowable with arguments {}");
+    default DoubleFunctionWithThrowable<R, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in DoubleFunctionWithThrowable");
     }
 
 
@@ -124,7 +126,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @return An interface that will log exceptions on global logger
      */
     default DoubleFunctionWithThrowable<R, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -134,7 +136,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoubleFunctionWithThrowable<R, E> onException(Consumer<Throwable> consumer) {
+    default DoubleFunctionWithThrowable<R, E> onException(final Consumer<Throwable> consumer) {
         return (final double v1) -> {
             try {
                 return applyWithThrowable(v1);

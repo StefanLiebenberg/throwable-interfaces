@@ -6,7 +6,7 @@ public class IntConsumerWithThrowableIgnoresTest {
  public void testThrowExceptionWithNoIgnores() {
     castIntConsumerWithThrowable((v1) -> {
       throw new Exception("expected error");
-    }).thatIgnoresExceptions().accept(0);
+    }).thatThrowsNothing().accept(0);
  }
 
 }

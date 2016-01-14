@@ -6,7 +6,7 @@ public class BiConsumerWithThrowableIgnoresTest {
  public void testThrowExceptionWithNoIgnores() {
     castBiConsumerWithThrowable((v1, v2) -> {
       throw new Exception("expected error");
-    }).thatIgnoresExceptions().accept(null, null);
+    }).thatThrowsNothing().accept(null, null);
  }
 
 }

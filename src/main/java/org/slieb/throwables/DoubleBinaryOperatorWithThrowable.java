@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleBinaryOperator;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleBinaryOperator
  * Extends java.util.function.DoubleBinaryOperator to allow for a checked exception.
@@ -68,7 +69,8 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default DoubleBinaryOperatorWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default DoubleBinaryOperatorWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final double v1, final double v2) -> {
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
@@ -85,8 +87,8 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoubleBinaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoubleBinaryOperatorWithThrowable with arguments {} {}");
+    default DoubleBinaryOperatorWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in DoubleBinaryOperatorWithThrowable");
     }
 
 
@@ -95,7 +97,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @return An interface that will log exceptions on global logger
      */
     default DoubleBinaryOperatorWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -105,7 +107,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoubleBinaryOperatorWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default DoubleBinaryOperatorWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final double v1, final double v2) -> {
             try {
                 return applyAsDoubleWithThrowable(v1, v2);

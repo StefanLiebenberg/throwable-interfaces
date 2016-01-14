@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.ToIntFunction;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from ToIntFunction
  * Extends java.util.function.ToIntFunction to allow for a checked exception.
@@ -69,7 +70,8 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default ToIntFunctionWithThrowable<T, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default ToIntFunctionWithThrowable<T, E> withLogging(final Logger logger, final String message) {
         return (final T v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);
@@ -86,8 +88,8 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default ToIntFunctionWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ToIntFunctionWithThrowable with arguments {}");
+    default ToIntFunctionWithThrowable<T, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in ToIntFunctionWithThrowable");
     }
 
 
@@ -96,7 +98,7 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      * @return An interface that will log exceptions on global logger
      */
     default ToIntFunctionWithThrowable<T, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -106,7 +108,7 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default ToIntFunctionWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+    default ToIntFunctionWithThrowable<T, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);

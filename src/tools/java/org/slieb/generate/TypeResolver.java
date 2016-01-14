@@ -28,6 +28,22 @@ public class TypeResolver {
         return "null";
     }
 
+    public static String getBasicTypeFor(Type type) {
+        if (isTypePrimitive(type)) {
+            switch (((Class) type).getName()) {
+                case "double":
+                case "int":
+                case "long":
+                    return "1";
+                case "boolean":
+                    return "true";
+                default:
+                    return "new Object()";
+            }
+        }
+        return "new Object()";
+    }
+
     public static Type resolveType(Class<?> funcInterface, Type genericReturnType) {
         for (Class<?> interfaceClass : funcInterface.getInterfaces()) {
             final TypeVariable<? extends Class<?>>[] typeParameters = interfaceClass.getTypeParameters();

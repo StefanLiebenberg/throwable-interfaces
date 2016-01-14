@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongPredicate;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongPredicate
  * Extends java.util.function.LongPredicate to allow for a checked exception.
@@ -66,7 +67,8 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default LongPredicateWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default LongPredicateWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final long v1) -> {
             try {
                 return testWithThrowable(v1);
@@ -83,8 +85,8 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default LongPredicateWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongPredicateWithThrowable with arguments {}");
+    default LongPredicateWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in LongPredicateWithThrowable");
     }
 
 
@@ -93,7 +95,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @return An interface that will log exceptions on global logger
      */
     default LongPredicateWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -103,7 +105,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default LongPredicateWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default LongPredicateWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final long v1) -> {
             try {
                 return testWithThrowable(v1);

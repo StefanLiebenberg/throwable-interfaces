@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.ToDoubleBiFunction;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from ToDoubleBiFunction
  * Extends java.util.function.ToDoubleBiFunction to allow for a checked exception.
@@ -74,7 +75,8 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(final Logger logger, final String message) {
         return (final T v1, final U v2) -> {
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
@@ -91,8 +93,8 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in ToDoubleBiFunctionWithThrowable with arguments {} {}");
+    default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in ToDoubleBiFunctionWithThrowable");
     }
 
 
@@ -101,7 +103,7 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @return An interface that will log exceptions on global logger
      */
     default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -111,7 +113,7 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default ToDoubleBiFunctionWithThrowable<T, U, E> onException(Consumer<Throwable> consumer) {
+    default ToDoubleBiFunctionWithThrowable<T, U, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1, final U v2) -> {
             try {
                 return applyAsDoubleWithThrowable(v1, v2);

@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongConsumer
  * Extends java.util.function.LongConsumer to allow for a checked exception.
@@ -62,7 +63,7 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
-    default LongConsumer thatIgnoresExceptions() {
+    default LongConsumer thatThrowsNothing() {
         return (final long v1) -> {
             try {
                 acceptWithThrowable(v1);
@@ -76,7 +77,8 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default LongConsumerWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default LongConsumerWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final long v1) -> {
             try {
                 acceptWithThrowable(v1);
@@ -93,8 +95,8 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default LongConsumerWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongConsumerWithThrowable with arguments {}");
+    default LongConsumerWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in LongConsumerWithThrowable");
     }
 
 
@@ -103,7 +105,7 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
      * @return An interface that will log exceptions on global logger
      */
     default LongConsumerWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -113,7 +115,7 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default LongConsumerWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default LongConsumerWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final long v1) -> {
             try {
                 acceptWithThrowable(v1);

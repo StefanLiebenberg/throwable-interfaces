@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleToLongFunction;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleToLongFunction
  * Extends java.util.function.DoubleToLongFunction to allow for a checked exception.
@@ -66,7 +67,8 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default DoubleToLongFunctionWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default DoubleToLongFunctionWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final double v1) -> {
             try {
                 return applyAsLongWithThrowable(v1);
@@ -83,8 +85,8 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoubleToLongFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoubleToLongFunctionWithThrowable with arguments {}");
+    default DoubleToLongFunctionWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in DoubleToLongFunctionWithThrowable");
     }
 
 
@@ -93,7 +95,7 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @return An interface that will log exceptions on global logger
      */
     default DoubleToLongFunctionWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -103,7 +105,7 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoubleToLongFunctionWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default DoubleToLongFunctionWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final double v1) -> {
             try {
                 return applyAsLongWithThrowable(v1);

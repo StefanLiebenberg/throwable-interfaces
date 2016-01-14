@@ -6,7 +6,7 @@ public class LongConsumerWithThrowableIgnoresTest {
  public void testThrowExceptionWithNoIgnores() {
     castLongConsumerWithThrowable((v1) -> {
       throw new Exception("expected error");
-    }).thatIgnoresExceptions().accept(0);
+    }).thatThrowsNothing().accept(0);
  }
 
 }

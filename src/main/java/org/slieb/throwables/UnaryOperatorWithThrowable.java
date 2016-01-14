@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from UnaryOperator
  * Extends java.util.function.UnaryOperator to allow for a checked exception.
@@ -67,11 +68,11 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
     /**
      * @return An interface that returns a default value if any exception occurs.
      */
-    default UnaryOperator<T> thatReturnsOnCatch(T defaultReturnValue) {
-      return (v1) -> {
+    default UnaryOperator<T> thatReturnsOnCatch(final T defaultReturnValue) {
+      return (final T v1) -> {
         try {
           return applyWithThrowable(v1);
-        } catch(Throwable throwable) {
+        } catch(final Throwable throwable) {
           return defaultReturnValue;
         }
       };
@@ -83,7 +84,8 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default UnaryOperatorWithThrowable<T, E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default UnaryOperatorWithThrowable<T, E> withLogging(final Logger logger, final String message) {
         return (final T v1) -> {
             try {
                 return applyWithThrowable(v1);
@@ -100,8 +102,8 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default UnaryOperatorWithThrowable<T, E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in UnaryOperatorWithThrowable with arguments {}");
+    default UnaryOperatorWithThrowable<T, E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in UnaryOperatorWithThrowable");
     }
 
 
@@ -110,7 +112,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @return An interface that will log exceptions on global logger
      */
     default UnaryOperatorWithThrowable<T, E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -120,7 +122,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default UnaryOperatorWithThrowable<T, E> onException(Consumer<Throwable> consumer) {
+    default UnaryOperatorWithThrowable<T, E> onException(final Consumer<Throwable> consumer) {
         return (final T v1) -> {
             try {
                 return applyWithThrowable(v1);

@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoublePredicate;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoublePredicate
  * Extends java.util.function.DoublePredicate to allow for a checked exception.
@@ -66,7 +67,8 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default DoublePredicateWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default DoublePredicateWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final double v1) -> {
             try {
                 return testWithThrowable(v1);
@@ -83,8 +85,8 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoublePredicateWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoublePredicateWithThrowable with arguments {}");
+    default DoublePredicateWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in DoublePredicateWithThrowable");
     }
 
 
@@ -93,7 +95,7 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @return An interface that will log exceptions on global logger
      */
     default DoublePredicateWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -103,7 +105,7 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoublePredicateWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default DoublePredicateWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final double v1) -> {
             try {
                 return testWithThrowable(v1);

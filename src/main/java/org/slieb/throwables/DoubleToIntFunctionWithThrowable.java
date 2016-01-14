@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleToIntFunction;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleToIntFunction
  * Extends java.util.function.DoubleToIntFunction to allow for a checked exception.
@@ -66,7 +67,8 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default DoubleToIntFunctionWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default DoubleToIntFunctionWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final double v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);
@@ -83,8 +85,8 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default DoubleToIntFunctionWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in DoubleToIntFunctionWithThrowable with arguments {}");
+    default DoubleToIntFunctionWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in DoubleToIntFunctionWithThrowable");
     }
 
 
@@ -93,7 +95,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * @return An interface that will log exceptions on global logger
      */
     default DoubleToIntFunctionWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -103,7 +105,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default DoubleToIntFunctionWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default DoubleToIntFunctionWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final double v1) -> {
             try {
                 return applyAsIntWithThrowable(v1);

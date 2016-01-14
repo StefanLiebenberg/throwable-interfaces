@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongUnaryOperator;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongUnaryOperator
  * Extends java.util.function.LongUnaryOperator to allow for a checked exception.
@@ -66,7 +67,8 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default LongUnaryOperatorWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default LongUnaryOperatorWithThrowable<E> withLogging(final Logger logger, final String message) {
         return (final long v1) -> {
             try {
                 return applyAsLongWithThrowable(v1);
@@ -83,8 +85,8 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default LongUnaryOperatorWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in LongUnaryOperatorWithThrowable with arguments {}");
+    default LongUnaryOperatorWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in LongUnaryOperatorWithThrowable");
     }
 
 
@@ -93,7 +95,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @return An interface that will log exceptions on global logger
      */
     default LongUnaryOperatorWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -103,7 +105,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default LongUnaryOperatorWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default LongUnaryOperatorWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return (final long v1) -> {
             try {
                 return applyAsLongWithThrowable(v1);

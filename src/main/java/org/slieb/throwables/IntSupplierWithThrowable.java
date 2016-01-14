@@ -4,6 +4,7 @@ import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.IntSupplier;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from IntSupplier
  * Extends java.util.function.IntSupplier to allow for a checked exception.
@@ -64,7 +65,8 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
-    default IntSupplierWithThrowable<E> withLogging(Logger logger, String message) {
+    @SuppressWarnings("Duplicates")
+    default IntSupplierWithThrowable<E> withLogging(final Logger logger, final String message) {
         return () -> {
             try {
                 return getAsIntWithThrowable();
@@ -81,8 +83,8 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default IntSupplierWithThrowable<E> withLogging(org.slf4j.Logger logger) {
-        return withLogging(logger, "Exception in IntSupplierWithThrowable with arguments ");
+    default IntSupplierWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in IntSupplierWithThrowable");
     }
 
 
@@ -91,7 +93,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * @return An interface that will log exceptions on global logger
      */
     default IntSupplierWithThrowable<E> withLogging() {
-        return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));
+        return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
 
@@ -101,7 +103,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default IntSupplierWithThrowable<E> onException(Consumer<Throwable> consumer) {
+    default IntSupplierWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return () -> {
             try {
                 return getAsIntWithThrowable();

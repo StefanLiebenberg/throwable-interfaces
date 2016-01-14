@@ -1,6 +1,7 @@
 package org.slieb.generate;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slieb.throwables.SuppressedException;
 
 import java.io.File;
@@ -12,14 +13,15 @@ import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.slieb.generate.TypeResolver.getFunctionalMethod;
+import static org.slieb.generate.TypeResolver.*;
 
 /**
  * This class generates a bunch of interfaces based on some crazy reflecting of the utilities in java.util.function.*
@@ -38,12 +40,14 @@ public class InterfaceGenerator {
 
     public void generate(Class<?> funcInterface) {
         try {
+
             String className = funcInterface.getSimpleName() + "WithThrowable";
             generateImplementation(funcInterface, className);
             generateCastTest(funcInterface, className, className + "CastTest");
             generateConvertTest(funcInterface, className, className + "ConvertTest");
             generateIgnoresTest(funcInterface, className, className + "IgnoresTest");
             generateLogableTest(funcInterface, className, className + "LogableTest");
+            generateGeneralTest(funcInterface, className, className + "GeneralTest");
         } catch (Exception ignore) {
             ignore.printStackTrace();
         }
@@ -68,6 +72,10 @@ public class InterfaceGenerator {
 
     public void generateLogableTest(Class<?> funcInterface, String className, String testName) throws IOException {
         generateFile(testDirectory, packageName, testName, getLoggableTestContent(funcInterface, className, testName));
+    }
+
+    public void generateGeneralTest(Class<?> funcInterface, String className, String testName) throws IOException {
+        generateFile(testDirectory, packageName, testName, getGeneralTestContent(funcInterface, className, testName));
     }
 
     public void generateFile(File directory, String pkg, String fileName, String content) throws IOException {
@@ -232,7 +240,7 @@ public class InterfaceGenerator {
 
             stringBuilder.append("    cast").append(className).append("(").append(params).append(" -> {\n");
             stringBuilder.append("      throw new Exception(\"expected error\");\n");
-            stringBuilder.append("    }).thatIgnoresExceptions().").append(getMethodCall(funcInterface, method)).append(";\n");
+            stringBuilder.append("    }).thatThrowsNothing().").append(getMethodCall(funcInterface, method)).append(";\n");
             stringBuilder.append(" }\n\n");
 
 
@@ -312,6 +320,83 @@ public class InterfaceGenerator {
         return logableTest.toString();
     }
 
+    private String getGeneralTestContent(Class<?> funcInterface, String className, String testName) {
+        IndentStringBuilder isb = new IndentStringBuilder();
+        isb.appendPackage(packageName);
+
+        isb.append("import org.junit.Test;\n");
+
+
+        isb.appendImports(AtomicReference.class);
+
+        isb.append("import static ").append(packageName).append(".").append(className).append(".cast").append(className).append(";\n");
+        isb.append("import static org.junit.Assert.assertEquals;\n");
+
+        isb.append("public class ").append(testName);
+        isb.append(" {\n");
+
+        Method method = getFunctionalMethod(funcInterface);
+        String params = getMethodParams(funcInterface, method, false);
+
+        Type returnType = TypeResolver.resolveType(funcInterface, method.getGenericReturnType());
+        boolean hasReturnType = !returnType.equals(Void.TYPE);
+        boolean returnTypeIsPrimitive = TypeResolver.isTypePrimitive(returnType);
+        if (hasReturnType && !returnTypeIsPrimitive) {
+
+            isb.append(" @Test\n");
+            isb.append(" public void testReturnTypeException() {\n");
+            isb.indents(8).append("Object expected = new Object();").newline();
+            isb.indents(8).append("Object result = cast").append(className).append("(").append(params).append(" -> {\n");
+            isb.append("      throw new Exception(\"expect exception\");\n");
+            isb.append("    }).thatReturnsOnCatch(expected).").append(getMethodCall(funcInterface, method)).append(";\n");
+            isb.indents(8).append("assertEquals(expected, result);").newline();
+            isb.append(" }\n\n");
+
+            isb.append(" @Test\n");
+            isb.append(" public void testNormalOperation() {\n");
+            isb.append("    Object expected = ").append(getBasicTypeFor(returnType)).append(";").newline();
+            isb.append("    Object result = cast").append(className).append("(").append(params)
+                    .append(" -> expected).thatReturnsOnCatch(").append(getNullTypeFor(returnType)).append(").").append(getMethodCall(funcInterface, method)).append(";\n");
+            isb.append("    assertEquals(expected, result);\n");
+            isb.append(" }\n\n");
+        }
+
+        if (!hasReturnType) {
+            isb.append(" @Test\n");
+            isb.append(" public void testThrowsNothing() {\n");
+            isb.indents(8).append("cast").append(className).append("(").append(params).append(" -> {\n");
+            isb.append("      throw new Exception(\"expect exception\");\n");
+            isb.append("    }).thatThrowsNothing().").append(getMethodCall(funcInterface, method)).append(";\n");
+            isb.append(" }\n\n");
+
+            isb.append(" @Test\n");
+            isb.append(" public void testThrowsNothingNormalOperation() {\n");
+            isb.append("    cast").append(className).append("(").append(params)
+                    .append(" -> {}).thatThrowsNothing().").append(getMethodCall(funcInterface, method)).append(";\n");
+            isb.append(" }\n\n");
+        }
+
+
+        isb.append(" @Test\n");
+        isb.append(" public void testOnException() {\n");
+        isb.indents(8).appendClass(AtomicReference.class).append("<").appendClass(Throwable.class)
+                .append("> reference = new ").appendClass(AtomicReference.class).append("<>();").newline();
+        isb.indents(8).appendClass(Exception.class).append(" expected = new ").appendClass(Exception.class).append("(\"expected\");").newline();
+        isb.indents(8).append("try {").newline();
+        isb.indents(8).append("cast").append(className).append("(").append(params).append(" -> {\n");
+        isb.append("      throw expected;\n");
+        isb.append("    }).onException(reference::set).").append(getMethodCall(funcInterface, method)).append(";\n");
+        isb.indents(8).append("} catch (Throwable ignored) {}").newline();
+        isb.indents(8).append("assertEquals(expected, reference.get());").newline();
+
+        isb.append(" }\n\n");
+
+
+        isb.append("}\n");
+
+        return isb.toString();
+    }
+
     private String getMethodCall(Class funcClass, Method method) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(method.getName());
@@ -334,8 +419,9 @@ public class InterfaceGenerator {
     private String getImplementationContent(Class<?> funcInterface, String className) {
         List<String> generics = getGenerics(funcInterface);
         IndentStringBuilder isb = new IndentStringBuilder();
-isb.appendPackage(packageName);
-        isb.appendImports(Logger.class, Consumer.class, Throwable.class, funcInterface, SuppressedException.class);
+        isb.appendPackage(packageName);
+        isb.appendImports(LoggerFactory.class, Logger.class, Consumer.class, Throwable.class, funcInterface,
+                SuppressedException.class);
 
         isb.append("/**").newline();
         isb.append(" * Generated from ").appendClass(funcInterface).append("\n");
@@ -465,7 +551,7 @@ isb.appendPackage(packageName);
 //                    if (!generics.isEmpty()) {
 //                        stringBuilder.append(generateGenerics(genericsWithOptionalReturn, false, false));
 //                    }
-//                    stringBuilder.append(" thatReturnsOptionalOnCatch() {\n");
+//                    stringBuilder.append(" thatReturnsOptional() {\n");
 //                    stringBuilder.append("  return ").append(getMethodParams(funcInterface, method, false));
 //                    stringBuilder.append(" -> {\n");
 //                    stringBuilder.append("    try {\n");
@@ -479,7 +565,7 @@ isb.appendPackage(packageName);
 //                    stringBuilder.append("}\n");
 //                }
             } else {
-                List<String> genericsWithOptionalReturn = generics.stream().map(gen -> gen.equals(returnTypeName) ? "java.util.Optional<" + gen + ">" : gen).collect(toList());
+                List<String> genericsWithOptionalReturn = generics.stream().map(gen -> gen.equals(returnTypeName) ? isb.getClassContent(java.util.Optional.class) + "<" + gen + ">" : gen).collect(toList());
                 boolean mixedTypes = Arrays.asList(method.getGenericParameterTypes())
                         .stream().map(t -> TypeResolver.resolveType(funcInterface, t)).anyMatch(returnType::equals);
 
@@ -494,15 +580,15 @@ isb.appendPackage(packageName);
                     if (!generics.isEmpty()) {
                         isb.append(generateGenerics(genericsWithOptionalReturn, false, false));
                     }
-                    isb.indent().append("thatReturnsOptionalOnCatch() {\n");
-                    isb.indent().append("  return ").append(getMethodParams(funcInterface, method, false));
+                    isb.indent().append("thatReturnsOptional() {\n");
+                    isb.indent().append("  return ").append(getMethodParams(funcInterface, method, true));
                     isb.indent().append(" -> {\n");
                     isb.indent().append("    try {\n");
-                    isb.indent().append("      return java.util.Optional.of(").append(methodName).append("WithThrowable")
+                    isb.indent().append("      return ").appendClass(Optional.class).append(".ofNullable(").append(methodName).append("WithThrowable")
                             .append(getMethodParams(funcInterface, method, false))
                             .append(");\n");
                     isb.indent().append("    } catch(Throwable throwable) {\n");
-                    isb.indent().append("      return java.util.Optional.empty();\n");
+                    isb.indent().append("      return ").appendClass(Optional.class).append(".empty();\n");
                     isb.indent().append("    }\n");
                     isb.indent().append("  };\n");
                     isb.indent().append("}\n");
@@ -516,14 +602,14 @@ isb.appendPackage(packageName);
                 if (!generics.isEmpty()) {
                     isb.append(generateGenerics(generics, false, false));
                 }
-                isb.append(" thatReturnsOnCatch(").append(returnTypeName).append(" defaultReturnValue) {\n");
-                isb.indent().append("  return ").append(getMethodParams(funcInterface, method, false));
+                isb.append(" thatReturnsOnCatch(final ").append(returnTypeName).append(" defaultReturnValue) {\n");
+                isb.indent().append("  return ").append(getMethodParams(funcInterface, method, true));
                 isb.append(" -> {\n");
                 isb.indent().append("    try {\n");
                 isb.indent().append("      return ").append(methodName).append("WithThrowable")
                         .append(getMethodParams(funcInterface, method, false))
                         .append(";\n");
-                isb.indent().append("    } catch(Throwable throwable) {\n");
+                isb.indent().append("    } catch(final ").appendClass(Throwable.class).append(" throwable) {\n");
                 isb.indent().append("      return defaultReturnValue;\n");
                 isb.indent().append("    }\n");
                 isb.indent().append("  };\n");
@@ -540,7 +626,7 @@ isb.appendPackage(packageName);
             if (!generics.isEmpty()) {
                 isb.append(generateGenerics(generics, false, false));
             }
-            isb.append(" thatIgnoresExceptions() {").newline();
+            isb.append(" thatThrowsNothing() {").newline();
 
             isb.setIndent(8);
             isb.indent().append("return ").append(getMethodParams(funcInterface, method, true))
@@ -585,7 +671,7 @@ isb.appendPackage(packageName);
         isb.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
         isb.indents(4).append("default")
                 .append(" ").append(className).append(generateGenerics(generics, true, false))
-                .append(" onException(").appendClass(Consumer.class).append("<").appendClass(Throwable.class).append(">").append(" consumer) {")
+                .append(" onException(final ").appendClass(Consumer.class).append("<").appendClass(Throwable.class).append(">").append(" consumer) {")
                 .newline();
         isb.indents(8).append("return ").append(getMethodParams(funcInterface, method, true)).append(" -> {").newline();
         isb.indents(12).append("try {").newline();
@@ -618,10 +704,10 @@ isb.appendPackage(packageName);
         isb.indent().append(" * @param message A message to use for logging exceptions").newline();
         isb.indent().append(" * @return An interface that will log all exceptions to given logger").newline();
         isb.indent().append(" */").newline();
-//        isb.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
+        isb.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
         isb.indent().append("default")
                 .append(" ").append(className).append(generateGenerics(generics, true, false))
-                .append(" withLogging(").appendClass(Logger.class).append(" logger, String message) {")
+                .append(" withLogging(final ").appendClass(Logger.class).append(" logger, final String message) {")
                 .newline();
         isb.setIndent(8);
 
@@ -661,8 +747,8 @@ isb.appendPackage(packageName);
         isb.indent().append(" */").newline();
         isb.indent().append("default")
                 .append(" ").append(className).append(generateGenerics(generics, true, false))
-                .append(" withLogging(").append(Logger.class.getCanonicalName()).append(" logger) {").newline();
-        isb.indents(8).append("return withLogging(logger, \"").append(getErrorMessage(className, method)).append("\");").newline();
+                .append(" withLogging(final ").appendClass(Logger.class).append(" logger) {").newline();
+        isb.indents(8).append("return withLogging(logger, \"").append(getErrorMessage(className)).append("\");").newline();
         isb.indent().append("}").newline();
 
         isb.newlines(2);
@@ -673,7 +759,7 @@ isb.appendPackage(packageName);
         isb.indent().append(" */").newline();
         isb.indent().append("default ").append(className).append(generateGenerics(generics, true, false))
                 .append(" withLogging() {").newline();
-        isb.indents(8).append("return withLogging(org.slf4j.LoggerFactory.getLogger(getClass()));\n");
+        isb.indents(8).append("return withLogging(").appendClass(LoggerFactory.class).append(".getLogger(getClass()));\n");
         isb.indent().append("}\n");
 
         isb.append("\n");
@@ -706,9 +792,8 @@ isb.appendPackage(packageName);
                 .map(prefix -> prefix + "v" + atomicInteger.incrementAndGet());
     }
 
-    private String getErrorMessage(String className, Method method) {
-        return "Exception in " + className + " with arguments " +
-                Arrays.stream(method.getGenericParameterTypes()).map((t) -> "{}").collect(joining(" "));
+    private String getErrorMessage(String className) {
+        return "Exception in " + className;
     }
 
 
