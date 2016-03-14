@@ -36,7 +36,7 @@ public class SuppressedException extends RuntimeException {
         try {
             return supplier.get();
         } catch (SuppressedException e) {
-            throw unwrapException(e, exceptionClass).orElseThrow(() -> e);
+            throw unwrapExceptionCause(e, exceptionClass).orElseThrow(() -> e);
         }
     }
 
@@ -65,7 +65,7 @@ public class SuppressedException extends RuntimeException {
         try {
             closure.call();
         } catch (SuppressedException e) {
-            throw unwrapException(e, exception).orElseThrow(() -> e);
+            throw unwrapExceptionCause(e, exception).orElseThrow(() -> e);
         }
     }
 
@@ -87,8 +87,8 @@ public class SuppressedException extends RuntimeException {
      * @param <E>            The exception class type generic
      * @return An optional of the exception, if it is a instance of the exceptionClass.
      */
-    public static <E extends Throwable> Optional<E> unwrapException(final SuppressedException suppressed,
-                                                                    final Class<E> exceptionClass) {
+    public static <E extends Throwable> Optional<E> unwrapExceptionCause(final SuppressedException suppressed,
+                                                                         final Class<E> exceptionClass) {
         return Optional.of(suppressed).map(Throwable::getCause)
                        .flatMap(castFunctionWithThrowable(exceptionClass::cast)
                                         .thatReturnsOptional());
