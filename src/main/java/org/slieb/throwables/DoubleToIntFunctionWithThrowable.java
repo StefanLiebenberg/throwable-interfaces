@@ -24,6 +24,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
     static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> castDoubleToIntFunctionWithThrowable(final DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) {
         return doubletointfunctionwiththrowable;
     }
+
     /**
      * Utility method to convert DoubleToIntFunctionWithThrowable
      * @param doubletointfunction The interface instance
@@ -59,6 +60,11 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * @throws E some exception
      */
     int applyAsIntWithThrowable(final double v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

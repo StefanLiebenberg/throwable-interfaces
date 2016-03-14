@@ -24,6 +24,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
     static <E extends Throwable> LongPredicateWithThrowable<E> castLongPredicateWithThrowable(final LongPredicateWithThrowable<E> longpredicatewiththrowable) {
         return longpredicatewiththrowable;
     }
+
     /**
      * Utility method to convert LongPredicateWithThrowable
      * @param longpredicate The interface instance
@@ -59,6 +60,11 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @throws E some exception
      */
     boolean testWithThrowable(final long v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

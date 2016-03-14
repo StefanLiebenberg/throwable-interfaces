@@ -24,6 +24,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
     static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(final LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) {
         return longunaryoperatorwiththrowable;
     }
+
     /**
      * Utility method to convert LongUnaryOperatorWithThrowable
      * @param longunaryoperator The interface instance
@@ -59,6 +60,11 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @throws E some exception
      */
     long applyAsLongWithThrowable(final long v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

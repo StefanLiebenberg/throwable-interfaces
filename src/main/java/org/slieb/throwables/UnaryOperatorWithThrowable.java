@@ -26,6 +26,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
     static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> castUnaryOperatorWithThrowable(final UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) {
         return unaryoperatorwiththrowable;
     }
+
     /**
      * Utility method to convert UnaryOperatorWithThrowable
      * @param unaryoperator The interface instance

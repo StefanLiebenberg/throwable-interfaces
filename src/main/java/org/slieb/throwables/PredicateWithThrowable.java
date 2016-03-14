@@ -26,6 +26,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
     static <T, E extends Throwable> PredicateWithThrowable<T, E> castPredicateWithThrowable(final PredicateWithThrowable<T, E> predicatewiththrowable) {
         return predicatewiththrowable;
     }
+
     /**
      * Utility method to convert PredicateWithThrowable
      * @param predicate The interface instance
@@ -62,6 +63,11 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @throws E some exception
      */
     boolean testWithThrowable(final T v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

@@ -26,6 +26,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
     static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(final BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) {
         return binaryoperatorwiththrowable;
     }
+
     /**
      * Utility method to convert BinaryOperatorWithThrowable
      * @param binaryoperator The interface instance

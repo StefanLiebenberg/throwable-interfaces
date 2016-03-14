@@ -26,6 +26,7 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
     static <T, E extends Throwable> ToLongFunctionWithThrowable<T, E> castToLongFunctionWithThrowable(final ToLongFunctionWithThrowable<T, E> tolongfunctionwiththrowable) {
         return tolongfunctionwiththrowable;
     }
+
     /**
      * Utility method to convert ToLongFunctionWithThrowable
      * @param tolongfunction The interface instance
@@ -62,6 +63,20 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
      * @throws E some exception
      */
     long applyAsLongWithThrowable(final T v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
+    default java.util.function.Function<T, java.util.OptionalLong>     thatReturnsOptional() {
+      return (v1)     -> {
+        try {
+          return java.util.OptionalLong.of(applyAsLongWithThrowable(v1));
+        } catch(Throwable throwable) {
+          return java.util.OptionalLong.empty();
+        }
+      };
+    }
 
 
     /**

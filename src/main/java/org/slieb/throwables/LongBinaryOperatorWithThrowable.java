@@ -24,6 +24,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
     static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(final LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) {
         return longbinaryoperatorwiththrowable;
     }
+
     /**
      * Utility method to convert LongBinaryOperatorWithThrowable
      * @param longbinaryoperator The interface instance
@@ -61,6 +62,11 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
      * @throws E some exception
      */
     long applyAsLongWithThrowable(final long v1, final long v2) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

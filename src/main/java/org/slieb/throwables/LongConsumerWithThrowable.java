@@ -24,6 +24,7 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
     static <E extends Throwable> LongConsumerWithThrowable<E> castLongConsumerWithThrowable(final LongConsumerWithThrowable<E> longconsumerwiththrowable) {
         return longconsumerwiththrowable;
     }
+
     /**
      * Utility method to convert LongConsumerWithThrowable
      * @param longconsumer The interface instance

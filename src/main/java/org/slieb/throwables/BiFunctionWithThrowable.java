@@ -30,6 +30,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
     static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {
         return bifunctionwiththrowable;
     }
+
     /**
      * Utility method to convert BiFunctionWithThrowable
      * @param bifunction The interface instance

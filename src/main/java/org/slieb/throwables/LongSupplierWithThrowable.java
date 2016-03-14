@@ -24,6 +24,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
     static <E extends Throwable> LongSupplierWithThrowable<E> castLongSupplierWithThrowable(final LongSupplierWithThrowable<E> longsupplierwiththrowable) {
         return longsupplierwiththrowable;
     }
+
     /**
      * Utility method to convert LongSupplierWithThrowable
      * @param longsupplier The interface instance
@@ -57,6 +58,11 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * @throws E some exception
      */
     long getAsLongWithThrowable() throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

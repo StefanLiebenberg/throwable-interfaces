@@ -648,35 +648,42 @@ public class InterfaceGenerator {
 
         if (hasReturnType) {
             boolean returnTypeIsPrimitive = TypeResolver.isTypePrimitive(returnType);
-
             if (returnTypeIsPrimitive) {
-                System.out.println("todo!");
-                // todo, a lot of type resolution needs to happen here.
-//                Type optionalReturnType = TypeResolver.getOptionalTypeForPrimitive(returnType);
-                //                if (optionalReturnType != null) {
-                //                    List<String> genericsWithOptionalReturn = generics.stream().map(gen -> gen.equals(returnTypeName) ? optionalReturnType
-                // .getTypeName() : gen).collect(toList());
-                //                    stringBuilder.append("default ").append(funcInterface.getName());
-                //                    if (!generics.isEmpty()) {
-                //                        stringBuilder.append(generateGenerics(genericsWithOptionalReturn, false, false));
-                //                    }
-                //                    stringBuilder.append(" thatReturnsOptional() {\n");
-                //                    stringBuilder.append("  return ").append(getMethodParams(funcInterface, method, false));
-                //                    stringBuilder.append(" -> {\n");
-                //                    stringBuilder.append("    try {\n");
-                //                    stringBuilder.append("      return java.util.Optional.of(").append(methodName).append("WithThrowable")
-                //                            .append(getMethodParams(funcInterface, method, false))
-                //                            .append(");\n");
-                //                    stringBuilder.append("    } catch(Throwable throwable) {\n");
-                //                    stringBuilder.append("      return java.util.Optional.empty();\n");
-                //                    stringBuilder.append("    }\n");
-                //                    stringBuilder.append("  };\n");
-                //                    stringBuilder.append("}\n");
-                //                }
+                boolean returnTypeInGenerics = generics.stream().anyMatch(returnTypeName::equals);
+
+                isb.newlines(2).setIndent(4);
+                isb.indent().append("/**").newline();
+                isb.indent()
+                   .append(" * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.")
+                   .newline();
+                isb.indent().append(" */").newline();
+                Class<?> optionalReturnType = TypeResolver.getOptionalTypeForPrimitive(returnType);
+                Class<?> optionalFunctionType = TypeResolver.getOptionalFunctionTypeFor(funcInterface);
+                if (optionalReturnType != null && optionalFunctionType != null) {
+                    List<String> genericsWithOptionalReturn = (returnTypeInGenerics ?
+                            generics.stream().map(gen -> gen.equals(returnTypeName) ? optionalReturnType.getTypeName() : gen) :
+                            Stream.concat(generics.stream(), Stream.of(optionalReturnType.getName()))).collect(toList());
+                    isb.indent().append("default ").appendClass(optionalFunctionType);
+                    if (!generics.isEmpty()) {
+                        isb.append(generateGenerics(genericsWithOptionalReturn, false, false));
+                    }
+                    isb.indent().append(" thatReturnsOptional() {\n");
+                    isb.indent().append("  return ").append(getMethodParams(funcInterface, method, false));
+                    isb.indent().append(" -> {\n");
+                    isb.indent().append("    try {\n");
+                    isb.indent().append("      return ").appendClass(optionalReturnType).append(".of(").append(methodName).append("WithThrowable")
+                       .append(getMethodParams(funcInterface, method, false))
+                       .append(");\n");
+                    isb.indent().append("    } catch(Throwable throwable) {\n");
+                    isb.indent().append("      return ").appendClass(optionalReturnType).append(".empty();\n");
+                    isb.indent().append("    }\n");
+                    isb.indent().append("  };\n");
+                    isb.indent().append("}\n");
+                }
             } else {
                 List<String> genericsWithOptionalReturn = generics.stream()
                                                                   .map(gen -> gen.equals(returnTypeName) ? isb.getClassContent(
-                                                                          java.util.Optional.class) + "<" + gen + ">" : gen)
+                                                                          Optional.class) + "<" + gen + ">" : gen)
                                                                   .collect(toList());
                 boolean mixedTypes = Arrays.asList(method.getGenericParameterTypes())
                                            .stream().map(t -> TypeResolver.resolveType(funcInterface, t)).anyMatch(returnType::equals);
@@ -870,7 +877,7 @@ public class InterfaceGenerator {
         isb.append(methodName).append("WithThrowable").append(getMethodParams(funcInterface, method, false))
            .append(";").newline();
 
-        List<String> errorArgs = Stream.of("message", "throwable").collect(Collectors.toList());
+        List<String> errorArgs = Stream.of("message", "throwable").collect(toList());
 
         isb.indents(12).append("} catch (final Throwable throwable) {").newline();
         isb.setIndent(16);

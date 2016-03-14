@@ -26,6 +26,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
     static <T, E extends Throwable> SupplierWithThrowable<T, E> castSupplierWithThrowable(final SupplierWithThrowable<T, E> supplierwiththrowable) {
         return supplierwiththrowable;
     }
+
     /**
      * Utility method to convert SupplierWithThrowable
      * @param supplier The interface instance

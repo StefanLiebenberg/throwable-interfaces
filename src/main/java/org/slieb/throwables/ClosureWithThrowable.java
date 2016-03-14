@@ -23,6 +23,7 @@ public interface ClosureWithThrowable<E extends Throwable> extends Closure {
     static <E extends Throwable> ClosureWithThrowable<E> castClosureWithThrowable(final ClosureWithThrowable<E> closurewiththrowable) {
         return closurewiththrowable;
     }
+
     /**
      * Utility method to convert ClosureWithThrowable
      * @param closure The interface instance

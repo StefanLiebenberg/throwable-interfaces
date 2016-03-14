@@ -24,6 +24,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
     static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(final DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {
         return doublesupplierwiththrowable;
     }
+
     /**
      * Utility method to convert DoubleSupplierWithThrowable
      * @param doublesupplier The interface instance
@@ -57,6 +58,11 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      * @throws E some exception
      */
     double getAsDoubleWithThrowable() throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

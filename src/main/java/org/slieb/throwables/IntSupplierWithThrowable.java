@@ -24,6 +24,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
     static <E extends Throwable> IntSupplierWithThrowable<E> castIntSupplierWithThrowable(final IntSupplierWithThrowable<E> intsupplierwiththrowable) {
         return intsupplierwiththrowable;
     }
+
     /**
      * Utility method to convert IntSupplierWithThrowable
      * @param intsupplier The interface instance
@@ -57,6 +58,11 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * @throws E some exception
      */
     int getAsIntWithThrowable() throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

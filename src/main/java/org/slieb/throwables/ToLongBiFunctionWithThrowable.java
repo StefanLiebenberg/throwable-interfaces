@@ -28,6 +28,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
     static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(final ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) {
         return tolongbifunctionwiththrowable;
     }
+
     /**
      * Utility method to convert ToLongBiFunctionWithThrowable
      * @param tolongbifunction The interface instance
@@ -67,6 +68,20 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @throws E some exception
      */
     long applyAsLongWithThrowable(final T v1, final U v2) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
+    default java.util.function.BiFunction<T, U, java.util.OptionalLong>     thatReturnsOptional() {
+      return (v1, v2)     -> {
+        try {
+          return java.util.OptionalLong.of(applyAsLongWithThrowable(v1, v2));
+        } catch(Throwable throwable) {
+          return java.util.OptionalLong.empty();
+        }
+      };
+    }
 
 
     /**

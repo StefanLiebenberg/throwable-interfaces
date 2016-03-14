@@ -24,6 +24,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
     static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {
         return intbinaryoperatorwiththrowable;
     }
+
     /**
      * Utility method to convert IntBinaryOperatorWithThrowable
      * @param intbinaryoperator The interface instance
@@ -61,6 +62,11 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      * @throws E some exception
      */
     int applyAsIntWithThrowable(final int v1, final int v2) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

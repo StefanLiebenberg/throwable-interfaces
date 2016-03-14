@@ -24,6 +24,7 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends Boole
     static <E extends Throwable> BooleanSupplierWithThrowable<E> castBooleanSupplierWithThrowable(final BooleanSupplierWithThrowable<E> booleansupplierwiththrowable) {
         return booleansupplierwiththrowable;
     }
+
     /**
      * Utility method to convert BooleanSupplierWithThrowable
      * @param booleansupplier The interface instance
@@ -57,6 +58,11 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends Boole
      * @throws E some exception
      */
     boolean getAsBooleanWithThrowable() throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

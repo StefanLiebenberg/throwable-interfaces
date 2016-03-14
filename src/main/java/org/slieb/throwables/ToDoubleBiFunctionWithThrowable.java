@@ -28,6 +28,7 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
     static <T, U, E extends Throwable> ToDoubleBiFunctionWithThrowable<T, U, E> castToDoubleBiFunctionWithThrowable(final ToDoubleBiFunctionWithThrowable<T, U, E> todoublebifunctionwiththrowable) {
         return todoublebifunctionwiththrowable;
     }
+
     /**
      * Utility method to convert ToDoubleBiFunctionWithThrowable
      * @param todoublebifunction The interface instance
@@ -67,6 +68,20 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(final T v1, final U v2) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
+    default java.util.function.BiFunction<T, U, java.util.OptionalDouble>     thatReturnsOptional() {
+      return (v1, v2)     -> {
+        try {
+          return java.util.OptionalDouble.of(applyAsDoubleWithThrowable(v1, v2));
+        } catch(Throwable throwable) {
+          return java.util.OptionalDouble.empty();
+        }
+      };
+    }
 
 
     /**

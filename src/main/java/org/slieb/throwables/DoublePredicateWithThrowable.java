@@ -24,6 +24,7 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
     static <E extends Throwable> DoublePredicateWithThrowable<E> castDoublePredicateWithThrowable(final DoublePredicateWithThrowable<E> doublepredicatewiththrowable) {
         return doublepredicatewiththrowable;
     }
+
     /**
      * Utility method to convert DoublePredicateWithThrowable
      * @param doublepredicate The interface instance
@@ -59,6 +60,11 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @throws E some exception
      */
     boolean testWithThrowable(final double v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

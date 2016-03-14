@@ -26,6 +26,7 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
     static <T, E extends Throwable> ObjIntConsumerWithThrowable<T, E> castObjIntConsumerWithThrowable(final ObjIntConsumerWithThrowable<T, E> objintconsumerwiththrowable) {
         return objintconsumerwiththrowable;
     }
+
     /**
      * Utility method to convert ObjIntConsumerWithThrowable
      * @param objintconsumer The interface instance

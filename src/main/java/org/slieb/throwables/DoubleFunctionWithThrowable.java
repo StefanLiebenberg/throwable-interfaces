@@ -26,6 +26,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
     static <R, E extends Throwable> DoubleFunctionWithThrowable<R, E> castDoubleFunctionWithThrowable(final DoubleFunctionWithThrowable<R, E> doublefunctionwiththrowable) {
         return doublefunctionwiththrowable;
     }
+
     /**
      * Utility method to convert DoubleFunctionWithThrowable
      * @param doublefunction The interface instance

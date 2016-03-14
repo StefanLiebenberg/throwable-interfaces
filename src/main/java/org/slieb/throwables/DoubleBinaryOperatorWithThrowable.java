@@ -24,6 +24,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
     static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> castDoubleBinaryOperatorWithThrowable(final DoubleBinaryOperatorWithThrowable<E> doublebinaryoperatorwiththrowable) {
         return doublebinaryoperatorwiththrowable;
     }
+
     /**
      * Utility method to convert DoubleBinaryOperatorWithThrowable
      * @param doublebinaryoperator The interface instance
@@ -61,6 +62,11 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(final double v1, final double v2) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

@@ -1,10 +1,10 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from Function
  * Extends java.util.function.Function to allow for a checked exception.
@@ -20,19 +20,20 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * Utility method to mark lambdas of type FunctionWithThrowable
      *
      * @param functionwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on Function
-     * @param <R> Generic that corresponds to the same generic on Function
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> castFunctionWithThrowable(final FunctionWithThrowable<T, R, E> functionwiththrowable) {
         return functionwiththrowable;
     }
+
     /**
      * Utility method to convert FunctionWithThrowable
      * @param function The interface instance
-     * @param <T> Generic that corresponds to the same generic on Function
-     * @param <R> Generic that corresponds to the same generic on Function
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
@@ -40,7 +41,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
         return function::apply;
     }
 
-    /**
+    /** 
      * Overridden method of FunctionWithThrowable that will call applyWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -57,7 +58,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
         }
     }
 
-    /**
+    /** 
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method

@@ -24,6 +24,7 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
     static <E extends Throwable> LongToDoubleFunctionWithThrowable<E> castLongToDoubleFunctionWithThrowable(final LongToDoubleFunctionWithThrowable<E> longtodoublefunctionwiththrowable) {
         return longtodoublefunctionwiththrowable;
     }
+
     /**
      * Utility method to convert LongToDoubleFunctionWithThrowable
      * @param longtodoublefunction The interface instance
@@ -59,6 +60,11 @@ public interface LongToDoubleFunctionWithThrowable<E extends Throwable> extends 
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(final long v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

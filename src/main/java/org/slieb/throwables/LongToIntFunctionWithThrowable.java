@@ -24,6 +24,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
     static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
         return longtointfunctionwiththrowable;
     }
+
     /**
      * Utility method to convert LongToIntFunctionWithThrowable
      * @param longtointfunction The interface instance
@@ -59,6 +60,11 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      * @throws E some exception
      */
     int applyAsIntWithThrowable(final long v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

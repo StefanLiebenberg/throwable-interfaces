@@ -1,10 +1,10 @@
 package org.slieb.throwables;
 
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.ToIntBiFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.ToIntBiFunction;
 /**
  * Generated from ToIntBiFunction
  * Extends java.util.function.ToIntBiFunction to allow for a checked exception.
@@ -28,6 +28,7 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
     static <T, U, E extends Throwable> ToIntBiFunctionWithThrowable<T, U, E> castToIntBiFunctionWithThrowable(final ToIntBiFunctionWithThrowable<T, U, E> tointbifunctionwiththrowable) {
         return tointbifunctionwiththrowable;
     }
+
     /**
      * Utility method to convert ToIntBiFunctionWithThrowable
      * @param tointbifunction The interface instance
@@ -67,6 +68,20 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @throws E some exception
      */
     int applyAsIntWithThrowable(final T v1, final U v2) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
+    default java.util.function.BiFunction<T, U, java.util.OptionalInt>     thatReturnsOptional() {
+      return (v1, v2)     -> {
+        try {
+          return java.util.OptionalInt.of(applyAsIntWithThrowable(v1, v2));
+        } catch(Throwable throwable) {
+          return java.util.OptionalInt.empty();
+        }
+      };
+    }
 
 
     /**

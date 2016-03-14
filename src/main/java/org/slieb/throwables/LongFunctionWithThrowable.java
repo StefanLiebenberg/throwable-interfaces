@@ -26,6 +26,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
     static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) {
         return longfunctionwiththrowable;
     }
+
     /**
      * Utility method to convert LongFunctionWithThrowable
      * @param longfunction The interface instance

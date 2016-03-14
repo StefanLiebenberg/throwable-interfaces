@@ -26,6 +26,7 @@ public interface ObjDoubleConsumerWithThrowable<T, E extends Throwable> extends 
     static <T, E extends Throwable> ObjDoubleConsumerWithThrowable<T, E> castObjDoubleConsumerWithThrowable(final ObjDoubleConsumerWithThrowable<T, E> objdoubleconsumerwiththrowable) {
         return objdoubleconsumerwiththrowable;
     }
+
     /**
      * Utility method to convert ObjDoubleConsumerWithThrowable
      * @param objdoubleconsumer The interface instance

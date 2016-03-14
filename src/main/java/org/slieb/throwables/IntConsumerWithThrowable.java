@@ -24,6 +24,7 @@ public interface IntConsumerWithThrowable<E extends Throwable> extends IntConsum
     static <E extends Throwable> IntConsumerWithThrowable<E> castIntConsumerWithThrowable(final IntConsumerWithThrowable<E> intconsumerwiththrowable) {
         return intconsumerwiththrowable;
     }
+
     /**
      * Utility method to convert IntConsumerWithThrowable
      * @param intconsumer The interface instance

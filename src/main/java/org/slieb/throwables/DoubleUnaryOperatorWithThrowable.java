@@ -24,6 +24,7 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
     static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) {
         return doubleunaryoperatorwiththrowable;
     }
+
     /**
      * Utility method to convert DoubleUnaryOperatorWithThrowable
      * @param doubleunaryoperator The interface instance
@@ -59,6 +60,11 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      * @throws E some exception
      */
     double applyAsDoubleWithThrowable(final double v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

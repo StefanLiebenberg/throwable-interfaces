@@ -24,6 +24,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
     static <E extends Throwable> IntPredicateWithThrowable<E> castIntPredicateWithThrowable(final IntPredicateWithThrowable<E> intpredicatewiththrowable) {
         return intpredicatewiththrowable;
     }
+
     /**
      * Utility method to convert IntPredicateWithThrowable
      * @param intpredicate The interface instance
@@ -59,6 +60,11 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @throws E some exception
      */
     boolean testWithThrowable(final int v1) throws E;
+
+
+    /**
+     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     */
 
 
     /**

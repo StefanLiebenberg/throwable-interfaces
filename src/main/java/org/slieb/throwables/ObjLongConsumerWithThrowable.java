@@ -26,6 +26,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
     static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(final ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) {
         return objlongconsumerwiththrowable;
     }
+
     /**
      * Utility method to convert ObjLongConsumerWithThrowable
      * @param objlongconsumer The interface instance
