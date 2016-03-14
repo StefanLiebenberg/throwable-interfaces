@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends LongBinaryOperator {
 
-
     /**
      * Utility method to mark lambdas of type LongBinaryOperatorWithThrowable
      *

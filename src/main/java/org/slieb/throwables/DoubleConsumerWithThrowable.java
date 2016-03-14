@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface DoubleConsumerWithThrowable<E extends Throwable> extends DoubleConsumer {
 
-
     /**
      * Utility method to mark lambdas of type DoubleConsumerWithThrowable
      *

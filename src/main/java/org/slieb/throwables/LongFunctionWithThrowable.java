@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongFunction<R> {
 
-
     /**
      * Utility method to mark lambdas of type LongFunctionWithThrowable
      *

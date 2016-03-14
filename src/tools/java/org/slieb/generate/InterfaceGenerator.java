@@ -514,8 +514,10 @@ public class InterfaceGenerator {
 
     private String getImplementationContent(Class<?> funcInterface,
                                             String className) {
-        List<String> generics = getGenerics(funcInterface);
-        IndentStringBuilder isb = new IndentStringBuilder();
+
+        final List<String> generics = getGenerics(funcInterface);
+        final IndentStringBuilder isb = new IndentStringBuilder();
+
         isb.appendPackage(packageName);
         isb.appendImports(LoggerFactory.class, Logger.class, Consumer.class, Throwable.class, funcInterface,
                           SuppressedException.class);
@@ -537,7 +539,7 @@ public class InterfaceGenerator {
         }
         isb.append(" {").newline();
 
-        isb.newlines(2);
+        isb.newlines(1);
         isb.setIndent(4);
         String objectName = className.toLowerCase();
         isb.append("    /**\n");
@@ -558,7 +560,8 @@ public class InterfaceGenerator {
            .append(" cast").append(className)
            .append("(final ").append(className).append(generateGenerics(generics, true, false)).append(" ").append(objectName).append(") {\n")
            .append("        return ").append(objectName).append(";\n")
-           .append("    }\n");
+           .append("    }");
+        isb.newlines(2);
 
         Method method = getFunctionalMethod(funcInterface);
         String methodName = method.getName();
@@ -649,7 +652,7 @@ public class InterfaceGenerator {
             if (returnTypeIsPrimitive) {
                 System.out.println("todo!");
                 // todo, a lot of type resolution needs to happen here.
-                //                Type optionalReturnType = TypeResolver.getOptionalTypeForPrimitive(returnType);
+//                Type optionalReturnType = TypeResolver.getOptionalTypeForPrimitive(returnType);
                 //                if (optionalReturnType != null) {
                 //                    List<String> genericsWithOptionalReturn = generics.stream().map(gen -> gen.equals(returnTypeName) ? optionalReturnType
                 // .getTypeName() : gen).collect(toList());

@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface DoublePredicateWithThrowable<E extends Throwable> extends DoublePredicate {
 
-
     /**
      * Utility method to mark lambdas of type DoublePredicateWithThrowable
      *

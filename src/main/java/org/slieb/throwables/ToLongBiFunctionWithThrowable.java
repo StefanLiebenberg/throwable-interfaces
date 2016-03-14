@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extends ToLongBiFunction<T, U> {
 
-
     /**
      * Utility method to mark lambdas of type ToLongBiFunctionWithThrowable
      *

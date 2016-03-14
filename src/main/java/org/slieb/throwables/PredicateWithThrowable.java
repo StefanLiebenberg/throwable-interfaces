@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface PredicateWithThrowable<T, E extends Throwable> extends Predicate<T> {
 
-
     /**
      * Utility method to mark lambdas of type PredicateWithThrowable
      *

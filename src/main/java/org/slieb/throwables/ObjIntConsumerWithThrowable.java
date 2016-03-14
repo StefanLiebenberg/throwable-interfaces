@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends ObjIntConsumer<T> {
 
-
     /**
      * Utility method to mark lambdas of type ObjIntConsumerWithThrowable
      *

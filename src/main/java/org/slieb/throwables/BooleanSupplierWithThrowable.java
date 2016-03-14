@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface BooleanSupplierWithThrowable<E extends Throwable> extends BooleanSupplier {
 
-
     /**
      * Utility method to mark lambdas of type BooleanSupplierWithThrowable
      *

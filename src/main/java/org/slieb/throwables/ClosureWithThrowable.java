@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface ClosureWithThrowable<E extends Throwable> extends Closure {
 
-
     /**
      * Utility method to mark lambdas of type ClosureWithThrowable
      *

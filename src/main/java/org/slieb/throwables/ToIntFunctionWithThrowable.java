@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIntFunction<T> {
 
-
     /**
      * Utility method to mark lambdas of type ToIntFunctionWithThrowable
      *

@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends DoubleToIntFunction {
 
-
     /**
      * Utility method to mark lambdas of type DoubleToIntFunctionWithThrowable
      *

@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends DoubleUnaryOperator {
 
-
     /**
      * Utility method to mark lambdas of type DoubleUnaryOperatorWithThrowable
      *

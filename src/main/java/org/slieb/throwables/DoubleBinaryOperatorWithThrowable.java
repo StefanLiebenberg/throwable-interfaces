@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 @FunctionalInterface
 public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends DoubleBinaryOperator {
 
-
     /**
      * Utility method to mark lambdas of type DoubleBinaryOperatorWithThrowable
      *
