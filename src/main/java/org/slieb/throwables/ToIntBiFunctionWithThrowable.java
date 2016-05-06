@@ -1,10 +1,10 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.ToIntBiFunction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from ToIntBiFunction
  * Extends java.util.function.ToIntBiFunction to allow for a checked exception.

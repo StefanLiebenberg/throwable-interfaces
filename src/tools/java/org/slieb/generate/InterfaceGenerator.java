@@ -999,6 +999,7 @@ public class InterfaceGenerator {
         interfaceGenerator.generate(java.util.function.IntConsumer.class);
         interfaceGenerator.generate(java.util.function.IntPredicate.class);
         interfaceGenerator.generate(java.util.function.IntSupplier.class);
+        interfaceGenerator.generate(java.util.function.IntFunction.class);
         interfaceGenerator.generate(java.util.function.LongBinaryOperator.class);
         interfaceGenerator.generate(java.util.function.LongConsumer.class);
         interfaceGenerator.generate(java.util.function.LongFunction.class);
