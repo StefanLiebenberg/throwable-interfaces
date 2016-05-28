@@ -4,7 +4,7 @@
     <groupId>org.slieb</groupId>
     <name>throwable-interfaces</name>
     <artifactId>throwable-interfaces</artifactId>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.10</version>
     <description>A collection of standard interfaces that throw exceptions</description>
     <packaging>jar</packaging>
     <url>https://stefanliebenberg.github.io/throwable-interfaces</url>
@@ -35,7 +35,7 @@
         <developerConnection>
             scm:git:git@github.com:StefanLiebenberg/throwable-interfaces.git
         </developerConnection>
-        <tag>HEAD</tag>
+        <tag>throwable-interfaces-1.10</tag>
     </scm>
 
     <licenses>
