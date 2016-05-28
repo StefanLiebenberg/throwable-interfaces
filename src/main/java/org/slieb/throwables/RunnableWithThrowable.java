@@ -1,52 +1,51 @@
 package org.slieb.throwables;
 
 import java.lang.FunctionalInterface;
+import java.lang.Runnable;
 import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.Consumer;
-import java.util.function.LongSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
- * Generated from LongSupplier
- * Extends java.util.function.LongSupplier to allow for a checked exception.
+ * Generated from Runnable
+ * Extends java.lang.Runnable to allow for a checked exception.
  *
  * @param <E> The extension
  */
 @FunctionalInterface
 @SuppressWarnings({"WeakerAccess"})
-public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupplier {
+public interface RunnableWithThrowable<E extends Throwable> extends Runnable {
 
     /**
-     * Utility method to mark lambdas of type LongSupplierWithThrowable
+     * Utility method to mark lambdas of type RunnableWithThrowable
      *
-     * @param longsupplierwiththrowable The interface instance
+     * @param runnablewiththrowable The interface instance
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongSupplierWithThrowable<E> castLongSupplierWithThrowable(final LongSupplierWithThrowable<E> longsupplierwiththrowable) {
-        return longsupplierwiththrowable;
+    static <E extends Throwable> RunnableWithThrowable<E> castRunnableWithThrowable(final RunnableWithThrowable<E> runnablewiththrowable) {
+        return runnablewiththrowable;
     }
 
     /**
-     * Utility method to convert LongSupplierWithThrowable
-     * @param longsupplier The interface instance
+     * Utility method to convert RunnableWithThrowable
+     * @param runnable The interface instance
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongSupplierWithThrowable<E> asLongSupplierWithThrowable(final LongSupplier longsupplier) {
-        return longsupplier::getAsLong;
+    static <E extends Throwable> RunnableWithThrowable<E> asRunnableWithThrowable(final Runnable runnable) {
+        return runnable::run;
     }
 
     /** 
-     * Overridden method of LongSupplierWithThrowable that will call getAsLongWithThrowable, but catching any exceptions.
+     * Overridden method of RunnableWithThrowable that will call runWithThrowable, but catching any exceptions.
      *
-     * @return the value
      */
     @Override
-    default long getAsLong() {
+    default void run() {
         try {
-            return getAsLongWithThrowable();
+            runWithThrowable();
         } catch (final RuntimeException | Error exception) {
             throw exception;
         } catch (final Throwable throwable) {
@@ -57,15 +56,21 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
     /** 
      * Functional method that will throw exceptions.
      *
-     * @return the value
      * @throws E some exception
      */
-    long getAsLongWithThrowable() throws E;
+    void runWithThrowable() throws E;
 
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
+    default Runnable thatThrowsNothing() {
+        return () -> {
+            try {
+                runWithThrowable();
+            } catch(Throwable ignored) {}
+        };
+    }
 
 
     /**
@@ -74,10 +79,10 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default LongSupplierWithThrowable<E> withLogging(final Logger logger, final String message) {
+    default RunnableWithThrowable<E> withLogging(final Logger logger, final String message) {
         return () -> {
             try {
-                return getAsLongWithThrowable();
+                runWithThrowable();
             } catch (final Throwable throwable) {
                 logger.error(message, throwable);
                 throw throwable;
@@ -91,8 +96,8 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
-    default LongSupplierWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in LongSupplierWithThrowable");
+    default RunnableWithThrowable<E> withLogging(final Logger logger) {
+        return withLogging(logger, "Exception in RunnableWithThrowable");
     }
 
 
@@ -100,7 +105,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * Will log WARNING level exceptions on logger if they occur within the interface
      * @return An interface that will log exceptions on global logger
      */
-    default LongSupplierWithThrowable<E> withLogging() {
+    default RunnableWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
 
@@ -111,10 +116,10 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * @return An interface that will log all exceptions to given logger
      */
     @SuppressWarnings("Duplicates")
-    default LongSupplierWithThrowable<E> onException(final Consumer<Throwable> consumer) {
+    default RunnableWithThrowable<E> onException(final Consumer<Throwable> consumer) {
         return () -> {
             try {
-                return getAsLongWithThrowable();
+                runWithThrowable();
             } catch (final Throwable throwable) {
                 consumer.accept(throwable);
                 throw throwable;

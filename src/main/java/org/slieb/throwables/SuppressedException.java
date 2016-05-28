@@ -55,27 +55,27 @@ public class SuppressedException extends RuntimeException {
     }
 
     /**
-     * @param closure   A closure that throws suppressed exceptions
+     * @param runnable  A runnable that throws suppressed exceptions
      * @param exception The exception class to intercept.
      * @param <E>       The exception class generic type.
      * @throws E The intercepted exception.
      */
-    public static <E extends Throwable> void unwrapSuppressedException(final Closure closure,
+    public static <E extends Throwable> void unwrapSuppressedException(final Runnable runnable,
                                                                        final Class<E> exception) throws E {
         try {
-            closure.call();
+            runnable.run();
         } catch (SuppressedException e) {
             throw unwrapExceptionCause(e, exception).orElseThrow(() -> e);
         }
     }
 
     /**
-     * @param closure A closure that throws suppressed exceptions
+     * @param runnable A runnable that throws suppressed exceptions
      * @throws Throwable Any throwable caused that is intercepted from caught Suppressed Exceptions.
      */
-    public static void unwrapSuppressedException(final Closure closure) throws Throwable {
+    public static void unwrapSuppressedException(final Runnable runnable) throws Throwable {
         try {
-            closure.call();
+            runnable.run();
         } catch (SuppressedException e) {
             throw e.getCause();
         }

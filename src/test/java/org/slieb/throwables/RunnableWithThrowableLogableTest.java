@@ -1,8 +1,8 @@
 package org.slieb.throwables;
 import org.junit.Test;
-import static org.slieb.throwables.LongPredicateWithThrowable.castLongPredicateWithThrowable;
+import static org.slieb.throwables.RunnableWithThrowable.castRunnableWithThrowable;
 @java.lang.SuppressWarnings({"WeakerAccess", "deprecation"})
-public class LongPredicateWithThrowableLogableTest {
+public class RunnableWithThrowableLogableTest {
 
   private ThrownHandler tHandler;
 
@@ -27,9 +27,9 @@ public class LongPredicateWithThrowableLogableTest {
   public void testThrowCheckedException() {
     Exception expected = new Exception("EXPECTED ERROR");
     try {
-      castLongPredicateWithThrowable((v1) -> {
+      castRunnableWithThrowable(() -> {
         throw expected;
-      }).withLogging().test(0);
+      }).withLogging().run();
     } catch (Exception ignored) {}
     org.junit.Assert.assertEquals(expected, tHandler.getLastRecord().getThrown());
   }
@@ -37,9 +37,7 @@ public class LongPredicateWithThrowableLogableTest {
 
   @Test
   public void testNormalOperation() {
-    castLongPredicateWithThrowable((v1) -> {
-      return false;
-    }).withLogging().test(0);
+    castRunnableWithThrowable(() -> {}).withLogging().run();
   }
 
 

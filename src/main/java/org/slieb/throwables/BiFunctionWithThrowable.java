@@ -1,5 +1,7 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory;
  * @param <E> The extension
  */
 @FunctionalInterface
+@SuppressWarnings({"WeakerAccess"})
 public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends BiFunction<T, U, R> {
 
     /**
@@ -88,7 +91,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
 
 
     /**
-     * @param defaultReturnValue A value to return if any throwable is catched.
+     * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default BiFunction<T, U, R> thatReturnsOnCatch(final R defaultReturnValue) {

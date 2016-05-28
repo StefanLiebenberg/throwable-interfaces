@@ -1,5 +1,7 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @param <E> The extension
  */
 @FunctionalInterface
+@SuppressWarnings({"WeakerAccess"})
 public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<T> {
 
     /**
@@ -78,7 +81,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
 
 
     /**
-     * @param defaultReturnValue A value to return if any throwable is catched.
+     * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default Supplier<T> thatReturnsOnCatch(final T defaultReturnValue) {

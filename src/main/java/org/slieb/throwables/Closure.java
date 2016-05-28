@@ -1,7 +1,12 @@
 package org.slieb.throwables;
 
 @FunctionalInterface
-public interface Closure {
+@Deprecated
+public interface Closure extends Runnable {
 
     void call();
+
+    default void run() {
+        call();
+    }
 }

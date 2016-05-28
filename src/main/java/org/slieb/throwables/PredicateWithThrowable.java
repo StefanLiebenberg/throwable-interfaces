@@ -1,5 +1,7 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @param <E> The extension
  */
 @FunctionalInterface
+@SuppressWarnings({"WeakerAccess"})
 public interface PredicateWithThrowable<T, E extends Throwable> extends Predicate<T> {
 
     /**

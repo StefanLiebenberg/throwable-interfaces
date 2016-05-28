@@ -7,59 +7,59 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder> {
+class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder> {
 
     private final AtomicInteger atomicInteger;
+
     private final StringBuilder stringBuilder;
+
     private final Set<Class<?>> imports;
+
     private String packageName;
 
-    public IndentStringBuilder() {
+    IndentStringBuilder() {
         atomicInteger = new AtomicInteger(0);
         stringBuilder = new StringBuilder();
         imports = new HashSet<>();
     }
 
-    public Integer getIndent() {
-        return atomicInteger.get();
-    }
-
     public IndentStringBuilder incrementIndent() {
+        atomicInteger.incrementAndGet();
         atomicInteger.incrementAndGet();
         return this;
     }
 
     public IndentStringBuilder decrementIndent() {
         atomicInteger.decrementAndGet();
+        atomicInteger.decrementAndGet();
         return this;
     }
 
-    public void setIndent(Integer indent) {
+    void setIndent(Integer indent) {
         atomicInteger.set(indent);
     }
 
-
-    public IndentStringBuilder openComment() {
+    IndentStringBuilder openComment() {
         stringBuilder.append("/**");
         return this;
     }
 
-    public IndentStringBuilder appendComment(String string) {
+    private IndentStringBuilder appendComment(String string) {
         stringBuilder.append(" * ").append(string);
         return this;
     }
 
-    public IndentStringBuilder appendParam(String paramName, String description) {
+    IndentStringBuilder appendParam(String paramName, String description) {
         this.appendComment("@param").append(" ").append(paramName).append(" ").append(description);
         return this;
     }
 
-    public IndentStringBuilder appendReturn(String description) {
+    IndentStringBuilder appendReturn(String description) {
         this.appendComment("@return").append(" ").append(description);
         return this;
     }
 
-    public IndentStringBuilder closeComment() {
+    IndentStringBuilder closeComment() {
         stringBuilder.append(" */");
         return this;
     }
@@ -75,7 +75,7 @@ public class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder>
         return this;
     }
 
-    public IndentStringBuilder appendClass(Class classType) {
+    IndentStringBuilder appendClass(Class classType) {
         this.stringBuilder.append(this.getClassContent(classType));
         return this;
     }
@@ -86,32 +86,31 @@ public class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder>
         return this;
     }
 
-    public IndentStringBuilder append(int integer) {
+    IndentStringBuilder append(int integer) {
         stringBuilder.append(integer);
         return this;
     }
 
-    public IndentStringBuilder newlines(int count) {
+    IndentStringBuilder newlines(int count) {
         return printRepeated("\n", count);
     }
 
-    public IndentStringBuilder printRepeated(CharSequence sequence, Integer repeats) {
+    private IndentStringBuilder printRepeated(CharSequence sequence, Integer repeats) {
         for (int i = 0; i < repeats; i++) {
             stringBuilder.append(sequence);
         }
         return this;
     }
 
-
-    public IndentStringBuilder indent() {
+    IndentStringBuilder indent() {
         return this.indents(atomicInteger.get());
     }
 
-    public IndentStringBuilder indents(Integer indent) {
+    IndentStringBuilder indents(Integer indent) {
         return printRepeated(" ", indent);
     }
 
-    public IndentStringBuilder newline() {
+    IndentStringBuilder newline() {
         return newlines(1);
     }
 
@@ -120,7 +119,7 @@ public class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder>
         return stringBuilder.toString();
     }
 
-    public IndentStringBuilder appendImport(Class<?> classMethod) {
+    IndentStringBuilder appendImport(Class<?> classMethod) {
         imports.add(classMethod);
         if (!classMethod.getPackage().getName().equals(packageName)) {
             return append("import ").append(classMethod.getCanonicalName()).append(";").newline();
@@ -129,17 +128,33 @@ public class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder>
         }
     }
 
-    public IndentStringBuilder appendImports(Class<?>... classesToImport) {
+    IndentStringBuilder appendImports(Class<?>... classesToImport) {
         Arrays.stream(classesToImport).sorted(Comparator.comparing(Class::getCanonicalName)).forEach(this::appendImport);
         return this;
     }
 
-    public IndentStringBuilder appendPackage(String packageName) {
+    IndentStringBuilder appendPackage(String packageName) {
         this.packageName = packageName;
         return this.append("package ").append(packageName).append(";").newlines(2);
     }
 
-    public String getClassContent(Class classType) {
+    String getClassContent(Class classType) {
         return imports.contains(classType) ? classType.getSimpleName() : classType.getCanonicalName();
     }
+
+    IndentStringBuilder annotate(final Class<?> annotationClass) {
+        return this.annotate(annotationClass, null);
+    }
+
+    IndentStringBuilder annotate(final Class<?> annotationClass, String content) {
+        this.append("@").appendClass(annotationClass);
+
+        if (content != null) {
+            this.append("(").append(content).append(")");
+        }
+
+        return this.newline();
+    }
+
+
 }

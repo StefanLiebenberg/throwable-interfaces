@@ -1,5 +1,7 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @param <E> The extension
  */
 @FunctionalInterface
+@SuppressWarnings({"WeakerAccess"})
 public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends BinaryOperator<T> {
 
     /**
@@ -68,7 +71,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
 
 
     /**
-     * @param defaultReturnValue A value to return if any throwable is catched.
+     * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default BinaryOperator<T> thatReturnsOnCatch(final T defaultReturnValue) {

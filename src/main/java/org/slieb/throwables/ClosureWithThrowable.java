@@ -1,9 +1,12 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.lang.Deprecated;
 /**
  * Generated from Closure
  * Extends org.slieb.throwables.Closure to allow for a checked exception.
@@ -11,6 +14,8 @@ import org.slf4j.LoggerFactory;
  * @param <E> The extension
  */
 @FunctionalInterface
+@SuppressWarnings({"WeakerAccess", "deprecation"})
+@Deprecated
 public interface ClosureWithThrowable<E extends Throwable> extends Closure {
 
     /**

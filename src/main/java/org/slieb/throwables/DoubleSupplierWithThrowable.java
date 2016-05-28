@@ -1,5 +1,7 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
  * @param <E> The extension
  */
 @FunctionalInterface
+@SuppressWarnings({"WeakerAccess"})
 public interface DoubleSupplierWithThrowable<E extends Throwable> extends DoubleSupplier {
 
     /**

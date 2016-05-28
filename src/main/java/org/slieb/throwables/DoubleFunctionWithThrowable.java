@@ -1,5 +1,7 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
 import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleFunction;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @param <E> The extension
  */
 @FunctionalInterface
+@SuppressWarnings({"WeakerAccess"})
 public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends DoubleFunction<R> {
 
     /**
@@ -80,7 +83,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
 
 
     /**
-     * @param defaultReturnValue A value to return if any throwable is catched.
+     * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default DoubleFunction<R> thatReturnsOnCatch(final R defaultReturnValue) {
