@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.LongFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.LongFunction;
+
 /**
  * Generated from LongFunction
  * Extends java.util.function.LongFunction to allow for a checked exception.
@@ -22,26 +21,28 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      * Utility method to mark lambdas of type LongFunctionWithThrowable
      *
      * @param longfunctionwiththrowable The interface instance
-     * @param <R> Generic that corresponds to the same generic on LongFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <R>                       Generic that corresponds to the same generic on LongFunction
+     * @param <E>                       The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) {
+    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(
+            final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) {
         return longfunctionwiththrowable;
     }
 
     /**
      * Utility method to convert LongFunctionWithThrowable
+     *
      * @param longfunction The interface instance
-     * @param <R> Generic that corresponds to the same generic on LongFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <R>          Generic that corresponds to the same generic on LongFunction
+     * @param <E>          The type this interface is allowed to throw
      * @return the cast interface
      */
     static <R, E extends Throwable> LongFunctionWithThrowable<R, E> asLongFunctionWithThrowable(final LongFunction<R> longfunction) {
         return longfunction::apply;
     }
 
-    /** 
+    /**
      * Overridden method of LongFunctionWithThrowable that will call applyWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -58,7 +59,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -67,38 +68,35 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      */
     R applyWithThrowable(final long v1) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default LongFunction<java.util.Optional<R>>    thatReturnsOptional() {
-      return (final long v1)     -> {
-        try {
-          return java.util.Optional.ofNullable(applyWithThrowable(v1));
-        } catch(Throwable throwable) {
-          return java.util.Optional.empty();
-        }
-      };
+    default LongFunction<java.util.Optional<R>> thatReturnsOptional() {
+        return (final long v1) -> {
+            try {
+                return java.util.Optional.ofNullable(applyWithThrowable(v1));
+            } catch (Throwable throwable) {
+                return java.util.Optional.empty();
+            }
+        };
     }
-
 
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default LongFunction<R> thatReturnsOnCatch(final R defaultReturnValue) {
-      return (final long v1) -> {
-        try {
-          return applyWithThrowable(v1);
-        } catch(final Throwable throwable) {
-          return defaultReturnValue;
-        }
-      };
+        return (final long v1) -> {
+            try {
+                return applyWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
     }
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -114,9 +112,9 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -124,16 +122,14 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
         return withLogging(logger, "Exception in LongFunctionWithThrowable with the argument [{}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default LongFunctionWithThrowable<R, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -150,7 +146,6 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

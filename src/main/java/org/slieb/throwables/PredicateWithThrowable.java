@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
 /**
  * Generated from Predicate
  * Extends java.util.function.Predicate to allow for a checked exception.
@@ -22,8 +21,8 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * Utility method to mark lambdas of type PredicateWithThrowable
      *
      * @param predicatewiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on Predicate  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                    Generic that corresponds to the same generic on Predicate
+     * @param <E>                    The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> PredicateWithThrowable<T, E> castPredicateWithThrowable(final PredicateWithThrowable<T, E> predicatewiththrowable) {
@@ -32,16 +31,17 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
 
     /**
      * Utility method to convert PredicateWithThrowable
+     *
      * @param predicate The interface instance
-     * @param <T> Generic that corresponds to the same generic on Predicate  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>       Generic that corresponds to the same generic on Predicate
+     * @param <E>       The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> PredicateWithThrowable<T, E> asPredicateWithThrowable(final Predicate<T> predicate) {
         return predicate::test;
     }
 
-    /** 
+    /**
      * Overridden method of PredicateWithThrowable that will call testWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -58,7 +58,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -67,14 +67,12 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      */
     boolean testWithThrowable(final T v1) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -90,9 +88,9 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -100,16 +98,14 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
         return withLogging(logger, "Exception in PredicateWithThrowable with the argument [{}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default PredicateWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -126,7 +122,6 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

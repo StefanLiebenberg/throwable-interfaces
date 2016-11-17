@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+
 /**
  * Generated from BiFunction
  * Extends java.util.function.BiFunction to allow for a checked exception.
@@ -24,30 +23,32 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      * Utility method to mark lambdas of type BiFunctionWithThrowable
      *
      * @param bifunctionwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on BiFunction  
-     * @param <U> Generic that corresponds to the same generic on BiFunction  
-     * @param <R> Generic that corresponds to the same generic on BiFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                     Generic that corresponds to the same generic on BiFunction
+     * @param <U>                     Generic that corresponds to the same generic on BiFunction
+     * @param <R>                     Generic that corresponds to the same generic on BiFunction
+     * @param <E>                     The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {
+    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(
+            final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {
         return bifunctionwiththrowable;
     }
 
     /**
      * Utility method to convert BiFunctionWithThrowable
+     *
      * @param bifunction The interface instance
-     * @param <T> Generic that corresponds to the same generic on BiFunction  
-     * @param <U> Generic that corresponds to the same generic on BiFunction  
-     * @param <R> Generic that corresponds to the same generic on BiFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>        Generic that corresponds to the same generic on BiFunction
+     * @param <U>        Generic that corresponds to the same generic on BiFunction
+     * @param <R>        Generic that corresponds to the same generic on BiFunction
+     * @param <E>        The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> asBiFunctionWithThrowable(final BiFunction<T, U, R> bifunction) {
         return bifunction::apply;
     }
 
-    /** 
+    /**
      * Overridden method of BiFunctionWithThrowable that will call applyWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -65,7 +66,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -75,38 +76,35 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      */
     R applyWithThrowable(final T v1, final U v2) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default BiFunction<T, U, java.util.Optional<R>>    thatReturnsOptional() {
-      return (final T v1, final U v2)     -> {
-        try {
-          return java.util.Optional.ofNullable(applyWithThrowable(v1, v2));
-        } catch(Throwable throwable) {
-          return java.util.Optional.empty();
-        }
-      };
+    default BiFunction<T, U, java.util.Optional<R>> thatReturnsOptional() {
+        return (final T v1, final U v2) -> {
+            try {
+                return java.util.Optional.ofNullable(applyWithThrowable(v1, v2));
+            } catch (Throwable throwable) {
+                return java.util.Optional.empty();
+            }
+        };
     }
-
 
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default BiFunction<T, U, R> thatReturnsOnCatch(final R defaultReturnValue) {
-      return (final T v1, final U v2) -> {
-        try {
-          return applyWithThrowable(v1, v2);
-        } catch(final Throwable throwable) {
-          return defaultReturnValue;
-        }
-      };
+        return (final T v1, final U v2) -> {
+            try {
+                return applyWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
     }
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -122,9 +120,9 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -132,16 +130,14 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
         return withLogging(logger, "Exception in BiFunctionWithThrowable with the arguments [{}, {}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default BiFunctionWithThrowable<T, U, R, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -158,7 +154,6 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

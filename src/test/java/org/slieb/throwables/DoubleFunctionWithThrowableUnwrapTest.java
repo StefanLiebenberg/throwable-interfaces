@@ -1,12 +1,10 @@
 package org.slieb.throwables;
 
 import org.junit.Test;
-import java.util.concurrent.atomic.AtomicReference;
-import static org.slieb.throwables.DoubleFunctionWithThrowable.castDoubleFunctionWithThrowable;
-import static org.junit.Assert.assertEquals;
-public class DoubleFunctionWithThrowableUnwrapTest {
 
-    private class CustomException extends Exception {}
+import static org.slieb.throwables.DoubleFunctionWithThrowable.castDoubleFunctionWithThrowable;
+
+public class DoubleFunctionWithThrowableUnwrapTest {
 
     @Test(expected = CustomException.class)
     public void testUnwrap() throws CustomException {
@@ -17,4 +15,6 @@ public class DoubleFunctionWithThrowableUnwrapTest {
             }).apply(0);
         }, CustomException.class);
     }
+
+    private class CustomException extends Exception {}
 }

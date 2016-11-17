@@ -9,6 +9,7 @@ import static org.slieb.throwables.FunctionWithThrowable.castFunctionWithThrowab
  * This exception class wraps checked exceptions as a runtime exceptions, so we can throw them in Functional interfaces
  * such as Function and Supplier in a consistent manner.
  */
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class SuppressedException extends RuntimeException {
 
     protected SuppressedException(Throwable cause) {
@@ -16,11 +17,27 @@ public class SuppressedException extends RuntimeException {
     }
 
     /**
+     * @param supplier A supplier object which may throw some exception
+     * @param <E>      The exception type.
+     */
+    public static <T, E extends Throwable> T suppress(SupplierWithThrowable<T, E> supplier) {
+        return supplier.get();
+    }
+
+    /**
+     * @param runnable A supplier object which may throw some exception
+     * @param <E>      The exception type.
+     */
+    public static <E extends Throwable> void suppress(RunnableWithThrowable<E> runnable) {
+        runnable.run();
+    }
+
+    /**
      * @param cause The original cause.
      * @return A SuppressedException
      */
     public static SuppressedException wrapException(Throwable cause) {
-        return SuppressedException.wrapException(cause);
+        return new SuppressedException(cause);
     }
 
     /**

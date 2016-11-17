@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.ObjIntConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.ObjIntConsumer;
+
 /**
  * Generated from ObjIntConsumer
  * Extends java.util.function.ObjIntConsumer to allow for a checked exception.
@@ -22,26 +21,28 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
      * Utility method to mark lambdas of type ObjIntConsumerWithThrowable
      *
      * @param objintconsumerwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on ObjIntConsumer  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                         Generic that corresponds to the same generic on ObjIntConsumer
+     * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjIntConsumerWithThrowable<T, E> castObjIntConsumerWithThrowable(final ObjIntConsumerWithThrowable<T, E> objintconsumerwiththrowable) {
+    static <T, E extends Throwable> ObjIntConsumerWithThrowable<T, E> castObjIntConsumerWithThrowable(
+            final ObjIntConsumerWithThrowable<T, E> objintconsumerwiththrowable) {
         return objintconsumerwiththrowable;
     }
 
     /**
      * Utility method to convert ObjIntConsumerWithThrowable
+     *
      * @param objintconsumer The interface instance
-     * @param <T> Generic that corresponds to the same generic on ObjIntConsumer  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>            Generic that corresponds to the same generic on ObjIntConsumer
+     * @param <E>            The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ObjIntConsumerWithThrowable<T, E> asObjIntConsumerWithThrowable(final ObjIntConsumer<T> objintconsumer) {
         return objintconsumer::accept;
     }
 
-    /** 
+    /**
      * Overridden method of ObjIntConsumerWithThrowable that will call acceptWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -58,7 +59,7 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -67,7 +68,6 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
      */
     void acceptWithThrowable(final T v1, final int v2) throws E;
 
-
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
@@ -75,13 +75,12 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
         return (final T v1, final int v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
-            } catch(Throwable ignored) {}
+            } catch (Throwable ignored) {}
         };
     }
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -97,9 +96,9 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -107,16 +106,14 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
         return withLogging(logger, "Exception in ObjIntConsumerWithThrowable with the arguments [{}, {}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default ObjIntConsumerWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -133,7 +130,6 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

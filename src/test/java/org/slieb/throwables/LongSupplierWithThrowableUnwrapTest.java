@@ -1,12 +1,10 @@
 package org.slieb.throwables;
 
 import org.junit.Test;
-import java.util.concurrent.atomic.AtomicReference;
-import static org.slieb.throwables.LongSupplierWithThrowable.castLongSupplierWithThrowable;
-import static org.junit.Assert.assertEquals;
-public class LongSupplierWithThrowableUnwrapTest {
 
-    private class CustomException extends Exception {}
+import static org.slieb.throwables.LongSupplierWithThrowable.castLongSupplierWithThrowable;
+
+public class LongSupplierWithThrowableUnwrapTest {
 
     @Test(expected = CustomException.class)
     public void testUnwrap() throws CustomException {
@@ -17,4 +15,6 @@ public class LongSupplierWithThrowableUnwrapTest {
             }).getAsLong();
         }, CustomException.class);
     }
+
+    private class CustomException extends Exception {}
 }

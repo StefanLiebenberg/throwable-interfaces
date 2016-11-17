@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.DoubleSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.DoubleSupplier;
+
 /**
  * Generated from DoubleSupplier
  * Extends java.util.function.DoubleSupplier to allow for a checked exception.
@@ -21,24 +20,26 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      * Utility method to mark lambdas of type DoubleSupplierWithThrowable
      *
      * @param doublesupplierwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(final DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {
+    static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(
+            final DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {
         return doublesupplierwiththrowable;
     }
 
     /**
      * Utility method to convert DoubleSupplierWithThrowable
+     *
      * @param doublesupplier The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>            The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleSupplierWithThrowable<E> asDoubleSupplierWithThrowable(final DoubleSupplier doublesupplier) {
         return doublesupplier::getAsDouble;
     }
 
-    /** 
+    /**
      * Overridden method of DoubleSupplierWithThrowable that will call getAsDoubleWithThrowable, but catching any exceptions.
      *
      * @return the value
@@ -54,7 +55,7 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @return the value
@@ -62,14 +63,12 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      */
     double getAsDoubleWithThrowable() throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -85,9 +84,9 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -95,16 +94,14 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
         return withLogging(logger, "Exception in DoubleSupplierWithThrowable");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default DoubleSupplierWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.

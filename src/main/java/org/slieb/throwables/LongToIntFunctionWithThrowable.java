@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.LongToIntFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.LongToIntFunction;
+
 /**
  * Generated from LongToIntFunction
  * Extends java.util.function.LongToIntFunction to allow for a checked exception.
@@ -21,24 +20,26 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      * Utility method to mark lambdas of type LongToIntFunctionWithThrowable
      *
      * @param longtointfunctionwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                            The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
+    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(
+            final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
         return longtointfunctionwiththrowable;
     }
 
     /**
      * Utility method to convert LongToIntFunctionWithThrowable
+     *
      * @param longtointfunction The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>               The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongToIntFunctionWithThrowable<E> asLongToIntFunctionWithThrowable(final LongToIntFunction longtointfunction) {
         return longtointfunction::applyAsInt;
     }
 
-    /** 
+    /**
      * Overridden method of LongToIntFunctionWithThrowable that will call applyAsIntWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -55,7 +56,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -64,14 +65,12 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      */
     int applyAsIntWithThrowable(final long v1) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -87,9 +86,9 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -97,16 +96,14 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
         return withLogging(logger, "Exception in LongToIntFunctionWithThrowable with the argument [{}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default LongToIntFunctionWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -123,7 +120,6 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

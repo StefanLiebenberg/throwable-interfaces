@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.LongSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.LongSupplier;
+
 /**
  * Generated from LongSupplier
  * Extends java.util.function.LongSupplier to allow for a checked exception.
@@ -21,7 +20,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * Utility method to mark lambdas of type LongSupplierWithThrowable
      *
      * @param longsupplierwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                       The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongSupplierWithThrowable<E> castLongSupplierWithThrowable(final LongSupplierWithThrowable<E> longsupplierwiththrowable) {
@@ -30,15 +29,16 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
 
     /**
      * Utility method to convert LongSupplierWithThrowable
+     *
      * @param longsupplier The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>          The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongSupplierWithThrowable<E> asLongSupplierWithThrowable(final LongSupplier longsupplier) {
         return longsupplier::getAsLong;
     }
 
-    /** 
+    /**
      * Overridden method of LongSupplierWithThrowable that will call getAsLongWithThrowable, but catching any exceptions.
      *
      * @return the value
@@ -54,7 +54,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @return the value
@@ -62,14 +62,12 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      */
     long getAsLongWithThrowable() throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -85,9 +83,9 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -95,16 +93,14 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
         return withLogging(logger, "Exception in LongSupplierWithThrowable");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default LongSupplierWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.

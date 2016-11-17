@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.IntSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.IntSupplier;
+
 /**
  * Generated from IntSupplier
  * Extends java.util.function.IntSupplier to allow for a checked exception.
@@ -21,7 +20,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * Utility method to mark lambdas of type IntSupplierWithThrowable
      *
      * @param intsupplierwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                      The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> IntSupplierWithThrowable<E> castIntSupplierWithThrowable(final IntSupplierWithThrowable<E> intsupplierwiththrowable) {
@@ -30,15 +29,16 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
 
     /**
      * Utility method to convert IntSupplierWithThrowable
+     *
      * @param intsupplier The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>         The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> IntSupplierWithThrowable<E> asIntSupplierWithThrowable(final IntSupplier intsupplier) {
         return intsupplier::getAsInt;
     }
 
-    /** 
+    /**
      * Overridden method of IntSupplierWithThrowable that will call getAsIntWithThrowable, but catching any exceptions.
      *
      * @return the value
@@ -54,7 +54,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @return the value
@@ -62,14 +62,12 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      */
     int getAsIntWithThrowable() throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -85,9 +83,9 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -95,16 +93,14 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
         return withLogging(logger, "Exception in IntSupplierWithThrowable");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default IntSupplierWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.

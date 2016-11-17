@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.LongPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.LongPredicate;
+
 /**
  * Generated from LongPredicate
  * Extends java.util.function.LongPredicate to allow for a checked exception.
@@ -21,7 +20,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * Utility method to mark lambdas of type LongPredicateWithThrowable
      *
      * @param longpredicatewiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                        The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongPredicateWithThrowable<E> castLongPredicateWithThrowable(final LongPredicateWithThrowable<E> longpredicatewiththrowable) {
@@ -30,15 +29,16 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
 
     /**
      * Utility method to convert LongPredicateWithThrowable
+     *
      * @param longpredicate The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>           The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongPredicateWithThrowable<E> asLongPredicateWithThrowable(final LongPredicate longpredicate) {
         return longpredicate::test;
     }
 
-    /** 
+    /**
      * Overridden method of LongPredicateWithThrowable that will call testWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -55,7 +55,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -64,14 +64,12 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      */
     boolean testWithThrowable(final long v1) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -87,9 +85,9 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -97,16 +95,14 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
         return withLogging(logger, "Exception in LongPredicateWithThrowable with the argument [{}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default LongPredicateWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -123,7 +119,6 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

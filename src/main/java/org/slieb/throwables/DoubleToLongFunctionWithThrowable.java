@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.DoubleToLongFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.DoubleToLongFunction;
+
 /**
  * Generated from DoubleToLongFunction
  * Extends java.util.function.DoubleToLongFunction to allow for a checked exception.
@@ -21,24 +20,26 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * Utility method to mark lambdas of type DoubleToLongFunctionWithThrowable
      *
      * @param doubletolongfunctionwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                               The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleToLongFunctionWithThrowable<E> castDoubleToLongFunctionWithThrowable(final DoubleToLongFunctionWithThrowable<E> doubletolongfunctionwiththrowable) {
+    static <E extends Throwable> DoubleToLongFunctionWithThrowable<E> castDoubleToLongFunctionWithThrowable(
+            final DoubleToLongFunctionWithThrowable<E> doubletolongfunctionwiththrowable) {
         return doubletolongfunctionwiththrowable;
     }
 
     /**
      * Utility method to convert DoubleToLongFunctionWithThrowable
+     *
      * @param doubletolongfunction The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                  The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleToLongFunctionWithThrowable<E> asDoubleToLongFunctionWithThrowable(final DoubleToLongFunction doubletolongfunction) {
         return doubletolongfunction::applyAsLong;
     }
 
-    /** 
+    /**
      * Overridden method of DoubleToLongFunctionWithThrowable that will call applyAsLongWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -55,7 +56,7 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -64,14 +65,12 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      */
     long applyAsLongWithThrowable(final double v1) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -87,9 +86,9 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -97,16 +96,14 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
         return withLogging(logger, "Exception in DoubleToLongFunctionWithThrowable with the argument [{}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default DoubleToLongFunctionWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -123,7 +120,6 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.ObjLongConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.ObjLongConsumer;
+
 /**
  * Generated from ObjLongConsumer
  * Extends java.util.function.ObjLongConsumer to allow for a checked exception.
@@ -22,26 +21,28 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
      * Utility method to mark lambdas of type ObjLongConsumerWithThrowable
      *
      * @param objlongconsumerwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on ObjLongConsumer  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                          Generic that corresponds to the same generic on ObjLongConsumer
+     * @param <E>                          The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(final ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) {
+    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(
+            final ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) {
         return objlongconsumerwiththrowable;
     }
 
     /**
      * Utility method to convert ObjLongConsumerWithThrowable
+     *
      * @param objlongconsumer The interface instance
-     * @param <T> Generic that corresponds to the same generic on ObjLongConsumer  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>             Generic that corresponds to the same generic on ObjLongConsumer
+     * @param <E>             The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> asObjLongConsumerWithThrowable(final ObjLongConsumer<T> objlongconsumer) {
         return objlongconsumer::accept;
     }
 
-    /** 
+    /**
      * Overridden method of ObjLongConsumerWithThrowable that will call acceptWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -58,7 +59,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -67,7 +68,6 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
      */
     void acceptWithThrowable(final T v1, final long v2) throws E;
 
-
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
@@ -75,13 +75,12 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         return (final T v1, final long v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
-            } catch(Throwable ignored) {}
+            } catch (Throwable ignored) {}
         };
     }
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -97,9 +96,9 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -107,16 +106,14 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         return withLogging(logger, "Exception in ObjLongConsumerWithThrowable with the arguments [{}, {}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default ObjLongConsumerWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -133,7 +130,6 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

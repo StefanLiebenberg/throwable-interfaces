@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.ToIntFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.ToIntFunction;
+
 /**
  * Generated from ToIntFunction
  * Extends java.util.function.ToIntFunction to allow for a checked exception.
@@ -22,26 +21,28 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      * Utility method to mark lambdas of type ToIntFunctionWithThrowable
      *
      * @param tointfunctionwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on ToIntFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                        Generic that corresponds to the same generic on ToIntFunction
+     * @param <E>                        The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToIntFunctionWithThrowable<T, E> castToIntFunctionWithThrowable(final ToIntFunctionWithThrowable<T, E> tointfunctionwiththrowable) {
+    static <T, E extends Throwable> ToIntFunctionWithThrowable<T, E> castToIntFunctionWithThrowable(
+            final ToIntFunctionWithThrowable<T, E> tointfunctionwiththrowable) {
         return tointfunctionwiththrowable;
     }
 
     /**
      * Utility method to convert ToIntFunctionWithThrowable
+     *
      * @param tointfunction The interface instance
-     * @param <T> Generic that corresponds to the same generic on ToIntFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>           Generic that corresponds to the same generic on ToIntFunction
+     * @param <E>           The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ToIntFunctionWithThrowable<T, E> asToIntFunctionWithThrowable(final ToIntFunction<T> tointfunction) {
         return tointfunction::applyAsInt;
     }
 
-    /** 
+    /**
      * Overridden method of ToIntFunctionWithThrowable that will call applyAsIntWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -58,7 +59,7 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -67,23 +68,21 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      */
     int applyAsIntWithThrowable(final T v1) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.Function<T, java.util.OptionalInt>     thatReturnsOptional() {
-      return (v1)     -> {
-        try {
-          return java.util.OptionalInt.of(applyAsIntWithThrowable(v1));
-        } catch(Throwable throwable) {
-          return java.util.OptionalInt.empty();
-        }
-      };
+    default java.util.function.Function<T, java.util.OptionalInt> thatReturnsOptional() {
+        return (v1) -> {
+            try {
+                return java.util.OptionalInt.of(applyAsIntWithThrowable(v1));
+            } catch (Throwable throwable) {
+                return java.util.OptionalInt.empty();
+            }
+        };
     }
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -99,9 +98,9 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -109,16 +108,14 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
         return withLogging(logger, "Exception in ToIntFunctionWithThrowable with the argument [{}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default ToIntFunctionWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -135,7 +132,6 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

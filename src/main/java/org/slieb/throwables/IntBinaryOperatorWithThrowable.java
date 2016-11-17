@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.IntBinaryOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.IntBinaryOperator;
+
 /**
  * Generated from IntBinaryOperator
  * Extends java.util.function.IntBinaryOperator to allow for a checked exception.
@@ -21,24 +20,26 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      * Utility method to mark lambdas of type IntBinaryOperatorWithThrowable
      *
      * @param intbinaryoperatorwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                            The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {
+    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(
+            final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {
         return intbinaryoperatorwiththrowable;
     }
 
     /**
      * Utility method to convert IntBinaryOperatorWithThrowable
+     *
      * @param intbinaryoperator The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>               The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> IntBinaryOperatorWithThrowable<E> asIntBinaryOperatorWithThrowable(final IntBinaryOperator intbinaryoperator) {
         return intbinaryoperator::applyAsInt;
     }
 
-    /** 
+    /**
      * Overridden method of IntBinaryOperatorWithThrowable that will call applyAsIntWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -56,7 +57,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -66,14 +67,12 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      */
     int applyAsIntWithThrowable(final int v1, final int v2) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -89,9 +88,9 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -99,16 +98,14 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
         return withLogging(logger, "Exception in IntBinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default IntBinaryOperatorWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -125,7 +122,6 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

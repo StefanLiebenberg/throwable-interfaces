@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.DoubleBinaryOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.DoubleBinaryOperator;
+
 /**
  * Generated from DoubleBinaryOperator
  * Extends java.util.function.DoubleBinaryOperator to allow for a checked exception.
@@ -21,24 +20,26 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * Utility method to mark lambdas of type DoubleBinaryOperatorWithThrowable
      *
      * @param doublebinaryoperatorwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                               The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> castDoubleBinaryOperatorWithThrowable(final DoubleBinaryOperatorWithThrowable<E> doublebinaryoperatorwiththrowable) {
+    static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> castDoubleBinaryOperatorWithThrowable(
+            final DoubleBinaryOperatorWithThrowable<E> doublebinaryoperatorwiththrowable) {
         return doublebinaryoperatorwiththrowable;
     }
 
     /**
      * Utility method to convert DoubleBinaryOperatorWithThrowable
+     *
      * @param doublebinaryoperator The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                  The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> asDoubleBinaryOperatorWithThrowable(final DoubleBinaryOperator doublebinaryoperator) {
         return doublebinaryoperator::applyAsDouble;
     }
 
-    /** 
+    /**
      * Overridden method of DoubleBinaryOperatorWithThrowable that will call applyAsDoubleWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -56,7 +57,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -66,14 +67,12 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      */
     double applyAsDoubleWithThrowable(final double v1, final double v2) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -89,9 +88,9 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -99,16 +98,14 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
         return withLogging(logger, "Exception in DoubleBinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default DoubleBinaryOperatorWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -125,7 +122,6 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.DoubleUnaryOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.DoubleUnaryOperator;
+
 /**
  * Generated from DoubleUnaryOperator
  * Extends java.util.function.DoubleUnaryOperator to allow for a checked exception.
@@ -21,24 +20,26 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      * Utility method to mark lambdas of type DoubleUnaryOperatorWithThrowable
      *
      * @param doubleunaryoperatorwiththrowable The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                              The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) {
+    static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(
+            final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) {
         return doubleunaryoperatorwiththrowable;
     }
 
     /**
      * Utility method to convert DoubleUnaryOperatorWithThrowable
+     *
      * @param doubleunaryoperator The interface instance
-     * @param <E> The type this interface is allowed to throw
+     * @param <E>                 The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> asDoubleUnaryOperatorWithThrowable(final DoubleUnaryOperator doubleunaryoperator) {
         return doubleunaryoperator::applyAsDouble;
     }
 
-    /** 
+    /**
      * Overridden method of DoubleUnaryOperatorWithThrowable that will call applyAsDoubleWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -55,7 +56,7 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -64,14 +65,12 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      */
     double applyAsDoubleWithThrowable(final double v1) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -87,9 +86,9 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -97,16 +96,14 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
         return withLogging(logger, "Exception in DoubleUnaryOperatorWithThrowable with the argument [{}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default DoubleUnaryOperatorWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -123,7 +120,6 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

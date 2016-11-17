@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.ToIntBiFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.ToIntBiFunction;
+
 /**
  * Generated from ToIntBiFunction
  * Extends java.util.function.ToIntBiFunction to allow for a checked exception.
@@ -23,28 +22,30 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * Utility method to mark lambdas of type ToIntBiFunctionWithThrowable
      *
      * @param tointbifunctionwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on ToIntBiFunction  
-     * @param <U> Generic that corresponds to the same generic on ToIntBiFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                          Generic that corresponds to the same generic on ToIntBiFunction
+     * @param <U>                          Generic that corresponds to the same generic on ToIntBiFunction
+     * @param <E>                          The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToIntBiFunctionWithThrowable<T, U, E> castToIntBiFunctionWithThrowable(final ToIntBiFunctionWithThrowable<T, U, E> tointbifunctionwiththrowable) {
+    static <T, U, E extends Throwable> ToIntBiFunctionWithThrowable<T, U, E> castToIntBiFunctionWithThrowable(
+            final ToIntBiFunctionWithThrowable<T, U, E> tointbifunctionwiththrowable) {
         return tointbifunctionwiththrowable;
     }
 
     /**
      * Utility method to convert ToIntBiFunctionWithThrowable
+     *
      * @param tointbifunction The interface instance
-     * @param <T> Generic that corresponds to the same generic on ToIntBiFunction  
-     * @param <U> Generic that corresponds to the same generic on ToIntBiFunction  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>             Generic that corresponds to the same generic on ToIntBiFunction
+     * @param <U>             Generic that corresponds to the same generic on ToIntBiFunction
+     * @param <E>             The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, U, E extends Throwable> ToIntBiFunctionWithThrowable<T, U, E> asToIntBiFunctionWithThrowable(final ToIntBiFunction<T, U> tointbifunction) {
         return tointbifunction::applyAsInt;
     }
 
-    /** 
+    /**
      * Overridden method of ToIntBiFunctionWithThrowable that will call applyAsIntWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -62,7 +63,7 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -72,23 +73,21 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      */
     int applyAsIntWithThrowable(final T v1, final U v2) throws E;
 
-
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.BiFunction<T, U, java.util.OptionalInt>     thatReturnsOptional() {
-      return (v1, v2)     -> {
-        try {
-          return java.util.OptionalInt.of(applyAsIntWithThrowable(v1, v2));
-        } catch(Throwable throwable) {
-          return java.util.OptionalInt.empty();
-        }
-      };
+    default java.util.function.BiFunction<T, U, java.util.OptionalInt> thatReturnsOptional() {
+        return (v1, v2) -> {
+            try {
+                return java.util.OptionalInt.of(applyAsIntWithThrowable(v1, v2));
+            } catch (Throwable throwable) {
+                return java.util.OptionalInt.empty();
+            }
+        };
     }
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -104,9 +103,9 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -114,16 +113,14 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
         return withLogging(logger, "Exception in ToIntBiFunctionWithThrowable with the arguments [{}, {}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default ToIntBiFunctionWithThrowable<T, U, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -140,7 +137,6 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.

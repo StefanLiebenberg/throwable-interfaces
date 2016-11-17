@@ -1,12 +1,11 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.BinaryOperator;
-import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
+
 /**
  * Generated from BinaryOperator
  * Extends java.util.function.BinaryOperator to allow for a checked exception.
@@ -22,26 +21,28 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
      * Utility method to mark lambdas of type BinaryOperatorWithThrowable
      *
      * @param binaryoperatorwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on BinaryOperator  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>                         Generic that corresponds to the same generic on BinaryOperator
+     * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(final BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) {
+    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(
+            final BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) {
         return binaryoperatorwiththrowable;
     }
 
     /**
      * Utility method to convert BinaryOperatorWithThrowable
+     *
      * @param binaryoperator The interface instance
-     * @param <T> Generic that corresponds to the same generic on BinaryOperator  
-     * @param <E> The type this interface is allowed to throw
+     * @param <T>            Generic that corresponds to the same generic on BinaryOperator
+     * @param <E>            The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> asBinaryOperatorWithThrowable(final BinaryOperator<T> binaryoperator) {
         return binaryoperator::apply;
     }
 
-    /** 
+    /**
      * Overridden method of BinaryOperatorWithThrowable that will call applyWithThrowable, but catching any exceptions.
      *
      * @param v1 parameter to overridden method
@@ -59,7 +60,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
         }
     }
 
-    /** 
+    /**
      * Functional method that will throw exceptions.
      *
      * @param v1 parameter to overridden method
@@ -69,24 +70,22 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
      */
     T applyWithThrowable(final T v1, final T v2) throws E;
 
-
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default BinaryOperator<T> thatReturnsOnCatch(final T defaultReturnValue) {
-      return (final T v1, final T v2) -> {
-        try {
-          return applyWithThrowable(v1, v2);
-        } catch(final Throwable throwable) {
-          return defaultReturnValue;
-        }
-      };
+        return (final T v1, final T v2) -> {
+            try {
+                return applyWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
     }
 
-
     /**
-     * @param logger The logger to log exceptions on
+     * @param logger  The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -102,9 +101,9 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
         };
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -112,16 +111,14 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
         return withLogging(logger, "Exception in BinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
-
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
+     *
      * @return An interface that will log exceptions on global logger
      */
     default BinaryOperatorWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
-
-
 
     /**
      * @param consumer An exception consumer.
@@ -138,7 +135,6 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
             }
         };
     }
-
 
     /**
      * @param consumer An exception consumer.
