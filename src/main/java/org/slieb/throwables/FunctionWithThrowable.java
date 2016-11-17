@@ -111,7 +111,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -124,7 +124,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * @return An interface that will log exceptions on given logger
      */
     default FunctionWithThrowable<T, R, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in FunctionWithThrowable");
+        return withLogging(logger, "Exception in FunctionWithThrowable with the argument [{}]");
     }
 
 

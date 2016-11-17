@@ -98,7 +98,7 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, v2, throwable);
                 throw throwable;
             }
         };
@@ -111,7 +111,7 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @return An interface that will log exceptions on given logger
      */
     default ToDoubleBiFunctionWithThrowable<T, U, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in ToDoubleBiFunctionWithThrowable");
+        return withLogging(logger, "Exception in ToDoubleBiFunctionWithThrowable with the arguments [{}, {}]");
     }
 
 

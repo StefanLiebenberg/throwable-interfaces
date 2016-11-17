@@ -96,7 +96,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
             try {
                 return applyWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, v2, throwable);
                 throw throwable;
             }
         };
@@ -109,7 +109,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
      * @return An interface that will log exceptions on given logger
      */
     default BinaryOperatorWithThrowable<T, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in BinaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in BinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
 

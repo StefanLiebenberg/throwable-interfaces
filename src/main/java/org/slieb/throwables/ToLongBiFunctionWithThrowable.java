@@ -98,7 +98,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, v2, throwable);
                 throw throwable;
             }
         };
@@ -111,7 +111,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @return An interface that will log exceptions on given logger
      */
     default ToLongBiFunctionWithThrowable<T, U, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in ToLongBiFunctionWithThrowable");
+        return withLogging(logger, "Exception in ToLongBiFunctionWithThrowable with the arguments [{}, {}]");
     }
 
 

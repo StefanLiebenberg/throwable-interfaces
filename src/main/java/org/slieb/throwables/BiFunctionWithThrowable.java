@@ -116,7 +116,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
             try {
                 return applyWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, v2, throwable);
                 throw throwable;
             }
         };
@@ -129,7 +129,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      * @return An interface that will log exceptions on given logger
      */
     default BiFunctionWithThrowable<T, U, R, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in BiFunctionWithThrowable");
+        return withLogging(logger, "Exception in BiFunctionWithThrowable with the arguments [{}, {}]");
     }
 
 

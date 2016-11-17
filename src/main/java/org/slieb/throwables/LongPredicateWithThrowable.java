@@ -81,7 +81,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -94,7 +94,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @return An interface that will log exceptions on given logger
      */
     default LongPredicateWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in LongPredicateWithThrowable");
+        return withLogging(logger, "Exception in LongPredicateWithThrowable with the argument [{}]");
     }
 
 

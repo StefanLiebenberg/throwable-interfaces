@@ -94,7 +94,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -107,7 +107,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @return An interface that will log exceptions on given logger
      */
     default UnaryOperatorWithThrowable<T, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in UnaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in UnaryOperatorWithThrowable with the argument [{}]");
     }
 
 

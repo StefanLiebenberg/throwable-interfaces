@@ -81,7 +81,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -94,7 +94,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @return An interface that will log exceptions on given logger
      */
     default IntPredicateWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in IntPredicateWithThrowable");
+        return withLogging(logger, "Exception in IntPredicateWithThrowable with the argument [{}]");
     }
 
 

@@ -1,6 +1,5 @@
 package org.slieb.throwables;
 
-
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
@@ -12,7 +11,6 @@ public class ThrownHandler extends Handler {
     public ThrownHandler() {
         lastRecord = new AtomicReference<>();
     }
-
 
     public LogRecord getLastRecord() {
         return lastRecord.get();

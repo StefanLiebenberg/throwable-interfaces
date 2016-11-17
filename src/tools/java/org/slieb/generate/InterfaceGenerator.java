@@ -2,7 +2,6 @@ package org.slieb.generate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slieb.throwables.Closure;
 import org.slieb.throwables.SuppressedException;
 
 import java.io.File;
@@ -311,7 +310,7 @@ public class InterfaceGenerator {
         isb.newlines(2);
         isb.indent().append("@org.junit.After").newline();
         isb.indent().append("public void teardown() {").newline();
-isb.incrementIndent();
+        isb.incrementIndent();
         isb.indent().append("globalLogger.removeHandler(tHandler);").newline();
         isb.decrementIndent();
         isb.indent().append("}").newline();
@@ -906,7 +905,14 @@ isb.incrementIndent();
         isb.append(methodName).append("WithThrowable").append(getMethodParams(funcInterface, method, false))
            .append(";").newline();
 
-        List<String> errorArgs = Stream.of("message", "throwable").collect(toList());
+        List<String> errorLogObjects = getMethodParamsStream(funcInterface, method, false).collect(toList());
+
+        Stream.Builder<String> errorArgsBuilder = Stream.builder();
+        errorArgsBuilder.add("message");
+        errorLogObjects.forEach(errorArgsBuilder);
+        errorArgsBuilder.add("throwable");
+
+        List<String> errorArgs = errorArgsBuilder.build().collect(toList());
 
         isb.indents(12).append("} catch (final Throwable throwable) {").newline();
         isb.setIndent(16);
@@ -928,7 +934,7 @@ isb.incrementIndent();
         isb.indent().append("default")
            .append(" ").append(className).append(generateGenerics(generics, true, false))
            .append(" withLogging(final ").appendClass(Logger.class).append(" logger) {").newline();
-        isb.indents(8).append("return withLogging(logger, \"").append(getErrorMessage(className)).append("\");").newline();
+        isb.indents(8).append("return withLogging(logger, \"").append(getErrorMessage(className, errorLogObjects)).append("\");").newline();
         isb.indent().append("}").newline();
 
         isb.newlines(2);
@@ -974,8 +980,20 @@ isb.incrementIndent();
                      .map(prefix -> prefix + "v" + atomicInteger.incrementAndGet());
     }
 
-    private String getErrorMessage(String className) {
-        return "Exception in " + className;
+    private String getErrorMessage(String className, final List<String> errorLogObjects) {
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Exception in ");
+        stringBuilder.append(className);
+        if (!errorLogObjects.isEmpty()) {
+            if(errorLogObjects.size() > 1) {
+                stringBuilder.append(" with the arguments [");
+            } else {
+                stringBuilder.append(" with the argument [");
+            }
+            stringBuilder.append(errorLogObjects.stream().map(obj -> "{}").collect(Collectors.joining(", ")));
+            stringBuilder.append("]");
+        }
+        return stringBuilder.toString();
     }
 
     private String generateGenerics(List<String> generics,
@@ -1010,7 +1028,6 @@ isb.incrementIndent();
     public static void main(String[] args) throws IOException {
 
         InterfaceGenerator interfaceGenerator = new InterfaceGenerator("org.slieb.throwables", new File("src/main/java"), new File("src/test/java"));
-        interfaceGenerator.generate(Closure.class);
         interfaceGenerator.generate(java.util.function.BiConsumer.class);
         interfaceGenerator.generate(java.util.function.BiFunction.class);
         interfaceGenerator.generate(java.util.function.BinaryOperator.class);

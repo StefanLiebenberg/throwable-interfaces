@@ -83,7 +83,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, v2, throwable);
                 throw throwable;
             }
         };
@@ -96,7 +96,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
      * @return An interface that will log exceptions on given logger
      */
     default LongBinaryOperatorWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in LongBinaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in LongBinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
 

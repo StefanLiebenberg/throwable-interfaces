@@ -86,7 +86,7 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
             try {
                 acceptWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -99,7 +99,7 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
      * @return An interface that will log exceptions on given logger
      */
     default LongConsumerWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in LongConsumerWithThrowable");
+        return withLogging(logger, "Exception in LongConsumerWithThrowable with the argument [{}]");
     }
 
 

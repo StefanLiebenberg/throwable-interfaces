@@ -84,7 +84,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -97,7 +97,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @return An interface that will log exceptions on given logger
      */
     default PredicateWithThrowable<T, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in PredicateWithThrowable");
+        return withLogging(logger, "Exception in PredicateWithThrowable with the argument [{}]");
     }
 
 

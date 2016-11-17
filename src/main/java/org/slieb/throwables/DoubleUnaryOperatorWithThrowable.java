@@ -81,7 +81,7 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
             try {
                 return applyAsDoubleWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -94,7 +94,7 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      * @return An interface that will log exceptions on given logger
      */
     default DoubleUnaryOperatorWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in DoubleUnaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in DoubleUnaryOperatorWithThrowable with the argument [{}]");
     }
 
 

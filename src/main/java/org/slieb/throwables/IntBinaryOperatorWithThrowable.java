@@ -83,7 +83,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
             try {
                 return applyAsIntWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, v2, throwable);
                 throw throwable;
             }
         };
@@ -96,7 +96,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      * @return An interface that will log exceptions on given logger
      */
     default IntBinaryOperatorWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in IntBinaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in IntBinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
 

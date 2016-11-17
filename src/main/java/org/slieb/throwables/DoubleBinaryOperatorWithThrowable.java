@@ -83,7 +83,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, v2, throwable);
                 throw throwable;
             }
         };
@@ -96,7 +96,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @return An interface that will log exceptions on given logger
      */
     default DoubleBinaryOperatorWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in DoubleBinaryOperatorWithThrowable");
+        return withLogging(logger, "Exception in DoubleBinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
 

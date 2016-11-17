@@ -93,7 +93,7 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
             try {
                 return applyAsIntWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -106,7 +106,7 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      * @return An interface that will log exceptions on given logger
      */
     default ToIntFunctionWithThrowable<T, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in ToIntFunctionWithThrowable");
+        return withLogging(logger, "Exception in ToIntFunctionWithThrowable with the argument [{}]");
     }
 
 

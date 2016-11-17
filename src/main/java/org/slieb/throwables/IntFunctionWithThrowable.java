@@ -108,7 +108,7 @@ public interface IntFunctionWithThrowable<R, E extends Throwable> extends IntFun
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -121,7 +121,7 @@ public interface IntFunctionWithThrowable<R, E extends Throwable> extends IntFun
      * @return An interface that will log exceptions on given logger
      */
     default IntFunctionWithThrowable<R, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in IntFunctionWithThrowable");
+        return withLogging(logger, "Exception in IntFunctionWithThrowable with the argument [{}]");
     }
 
 

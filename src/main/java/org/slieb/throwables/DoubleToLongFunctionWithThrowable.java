@@ -81,7 +81,7 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
             try {
                 return applyAsLongWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -94,7 +94,7 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @return An interface that will log exceptions on given logger
      */
     default DoubleToLongFunctionWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in DoubleToLongFunctionWithThrowable");
+        return withLogging(logger, "Exception in DoubleToLongFunctionWithThrowable with the argument [{}]");
     }
 
 

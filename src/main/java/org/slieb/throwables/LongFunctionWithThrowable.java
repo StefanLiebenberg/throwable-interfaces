@@ -108,7 +108,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
             try {
                 return applyWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -121,7 +121,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      * @return An interface that will log exceptions on given logger
      */
     default LongFunctionWithThrowable<R, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in LongFunctionWithThrowable");
+        return withLogging(logger, "Exception in LongFunctionWithThrowable with the argument [{}]");
     }
 
 

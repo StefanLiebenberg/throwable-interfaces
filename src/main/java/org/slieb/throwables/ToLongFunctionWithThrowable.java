@@ -93,7 +93,7 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
             try {
                 return applyAsLongWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -106,7 +106,7 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
      * @return An interface that will log exceptions on given logger
      */
     default ToLongFunctionWithThrowable<T, E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in ToLongFunctionWithThrowable");
+        return withLogging(logger, "Exception in ToLongFunctionWithThrowable with the argument [{}]");
     }
 
 

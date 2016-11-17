@@ -86,7 +86,7 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
             try {
                 acceptWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -99,7 +99,7 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
      * @return An interface that will log exceptions on given logger
      */
     default DoubleConsumerWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in DoubleConsumerWithThrowable");
+        return withLogging(logger, "Exception in DoubleConsumerWithThrowable with the argument [{}]");
     }
 
 

@@ -86,7 +86,7 @@ public interface IntConsumerWithThrowable<E extends Throwable> extends IntConsum
             try {
                 acceptWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -99,7 +99,7 @@ public interface IntConsumerWithThrowable<E extends Throwable> extends IntConsum
      * @return An interface that will log exceptions on given logger
      */
     default IntConsumerWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in IntConsumerWithThrowable");
+        return withLogging(logger, "Exception in IntConsumerWithThrowable with the argument [{}]");
     }
 
 

@@ -81,7 +81,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
             try {
                 return applyAsIntWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -94,7 +94,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      * @return An interface that will log exceptions on given logger
      */
     default LongToIntFunctionWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in LongToIntFunctionWithThrowable");
+        return withLogging(logger, "Exception in LongToIntFunctionWithThrowable with the argument [{}]");
     }
 
 

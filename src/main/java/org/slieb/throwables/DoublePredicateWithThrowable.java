@@ -81,7 +81,7 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
             try {
                 return testWithThrowable(v1);
             } catch (final Throwable throwable) {
-                logger.error(message, throwable);
+                logger.error(message, v1, throwable);
                 throw throwable;
             }
         };
@@ -94,7 +94,7 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @return An interface that will log exceptions on given logger
      */
     default DoublePredicateWithThrowable<E> withLogging(final Logger logger) {
-        return withLogging(logger, "Exception in DoublePredicateWithThrowable");
+        return withLogging(logger, "Exception in DoublePredicateWithThrowable with the argument [{}]");
     }
 
 
