@@ -25,8 +25,8 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
      * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(
-            final BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) {
+    static <T, E extends Throwable> BinaryOperatorWithThrowable<T, E> castBinaryOperatorWithThrowable(final BinaryOperatorWithThrowable<T, E>
+                                                                                                              binaryoperatorwiththrowable) {
         return binaryoperatorwiththrowable;
     }
 
@@ -146,7 +146,10 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
             try {
                 return applyWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

@@ -25,8 +25,8 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
      * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToLongFunctionWithThrowable<T, E> castToLongFunctionWithThrowable(
-            final ToLongFunctionWithThrowable<T, E> tolongfunctionwiththrowable) {
+    static <T, E extends Throwable> ToLongFunctionWithThrowable<T, E> castToLongFunctionWithThrowable(final ToLongFunctionWithThrowable<T, E>
+                                                                                                              tolongfunctionwiththrowable) {
         return tolongfunctionwiththrowable;
     }
 
@@ -77,6 +77,20 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
                 return java.util.OptionalLong.of(applyAsLongWithThrowable(v1));
             } catch (Throwable throwable) {
                 return java.util.OptionalLong.empty();
+            }
+        };
+    }
+
+    /**
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
+     */
+    default ToLongFunction<T> thatReturnsOnCatch(final long defaultReturnValue) {
+        return (final T v1) -> {
+            try {
+                return applyAsLongWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
             }
         };
     }

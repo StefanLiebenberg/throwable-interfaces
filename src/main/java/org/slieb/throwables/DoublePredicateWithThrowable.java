@@ -23,8 +23,8 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @param <E>                          The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoublePredicateWithThrowable<E> castDoublePredicateWithThrowable(
-            final DoublePredicateWithThrowable<E> doublepredicatewiththrowable) {
+    static <E extends Throwable> DoublePredicateWithThrowable<E> castDoublePredicateWithThrowable(final DoublePredicateWithThrowable<E>
+                                                                                                          doublepredicatewiththrowable) {
         return doublepredicatewiththrowable;
     }
 
@@ -66,8 +66,18 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
     boolean testWithThrowable(final double v1) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default DoublePredicate thatReturnsOnCatch(final boolean defaultReturnValue) {
+        return (final double v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

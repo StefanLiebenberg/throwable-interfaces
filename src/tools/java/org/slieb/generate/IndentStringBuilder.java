@@ -35,17 +35,34 @@ class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder> {
         return this;
     }
 
+    @Override
+    public IndentStringBuilder append(CharSequence charSequence) {
+        stringBuilder.append(charSequence);
+        return this;
+    }
+
+    @Override
+    public IndentStringBuilder append(char c) {
+        this.stringBuilder.append(c);
+        return this;
+    }
+
+    public IndentStringBuilder appendType(Type type) {
+        stringBuilder.append(type.getTypeName());
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return stringBuilder.toString();
+    }
+
     void setIndent(Integer indent) {
         atomicInteger.set(indent);
     }
 
     IndentStringBuilder openComment() {
         stringBuilder.append("/**");
-        return this;
-    }
-
-    private IndentStringBuilder appendComment(String string) {
-        stringBuilder.append(" * ").append(string);
         return this;
     }
 
@@ -64,25 +81,8 @@ class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder> {
         return this;
     }
 
-    @Override
-    public IndentStringBuilder append(CharSequence charSequence) {
-        stringBuilder.append(charSequence);
-        return this;
-    }
-
-    public IndentStringBuilder appendType(Type type) {
-        stringBuilder.append(type.getTypeName());
-        return this;
-    }
-
     IndentStringBuilder appendClass(Class classType) {
         this.stringBuilder.append(this.getClassContent(classType));
-        return this;
-    }
-
-    @Override
-    public IndentStringBuilder append(char c) {
-        this.stringBuilder.append(c);
         return this;
     }
 
@@ -95,13 +95,6 @@ class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder> {
         return printRepeated("\n", count);
     }
 
-    private IndentStringBuilder printRepeated(CharSequence sequence, Integer repeats) {
-        for (int i = 0; i < repeats; i++) {
-            stringBuilder.append(sequence);
-        }
-        return this;
-    }
-
     IndentStringBuilder indent() {
         return this.indents(atomicInteger.get());
     }
@@ -112,11 +105,6 @@ class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder> {
 
     IndentStringBuilder newline() {
         return newlines(1);
-    }
-
-    @Override
-    public String toString() {
-        return stringBuilder.toString();
     }
 
     IndentStringBuilder appendImport(Class<?> classMethod) {
@@ -156,5 +144,15 @@ class IndentStringBuilder extends AbstractAppendable<IndentStringBuilder> {
         return this.newline();
     }
 
+    private IndentStringBuilder appendComment(String string) {
+        stringBuilder.append(" * ").append(string);
+        return this;
+    }
 
+    private IndentStringBuilder printRepeated(CharSequence sequence, Integer repeats) {
+        for (int i = 0; i < repeats; i++) {
+            stringBuilder.append(sequence);
+        }
+        return this;
+    }
 }

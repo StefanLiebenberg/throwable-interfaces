@@ -23,8 +23,8 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @param <E>                               The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleToLongFunctionWithThrowable<E> castDoubleToLongFunctionWithThrowable(
-            final DoubleToLongFunctionWithThrowable<E> doubletolongfunctionwiththrowable) {
+    static <E extends Throwable> DoubleToLongFunctionWithThrowable<E> castDoubleToLongFunctionWithThrowable(final DoubleToLongFunctionWithThrowable<E>
+                                                                                                                    doubletolongfunctionwiththrowable) {
         return doubletolongfunctionwiththrowable;
     }
 
@@ -66,8 +66,18 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
     long applyAsLongWithThrowable(final double v1) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default DoubleToLongFunction thatReturnsOnCatch(final long defaultReturnValue) {
+        return (final double v1) -> {
+            try {
+                return applyAsLongWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

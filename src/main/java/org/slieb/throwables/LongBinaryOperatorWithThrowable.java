@@ -23,8 +23,8 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
      * @param <E>                             The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(
-            final LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) {
+    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(final LongBinaryOperatorWithThrowable<E>
+                                                                                                                longbinaryoperatorwiththrowable) {
         return longbinaryoperatorwiththrowable;
     }
 
@@ -68,8 +68,18 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
     long applyAsLongWithThrowable(final long v1, final long v2) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default LongBinaryOperator thatReturnsOnCatch(final long defaultReturnValue) {
+        return (final long v1, final long v2) -> {
+            try {
+                return applyAsLongWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on
@@ -133,7 +143,10 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

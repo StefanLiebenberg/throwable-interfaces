@@ -1,4 +1,3 @@
 package org.slieb.throwables;
 
-public class LongUnaryOperatorWithThrowableIgnoresTest {
-}
+public class LongUnaryOperatorWithThrowableIgnoresTest {}

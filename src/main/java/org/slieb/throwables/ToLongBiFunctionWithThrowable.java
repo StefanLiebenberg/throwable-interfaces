@@ -27,8 +27,8 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @param <E>                           The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(
-            final ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) {
+    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(final ToLongBiFunctionWithThrowable<T, U, E>
+                                                                                                                        tolongbifunctionwiththrowable) {
         return tolongbifunctionwiththrowable;
     }
 
@@ -82,6 +82,20 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
                 return java.util.OptionalLong.of(applyAsLongWithThrowable(v1, v2));
             } catch (Throwable throwable) {
                 return java.util.OptionalLong.empty();
+            }
+        };
+    }
+
+    /**
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
+     */
+    default ToLongBiFunction<T, U> thatReturnsOnCatch(final long defaultReturnValue) {
+        return (final T v1, final U v2) -> {
+            try {
+                return applyAsLongWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
             }
         };
     }
@@ -148,7 +162,10 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

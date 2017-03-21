@@ -2,12 +2,23 @@ package org.slieb.generate;
 
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
-import java.lang.reflect.*;
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
-import java.util.function.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.ToDoubleBiFunction;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntBiFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongBiFunction;
+import java.util.function.ToLongFunction;
 import java.util.stream.Stream;
 
 public class TypeResolver {
@@ -48,8 +59,7 @@ public class TypeResolver {
         return "new Object()";
     }
 
-    public static Type resolveType(Class<?> funcInterface,
-                                   Type genericReturnType) {
+    public static Type resolveType(Class<?> funcInterface, Type genericReturnType) {
         for (Class<?> interfaceClass : funcInterface.getInterfaces()) {
             final TypeVariable<? extends Class<?>>[] typeParameters = interfaceClass.getTypeParameters();
             for (int i = 0; i < typeParameters.length; i++) {
@@ -67,8 +77,7 @@ public class TypeResolver {
     }
 
     public static Method getFunctionalMethod(Class<?> funcInterface) {
-        return Arrays.stream(funcInterface.getMethods())
-                     .filter(m -> Modifier.isAbstract(m.getModifiers())).findFirst().get();
+        return Arrays.stream(funcInterface.getMethods()).filter(m -> Modifier.isAbstract(m.getModifiers())).findFirst().get();
     }
 
     public static Class<?> getOptionalTypeForPrimitive(final Type returnType) {

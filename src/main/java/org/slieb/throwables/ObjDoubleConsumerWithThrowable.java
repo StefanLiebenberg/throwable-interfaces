@@ -25,8 +25,8 @@ public interface ObjDoubleConsumerWithThrowable<T, E extends Throwable> extends 
      * @param <E>                            The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjDoubleConsumerWithThrowable<T, E> castObjDoubleConsumerWithThrowable(
-            final ObjDoubleConsumerWithThrowable<T, E> objdoubleconsumerwiththrowable) {
+    static <T, E extends Throwable> ObjDoubleConsumerWithThrowable<T, E> castObjDoubleConsumerWithThrowable(final ObjDoubleConsumerWithThrowable<T, E>
+                                                                                                                    objdoubleconsumerwiththrowable) {
         return objdoubleconsumerwiththrowable;
     }
 
@@ -141,7 +141,10 @@ public interface ObjDoubleConsumerWithThrowable<T, E extends Throwable> extends 
             try {
                 acceptWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

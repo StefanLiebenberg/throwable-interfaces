@@ -23,8 +23,8 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @param <E>                               The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> castDoubleBinaryOperatorWithThrowable(
-            final DoubleBinaryOperatorWithThrowable<E> doublebinaryoperatorwiththrowable) {
+    static <E extends Throwable> DoubleBinaryOperatorWithThrowable<E> castDoubleBinaryOperatorWithThrowable(final DoubleBinaryOperatorWithThrowable<E>
+                                                                                                                    doublebinaryoperatorwiththrowable) {
         return doublebinaryoperatorwiththrowable;
     }
 
@@ -68,8 +68,18 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
     double applyAsDoubleWithThrowable(final double v1, final double v2) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default DoubleBinaryOperator thatReturnsOnCatch(final double defaultReturnValue) {
+        return (final double v1, final double v2) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on
@@ -133,7 +143,10 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

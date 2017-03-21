@@ -1,6 +1,5 @@
 package org.slieb.generate;
 
-
 public abstract class AbstractAppendable<A extends AbstractAppendable> implements Appendable {
 
     public A append(Object o) {
@@ -20,10 +19,6 @@ public abstract class AbstractAppendable<A extends AbstractAppendable> implement
         return (A) this;
     }
 
-
     @Override
     abstract public A append(char c);
-
-
-
 }

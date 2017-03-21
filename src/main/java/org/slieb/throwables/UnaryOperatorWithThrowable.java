@@ -25,8 +25,8 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @param <E>                        The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> castUnaryOperatorWithThrowable(
-            final UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) {
+    static <T, E extends Throwable> UnaryOperatorWithThrowable<T, E> castUnaryOperatorWithThrowable(final UnaryOperatorWithThrowable<T, E>
+                                                                                                            unaryoperatorwiththrowable) {
         return unaryoperatorwiththrowable;
     }
 

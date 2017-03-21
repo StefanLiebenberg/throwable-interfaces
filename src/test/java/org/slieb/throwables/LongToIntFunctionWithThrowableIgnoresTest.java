@@ -1,4 +1,3 @@
 package org.slieb.throwables;
 
-public class LongToIntFunctionWithThrowableIgnoresTest {
-}
+public class LongToIntFunctionWithThrowableIgnoresTest {}

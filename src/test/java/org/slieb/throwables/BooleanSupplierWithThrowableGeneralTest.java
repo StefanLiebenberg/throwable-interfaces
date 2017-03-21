@@ -10,6 +10,31 @@ import static org.slieb.throwables.BooleanSupplierWithThrowable.castBooleanSuppl
 public class BooleanSupplierWithThrowableGeneralTest {
 
     @Test
+    public void testReturnTypeExceptionWithTrue() {
+        boolean expected = true;
+        boolean result = castBooleanSupplierWithThrowable(() -> {
+            throw new Exception("expect exception");
+        }).thatReturnsOnCatch(expected).getAsBoolean();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testReturnTypeExceptionWithFalse() {
+        boolean expected = false;
+        boolean result = castBooleanSupplierWithThrowable(() -> {
+            throw new Exception("expect exception");
+        }).thatReturnsOnCatch(expected).getAsBoolean();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testNormalOperation() {
+        boolean expected = true;
+        boolean result = castBooleanSupplierWithThrowable(() -> expected).thatReturnsOnCatch(false).getAsBoolean();
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void testOnException() {
         AtomicReference<java.lang.Throwable> reference = new AtomicReference<>();
         java.lang.Exception expected = new java.lang.Exception("expected");

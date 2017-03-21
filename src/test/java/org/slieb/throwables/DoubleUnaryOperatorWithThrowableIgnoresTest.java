@@ -1,4 +1,3 @@
 package org.slieb.throwables;
 
-public class DoubleUnaryOperatorWithThrowableIgnoresTest {
-}
+public class DoubleUnaryOperatorWithThrowableIgnoresTest {}

@@ -23,8 +23,8 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      * @param <E>                              The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(
-            final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) {
+    static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(final DoubleUnaryOperatorWithThrowable<E>
+                                                                                                                  doubleunaryoperatorwiththrowable) {
         return doubleunaryoperatorwiththrowable;
     }
 
@@ -66,8 +66,18 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
     double applyAsDoubleWithThrowable(final double v1) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default DoubleUnaryOperator thatReturnsOnCatch(final double defaultReturnValue) {
+        return (final double v1) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

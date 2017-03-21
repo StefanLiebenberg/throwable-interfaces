@@ -9,7 +9,10 @@ import static org.slieb.throwables.FunctionWithThrowable.castFunctionWithThrowab
  * This exception class wraps checked exceptions as a runtime exceptions, so we can throw them in Functional interfaces
  * such as Function and Supplier in a consistent manner.
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
+@SuppressWarnings({
+        "WeakerAccess",
+        "unused"
+})
 public class SuppressedException extends RuntimeException {
 
     protected SuppressedException(Throwable cause) {
@@ -48,8 +51,7 @@ public class SuppressedException extends RuntimeException {
      * @return The result of the supplier if no exception occurred.
      * @throws E The original exception, that was wrapped into a SuppressedException.
      */
-    public static <T, E extends Throwable> T unwrapSuppressedException(final Supplier<T> supplier,
-                                                                       final Class<E> exceptionClass) throws E {
+    public static <T, E extends Throwable> T unwrapSuppressedException(final Supplier<T> supplier, final Class<E> exceptionClass) throws E {
         try {
             return supplier.get();
         } catch (SuppressedException e) {
@@ -77,8 +79,7 @@ public class SuppressedException extends RuntimeException {
      * @param <E>       The exception class generic type.
      * @throws E The intercepted exception.
      */
-    public static <E extends Throwable> void unwrapSuppressedException(final Runnable runnable,
-                                                                       final Class<E> exception) throws E {
+    public static <E extends Throwable> void unwrapSuppressedException(final Runnable runnable, final Class<E> exception) throws E {
         try {
             runnable.run();
         } catch (SuppressedException e) {
@@ -104,11 +105,8 @@ public class SuppressedException extends RuntimeException {
      * @param <E>            The exception class type generic
      * @return An optional of the exception, if it is a instance of the exceptionClass.
      */
-    public static <E extends Throwable> Optional<E> unwrapExceptionCause(final SuppressedException suppressed,
-                                                                         final Class<E> exceptionClass) {
-        return Optional.of(suppressed).map(Throwable::getCause)
-                       .flatMap(castFunctionWithThrowable(exceptionClass::cast)
-                                        .thatReturnsOptional());
+    public static <E extends Throwable> Optional<E> unwrapExceptionCause(final SuppressedException suppressed, final Class<E> exceptionClass) {
+        return Optional.of(suppressed).map(Throwable::getCause).flatMap(castFunctionWithThrowable(exceptionClass::cast).thatReturnsOptional());
     }
 }
 

@@ -29,8 +29,8 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      * @param <E>                     The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(
-            final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) {
+    static <T, U, R, E extends Throwable> BiFunctionWithThrowable<T, U, R, E> castBiFunctionWithThrowable(final BiFunctionWithThrowable<T, U, R, E>
+                                                                                                                  bifunctionwiththrowable) {
         return bifunctionwiththrowable;
     }
 
@@ -165,7 +165,10 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
             try {
                 return applyWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

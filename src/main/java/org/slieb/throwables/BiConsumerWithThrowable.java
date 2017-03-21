@@ -27,8 +27,8 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
      * @param <E>                     The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> BiConsumerWithThrowable<T, U, E> castBiConsumerWithThrowable(
-            final BiConsumerWithThrowable<T, U, E> biconsumerwiththrowable) {
+    static <T, U, E extends Throwable> BiConsumerWithThrowable<T, U, E> castBiConsumerWithThrowable(final BiConsumerWithThrowable<T, U, E>
+                                                                                                            biconsumerwiththrowable) {
         return biconsumerwiththrowable;
     }
 
@@ -144,7 +144,10 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
             try {
                 acceptWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

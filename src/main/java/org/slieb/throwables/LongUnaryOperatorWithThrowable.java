@@ -23,8 +23,8 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @param <E>                            The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(
-            final LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) {
+    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(final LongUnaryOperatorWithThrowable<E>
+                                                                                                              longunaryoperatorwiththrowable) {
         return longunaryoperatorwiththrowable;
     }
 
@@ -66,8 +66,18 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
     long applyAsLongWithThrowable(final long v1) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default LongUnaryOperator thatReturnsOnCatch(final long defaultReturnValue) {
+        return (final long v1) -> {
+            try {
+                return applyAsLongWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

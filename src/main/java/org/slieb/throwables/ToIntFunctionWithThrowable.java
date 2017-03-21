@@ -25,8 +25,8 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
      * @param <E>                        The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToIntFunctionWithThrowable<T, E> castToIntFunctionWithThrowable(
-            final ToIntFunctionWithThrowable<T, E> tointfunctionwiththrowable) {
+    static <T, E extends Throwable> ToIntFunctionWithThrowable<T, E> castToIntFunctionWithThrowable(final ToIntFunctionWithThrowable<T, E>
+                                                                                                            tointfunctionwiththrowable) {
         return tointfunctionwiththrowable;
     }
 
@@ -77,6 +77,20 @@ public interface ToIntFunctionWithThrowable<T, E extends Throwable> extends ToIn
                 return java.util.OptionalInt.of(applyAsIntWithThrowable(v1));
             } catch (Throwable throwable) {
                 return java.util.OptionalInt.empty();
+            }
+        };
+    }
+
+    /**
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
+     */
+    default ToIntFunction<T> thatReturnsOnCatch(final int defaultReturnValue) {
+        return (final T v1) -> {
+            try {
+                return applyAsIntWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
             }
         };
     }

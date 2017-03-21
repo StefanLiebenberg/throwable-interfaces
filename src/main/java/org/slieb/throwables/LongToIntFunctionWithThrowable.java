@@ -23,8 +23,8 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      * @param <E>                            The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(
-            final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
+    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(final LongToIntFunctionWithThrowable<E>
+                                                                                                              longtointfunctionwiththrowable) {
         return longtointfunctionwiththrowable;
     }
 
@@ -66,8 +66,18 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
     int applyAsIntWithThrowable(final long v1) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default LongToIntFunction thatReturnsOnCatch(final int defaultReturnValue) {
+        return (final long v1) -> {
+            try {
+                return applyAsIntWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

@@ -23,8 +23,8 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
      * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(
-            final DoubleSupplierWithThrowable<E> doublesupplierwiththrowable) {
+    static <E extends Throwable> DoubleSupplierWithThrowable<E> castDoubleSupplierWithThrowable(final DoubleSupplierWithThrowable<E>
+                                                                                                        doublesupplierwiththrowable) {
         return doublesupplierwiththrowable;
     }
 
@@ -64,8 +64,18 @@ public interface DoubleSupplierWithThrowable<E extends Throwable> extends Double
     double getAsDoubleWithThrowable() throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default DoubleSupplier thatReturnsOnCatch(final double defaultReturnValue) {
+        return () -> {
+            try {
+                return getAsDoubleWithThrowable();
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

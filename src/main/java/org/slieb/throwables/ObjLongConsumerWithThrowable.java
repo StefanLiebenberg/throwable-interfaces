@@ -25,8 +25,8 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
      * @param <E>                          The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(
-            final ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) {
+    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(final ObjLongConsumerWithThrowable<T, E>
+                                                                                                                objlongconsumerwiththrowable) {
         return objlongconsumerwiththrowable;
     }
 
@@ -141,7 +141,10 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
             try {
                 acceptWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

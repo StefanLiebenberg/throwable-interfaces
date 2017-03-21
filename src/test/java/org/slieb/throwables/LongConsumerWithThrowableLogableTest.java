@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.slieb.throwables.LongConsumerWithThrowable.castLongConsumerWithThrowable;
 
-@java.lang.SuppressWarnings({"WeakerAccess", "deprecation"})
+@java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class LongConsumerWithThrowableLogableTest {
 
     private ThrownHandler tHandler;

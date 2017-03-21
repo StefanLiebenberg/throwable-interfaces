@@ -23,8 +23,8 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      * @param <E>                            The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(
-            final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {
+    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(final IntBinaryOperatorWithThrowable<E>
+                                                                                                              intbinaryoperatorwiththrowable) {
         return intbinaryoperatorwiththrowable;
     }
 
@@ -68,8 +68,18 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
     int applyAsIntWithThrowable(final int v1, final int v2) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default IntBinaryOperator thatReturnsOnCatch(final int defaultReturnValue) {
+        return (final int v1, final int v2) -> {
+            try {
+                return applyAsIntWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on
@@ -133,7 +143,10 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
             try {
                 return applyAsIntWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

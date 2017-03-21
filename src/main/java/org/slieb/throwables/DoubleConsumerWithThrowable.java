@@ -23,8 +23,8 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
      * @param <E>                         The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleConsumerWithThrowable<E> castDoubleConsumerWithThrowable(
-            final DoubleConsumerWithThrowable<E> doubleconsumerwiththrowable) {
+    static <E extends Throwable> DoubleConsumerWithThrowable<E> castDoubleConsumerWithThrowable(final DoubleConsumerWithThrowable<E>
+                                                                                                        doubleconsumerwiththrowable) {
         return doubleconsumerwiththrowable;
     }
 

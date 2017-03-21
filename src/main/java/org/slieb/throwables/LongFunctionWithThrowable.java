@@ -25,8 +25,8 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      * @param <E>                       The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(
-            final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) {
+    static <R, E extends Throwable> LongFunctionWithThrowable<R, E> castLongFunctionWithThrowable(final LongFunctionWithThrowable<R, E>
+                                                                                                          longfunctionwiththrowable) {
         return longfunctionwiththrowable;
     }
 

@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.slieb.throwables.ConsumerWithThrowable.castConsumerWithThrowable;
 
-@java.lang.SuppressWarnings({"WeakerAccess", "deprecation"})
+@java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class ConsumerWithThrowableLogableTest {
 
     private ThrownHandler tHandler;

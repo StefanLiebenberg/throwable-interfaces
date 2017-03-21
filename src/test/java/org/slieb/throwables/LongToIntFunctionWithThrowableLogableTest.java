@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import static org.slieb.throwables.LongToIntFunctionWithThrowable.castLongToIntFunctionWithThrowable;
 
-@java.lang.SuppressWarnings({"WeakerAccess", "deprecation"})
+@java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class LongToIntFunctionWithThrowableLogableTest {
 
     private ThrownHandler tHandler;

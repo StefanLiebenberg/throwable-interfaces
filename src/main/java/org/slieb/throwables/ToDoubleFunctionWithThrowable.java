@@ -25,8 +25,8 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends T
      * @param <E>                           The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToDoubleFunctionWithThrowable<T, E> castToDoubleFunctionWithThrowable(
-            final ToDoubleFunctionWithThrowable<T, E> todoublefunctionwiththrowable) {
+    static <T, E extends Throwable> ToDoubleFunctionWithThrowable<T, E> castToDoubleFunctionWithThrowable(final ToDoubleFunctionWithThrowable<T, E>
+                                                                                                                  todoublefunctionwiththrowable) {
         return todoublefunctionwiththrowable;
     }
 
@@ -77,6 +77,20 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends T
                 return java.util.OptionalDouble.of(applyAsDoubleWithThrowable(v1));
             } catch (Throwable throwable) {
                 return java.util.OptionalDouble.empty();
+            }
+        };
+    }
+
+    /**
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
+     */
+    default ToDoubleFunction<T> thatReturnsOnCatch(final double defaultReturnValue) {
+        return (final T v1) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
             }
         };
     }

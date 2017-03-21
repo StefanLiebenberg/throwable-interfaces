@@ -63,8 +63,18 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
     long getAsLongWithThrowable() throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default LongSupplier thatReturnsOnCatch(final long defaultReturnValue) {
+        return () -> {
+            try {
+                return getAsLongWithThrowable();
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

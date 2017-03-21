@@ -27,8 +27,8 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @param <E>                             The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToDoubleBiFunctionWithThrowable<T, U, E> castToDoubleBiFunctionWithThrowable(
-            final ToDoubleBiFunctionWithThrowable<T, U, E> todoublebifunctionwiththrowable) {
+    static <T, U, E extends Throwable> ToDoubleBiFunctionWithThrowable<T, U, E> castToDoubleBiFunctionWithThrowable(final ToDoubleBiFunctionWithThrowable<T,
+            U, E> todoublebifunctionwiththrowable) {
         return todoublebifunctionwiththrowable;
     }
 
@@ -41,8 +41,8 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @param <E>                The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToDoubleBiFunctionWithThrowable<T, U, E> asToDoubleBiFunctionWithThrowable(
-            final ToDoubleBiFunction<T, U> todoublebifunction) {
+    static <T, U, E extends Throwable> ToDoubleBiFunctionWithThrowable<T, U, E> asToDoubleBiFunctionWithThrowable(final ToDoubleBiFunction<T, U>
+                                                                                                                          todoublebifunction) {
         return todoublebifunction::applyAsDouble;
     }
 
@@ -83,6 +83,20 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
                 return java.util.OptionalDouble.of(applyAsDoubleWithThrowable(v1, v2));
             } catch (Throwable throwable) {
                 return java.util.OptionalDouble.empty();
+            }
+        };
+    }
+
+    /**
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
+     */
+    default ToDoubleBiFunction<T, U> thatReturnsOnCatch(final double defaultReturnValue) {
+        return (final T v1, final U v2) -> {
+            try {
+                return applyAsDoubleWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
             }
         };
     }
@@ -149,7 +163,10 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
             try {
                 return applyAsDoubleWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

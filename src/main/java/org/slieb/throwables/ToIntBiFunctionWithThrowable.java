@@ -27,8 +27,8 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @param <E>                          The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToIntBiFunctionWithThrowable<T, U, E> castToIntBiFunctionWithThrowable(
-            final ToIntBiFunctionWithThrowable<T, U, E> tointbifunctionwiththrowable) {
+    static <T, U, E extends Throwable> ToIntBiFunctionWithThrowable<T, U, E> castToIntBiFunctionWithThrowable(final ToIntBiFunctionWithThrowable<T, U, E>
+                                                                                                                      tointbifunctionwiththrowable) {
         return tointbifunctionwiththrowable;
     }
 
@@ -82,6 +82,20 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
                 return java.util.OptionalInt.of(applyAsIntWithThrowable(v1, v2));
             } catch (Throwable throwable) {
                 return java.util.OptionalInt.empty();
+            }
+        };
+    }
+
+    /**
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
+     */
+    default ToIntBiFunction<T, U> thatReturnsOnCatch(final int defaultReturnValue) {
+        return (final T v1, final U v2) -> {
+            try {
+                return applyAsIntWithThrowable(v1, v2);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
             }
         };
     }
@@ -148,7 +162,10 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
             try {
                 return applyAsIntWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{v1, v2});
+                consumer.accept(throwable, new Object[]{
+                        v1,
+                        v2
+                });
                 throw throwable;
             }
         };

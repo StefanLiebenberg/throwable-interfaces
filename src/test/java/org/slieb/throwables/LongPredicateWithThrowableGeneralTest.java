@@ -10,6 +10,31 @@ import static org.slieb.throwables.LongPredicateWithThrowable.castLongPredicateW
 public class LongPredicateWithThrowableGeneralTest {
 
     @Test
+    public void testReturnTypeExceptionWithTrue() {
+        boolean expected = true;
+        boolean result = castLongPredicateWithThrowable((v1) -> {
+            throw new Exception("expect exception");
+        }).thatReturnsOnCatch(expected).test(0);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testReturnTypeExceptionWithFalse() {
+        boolean expected = false;
+        boolean result = castLongPredicateWithThrowable((v1) -> {
+            throw new Exception("expect exception");
+        }).thatReturnsOnCatch(expected).test(0);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testNormalOperation() {
+        boolean expected = true;
+        boolean result = castLongPredicateWithThrowable((v1) -> expected).thatReturnsOnCatch(false).test(0);
+        assertEquals(expected, result);
+    }
+
+    @Test
     public void testOnException() {
         AtomicReference<java.lang.Throwable> reference = new AtomicReference<>();
         java.lang.Exception expected = new java.lang.Exception("expected");

@@ -23,7 +23,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
-import static org.slieb.generate.TypeResolver.*;
+import static org.slieb.generate.TypeResolver.getBasicTypeFor;
+import static org.slieb.generate.TypeResolver.getFunctionalMethod;
+import static org.slieb.generate.TypeResolver.getNullTypeFor;
 
 /**
  * This class generates a bunch of interfaces based on some crazy reflecting of the utilities in java.util.function.*
@@ -34,12 +36,56 @@ public class InterfaceGenerator {
 
     private final File directory, testDirectory;
 
-    private InterfaceGenerator(String packageName,
-                               File directory,
-                               File testDirectory) {
+    private InterfaceGenerator(String packageName, File directory, File testDirectory) {
         this.packageName = packageName;
         this.directory = directory;
         this.testDirectory = testDirectory;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void main(String[] args) throws IOException {
+
+        InterfaceGenerator interfaceGenerator = new InterfaceGenerator("org.slieb.throwables", new File("src/main/java"), new File("src/test/java"));
+        interfaceGenerator.generate(java.util.function.BiConsumer.class);
+        interfaceGenerator.generate(java.util.function.BiFunction.class);
+        interfaceGenerator.generate(java.util.function.BinaryOperator.class);
+        interfaceGenerator.generate(java.util.function.BooleanSupplier.class);
+        interfaceGenerator.generate(java.util.function.Consumer.class);
+        interfaceGenerator.generate(java.util.function.DoubleBinaryOperator.class);
+        interfaceGenerator.generate(java.util.function.DoubleConsumer.class);
+        interfaceGenerator.generate(java.util.function.DoubleFunction.class);
+        interfaceGenerator.generate(java.util.function.DoublePredicate.class);
+        interfaceGenerator.generate(java.util.function.DoubleSupplier.class);
+        interfaceGenerator.generate(java.util.function.DoubleToIntFunction.class);
+        interfaceGenerator.generate(java.util.function.DoubleToLongFunction.class);
+        interfaceGenerator.generate(java.util.function.DoubleUnaryOperator.class);
+        interfaceGenerator.generate(java.util.function.Function.class);
+        interfaceGenerator.generate(java.util.function.IntBinaryOperator.class);
+        interfaceGenerator.generate(java.util.function.IntConsumer.class);
+        interfaceGenerator.generate(java.util.function.IntPredicate.class);
+        interfaceGenerator.generate(java.util.function.IntSupplier.class);
+        interfaceGenerator.generate(java.util.function.IntFunction.class);
+        interfaceGenerator.generate(java.util.function.LongBinaryOperator.class);
+        interfaceGenerator.generate(java.util.function.LongConsumer.class);
+        interfaceGenerator.generate(java.util.function.LongFunction.class);
+        interfaceGenerator.generate(java.util.function.LongPredicate.class);
+        interfaceGenerator.generate(java.util.function.LongSupplier.class);
+        interfaceGenerator.generate(java.util.function.LongToDoubleFunction.class);
+        interfaceGenerator.generate(java.util.function.LongToIntFunction.class);
+        interfaceGenerator.generate(java.util.function.LongUnaryOperator.class);
+        interfaceGenerator.generate(java.util.function.ObjDoubleConsumer.class);
+        interfaceGenerator.generate(java.util.function.ObjIntConsumer.class);
+        interfaceGenerator.generate(java.util.function.ObjLongConsumer.class);
+        interfaceGenerator.generate(java.util.function.Predicate.class);
+        interfaceGenerator.generate(java.util.function.Supplier.class);
+        interfaceGenerator.generate(java.util.function.ToDoubleBiFunction.class);
+        interfaceGenerator.generate(java.util.function.ToDoubleFunction.class);
+        interfaceGenerator.generate(java.util.function.ToIntBiFunction.class);
+        interfaceGenerator.generate(java.util.function.ToIntFunction.class);
+        interfaceGenerator.generate(java.util.function.ToLongBiFunction.class);
+        interfaceGenerator.generate(java.util.function.ToLongFunction.class);
+        interfaceGenerator.generate(UnaryOperator.class);
+        interfaceGenerator.generate(Runnable.class);
     }
 
     private void generate(Class<?> funcInterface) {
@@ -67,46 +113,31 @@ public class InterfaceGenerator {
         generateFile(directory, packageName, className, getImplementationContent(className, node));
     }
 
-    private void generateCastTest(String className,
-                                  String testName,
-                                  FunctionalInterfaceNode node) throws IOException {
+    private void generateCastTest(String className, String testName, FunctionalInterfaceNode node) throws IOException {
         generateFile(testDirectory, packageName, testName, getCastTestContent(className, testName, node));
     }
 
-    private void generateConvertTest(Class<?> funcInterface,
-                                     String className,
-                                     String testName) throws IOException {
+    private void generateConvertTest(Class<?> funcInterface, String className, String testName) throws IOException {
         generateFile(testDirectory, packageName, testName, getConvertTestContent(funcInterface, className, testName));
     }
 
-    private void generateIgnoresTest(Class<?> funcInterface,
-                                     String className,
-                                     String testName) throws IOException {
+    private void generateIgnoresTest(Class<?> funcInterface, String className, String testName) throws IOException {
         generateFile(testDirectory, packageName, testName, getIgnoresTestContent(funcInterface, className, testName));
     }
 
-    private void generateLogableTest(String className,
-                                     String testName,
-                                     FunctionalInterfaceNode node) throws IOException {
+    private void generateLogableTest(String className, String testName, FunctionalInterfaceNode node) throws IOException {
         generateFile(testDirectory, packageName, testName, getLoggableTestContent(className, testName, node));
     }
 
-    private void generateGeneralTest(Class<?> funcInterface,
-                                     String className,
-                                     String testName) throws IOException {
+    private void generateGeneralTest(Class<?> funcInterface, String className, String testName) throws IOException {
         generateFile(testDirectory, packageName, testName, getGeneralTestContent(funcInterface, className, testName));
     }
 
-    private void generateUnwrapTest(Class<?> funcInterface,
-                                    String className,
-                                    String testName) throws IOException {
+    private void generateUnwrapTest(Class<?> funcInterface, String className, String testName) throws IOException {
         generateFile(testDirectory, packageName, testName, getUnwrapTestContent(funcInterface, className, testName));
     }
 
-    private void generateFile(File directory,
-                              String pkg,
-                              String fileName,
-                              String content) throws IOException {
+    private void generateFile(File directory, String pkg, String fileName, String content) throws IOException {
         File outputFile = getOutputFile(directory, pkg, fileName);
         if (outputFile.getParentFile().exists() || outputFile.getParentFile().mkdirs()) {
             try (FileWriter writer = new FileWriter(outputFile)) {
@@ -115,15 +146,11 @@ public class InterfaceGenerator {
         }
     }
 
-    private File getOutputFile(File directory,
-                               String pkg,
-                               String className) {
+    private File getOutputFile(File directory, String pkg, String className) {
         return new File(new File(directory, pkg.replaceAll("\\.", "/")), className + ".java");
     }
 
-    private String getCastTestContent(String className,
-                                      String testName,
-                                      FunctionalInterfaceNode node) {
+    private String getCastTestContent(String className, String testName, FunctionalInterfaceNode node) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("package ").append(packageName).append(";\n");
         stringBuilder.append("import org.junit.Test;\n");
@@ -189,9 +216,7 @@ public class InterfaceGenerator {
         return stringBuilder.toString();
     }
 
-    private String getConvertTestContent(Class<?> funcInterface,
-                                         String className,
-                                         String testName) {
+    private String getConvertTestContent(Class<?> funcInterface, String className, String testName) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("package ").append(packageName).append(";\n");
         stringBuilder.append("import org.junit.Test;\n");
@@ -241,9 +266,7 @@ public class InterfaceGenerator {
         return stringBuilder.toString();
     }
 
-    private String getIgnoresTestContent(Class<?> funcInterface,
-                                         String className,
-                                         String testName) {
+    private String getIgnoresTestContent(Class<?> funcInterface, String className, String testName) {
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("package ").append(packageName).append(";\n");
@@ -276,8 +299,7 @@ public class InterfaceGenerator {
         return stringBuilder.toString();
     }
 
-    private String getLoggableTestContent(String className,
-                                          String testName, FunctionalInterfaceNode node) {
+    private String getLoggableTestContent(String className, String testName, FunctionalInterfaceNode node) {
         final IndentStringBuilder isb = new IndentStringBuilder();
 
         isb.append("package ").append(packageName).append(";\n");
@@ -285,7 +307,8 @@ public class InterfaceGenerator {
 
         isb.append("import static ").append(packageName).append(".").append(className).append(".cast").append(className).append(";\n");
 
-        isb.annotate(SuppressWarnings.class, "{\"WeakerAccess\", \"deprecation\"}");
+        //        isb.annotate(SuppressWarnings.class, "{\"WeakerAccess\", \"deprecation\"}");
+        isb.annotate(SuppressWarnings.class, "{\"CodeBlock2Expr\"}");
         isb.indent().append("public class ").append(testName).append(" {").newline();
         isb.incrementIndent();
 
@@ -355,9 +378,7 @@ public class InterfaceGenerator {
         return isb.toString();
     }
 
-    private String getGeneralTestContent(Class<?> funcInterface,
-                                         String className,
-                                         String testName) {
+    private String getGeneralTestContent(Class<?> funcInterface, String className, String testName) {
         IndentStringBuilder isb = new IndentStringBuilder();
         isb.appendPackage(packageName);
 
@@ -377,31 +398,67 @@ public class InterfaceGenerator {
         Type returnType = TypeResolver.resolveType(funcInterface, method.getGenericReturnType());
         boolean hasReturnType = !returnType.equals(Void.TYPE);
         boolean returnTypeIsPrimitive = TypeResolver.isTypePrimitive(returnType);
-        if (hasReturnType && !returnTypeIsPrimitive) {
+        if (hasReturnType) {
+            if (!returnTypeIsPrimitive) {
 
-            isb.append(" @Test\n");
-            isb.append(" public void testReturnTypeException() {\n");
-            isb.indents(8).append("Object expected = new Object();").newline();
-            isb.indents(8).append("Object result = cast").append(className).append("(").append(params).append(" -> {\n");
-            isb.append("      throw new Exception(\"expect exception\");\n");
-            isb.append("    }).thatReturnsOnCatch(expected).").append(getMethodCall(funcInterface, method)).append(";\n");
-            isb.indents(8).append("assertEquals(expected, result);").newline();
-            isb.append(" }\n\n");
+                isb.append(" @Test\n");
+                isb.append(" public void testReturnTypeException() {\n");
+                isb.indents(8).append("Object expected = new Object();").newline();
+                isb.indents(8).append("Object result = cast").append(className).append("(").append(params).append(" -> {\n");
+                isb.append("      throw new Exception(\"expect exception\");\n");
+                isb.append("    }).thatReturnsOnCatch(expected).").append(getMethodCall(funcInterface, method)).append(";\n");
+                isb.indents(8).append("assertEquals(expected, result);").newline();
+                isb.append(" }\n\n");
 
-            isb.append(" @Test\n");
-            isb.append(" public void testNormalOperation() {\n");
-            isb.append("    Object expected = ").append(getBasicTypeFor(returnType)).append(";").newline();
-            isb.append("    Object result = cast")
-               .append(className)
-               .append("(")
-               .append(params)
-               .append(" -> expected).thatReturnsOnCatch(")
-               .append(getNullTypeFor(returnType))
-               .append(").")
-               .append(getMethodCall(funcInterface, method))
-               .append(";\n");
-            isb.append("    assertEquals(expected, result);\n");
-            isb.append(" }\n\n");
+                isb.append(" @Test\n");
+                isb.append(" public void testNormalOperation() {\n");
+                isb.append("    Object expected = ").append(getBasicTypeFor(returnType)).append(";").newline();
+                isb.append("    Object result = cast")
+                        .append(className)
+                        .append("(")
+                        .append(params)
+                        .append(" -> expected).thatReturnsOnCatch(")
+                        .append(getNullTypeFor(returnType))
+                        .append(").")
+                        .append(getMethodCall(funcInterface, method))
+                        .append(";\n");
+                isb.append("    assertEquals(expected, result);\n");
+                isb.append(" }\n\n");
+            } else {
+
+                if (returnType.equals(Boolean.TYPE)) {
+                    isb.append(" @Test\n");
+                    isb.append(" public void testReturnTypeExceptionWithTrue() {\n");
+                    isb.indents(8).append("boolean expected = true;").newline();
+                    isb.indents(8).append("boolean result = cast").append(className).append("(").append(params).append(" -> {\n");
+                    isb.append("      throw new Exception(\"expect exception\");\n");
+                    isb.append("    }).thatReturnsOnCatch(expected).").append(getMethodCall(funcInterface, method)).append(";\n");
+                    isb.indents(8).append("assertEquals(expected, result);").newline();
+                    isb.append(" }\n\n");
+
+                    isb.append(" @Test\n");
+                    isb.append(" public void testReturnTypeExceptionWithFalse() {\n");
+                    isb.indents(8).append("boolean expected = false;").newline();
+                    isb.indents(8).append("boolean result = cast").append(className).append("(").append(params).append(" -> {\n");
+                    isb.append("      throw new Exception(\"expect exception\");\n");
+                    isb.append("    }).thatReturnsOnCatch(expected).").append(getMethodCall(funcInterface, method)).append(";\n");
+                    isb.indents(8).append("assertEquals(expected, result);").newline();
+                    isb.append(" }\n\n");
+
+                    isb.append(" @Test\n");
+                    isb.append(" public void testNormalOperation() {\n");
+                    isb.append("    boolean expected = true").append(";").newline();
+                    isb.append("    boolean result = cast")
+                            .append(className)
+                            .append("(")
+                            .append(params)
+                            .append(" -> expected).thatReturnsOnCatch(false).")
+                            .append(getMethodCall(funcInterface, method))
+                            .append(";\n");
+                    isb.append("    assertEquals(expected, result);\n");
+                    isb.append(" }\n\n");
+                }
+            }
         }
 
         if (!hasReturnType) {
@@ -414,15 +471,26 @@ public class InterfaceGenerator {
 
             isb.append(" @Test\n");
             isb.append(" public void testThrowsNothingNormalOperation() {\n");
-            isb.append("    cast").append(className).append("(").append(params)
-               .append(" -> {}).thatThrowsNothing().").append(getMethodCall(funcInterface, method)).append(";\n");
+            isb.append("    cast")
+                    .append(className)
+                    .append("(")
+                    .append(params)
+                    .append(" -> {}).thatThrowsNothing().")
+                    .append(getMethodCall(funcInterface, method))
+                    .append(";\n");
             isb.append(" }\n\n");
         }
 
         isb.append(" @Test\n");
         isb.append(" public void testOnException() {\n");
-        isb.indents(8).appendClass(AtomicReference.class).append("<").appendClass(Throwable.class)
-           .append("> reference = new ").appendClass(AtomicReference.class).append("<>();").newline();
+        isb.indents(8)
+                .appendClass(AtomicReference.class)
+                .append("<")
+                .appendClass(Throwable.class)
+                .append("> reference = new ")
+                .appendClass(AtomicReference.class)
+                .append("<>();")
+                .newline();
         isb.indents(8).appendClass(Exception.class).append(" expected = new ").appendClass(Exception.class).append("(\"expected\");").newline();
         isb.indents(8).append("try {").newline();
         isb.indents(8).append("cast").append(className).append("(").append(params).append(" -> {\n");
@@ -438,9 +506,7 @@ public class InterfaceGenerator {
         return isb.toString();
     }
 
-    private String getUnwrapTestContent(Class<?> funcInterface,
-                                        String className,
-                                        String testName) {
+    private String getUnwrapTestContent(Class<?> funcInterface, String className, String testName) {
         IndentStringBuilder isb = new IndentStringBuilder();
         isb.appendPackage(packageName);
 
@@ -508,14 +574,11 @@ public class InterfaceGenerator {
         return isb.toString();
     }
 
-    private String getMethodCall(Class funcClass,
-                                 Method method) {
+    private String getMethodCall(Class funcClass, Method method) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(method.getName());
         stringBuilder.append("(");
-        Iterator<Type> iterator = Arrays.stream(method.getGenericParameterTypes())
-                                        .map(t -> TypeResolver.resolveType(funcClass, t))
-                                        .iterator();
+        Iterator<Type> iterator = Arrays.stream(method.getGenericParameterTypes()).map(t -> TypeResolver.resolveType(funcClass, t)).iterator();
         while (iterator.hasNext()) {
             Type nxt = iterator.next();
             stringBuilder.append(TypeResolver.getNullTypeFor(nxt));
@@ -534,8 +597,8 @@ public class InterfaceGenerator {
         final IndentStringBuilder isb = new IndentStringBuilder();
 
         isb.appendPackage(packageName);
-        isb.appendImports(LoggerFactory.class, Logger.class, Consumer.class, Throwable.class, node.getImplementationClass(),
-                          SuppressedException.class, FunctionalInterface.class, SuppressWarnings.class);
+        isb.appendImports(LoggerFactory.class, Logger.class, Consumer.class, Throwable.class, node.getImplementationClass(), SuppressedException.class,
+                          FunctionalInterface.class, SuppressWarnings.class);
 
         if (node.isDeprecated()) {
             isb.appendImport(Deprecated.class);
@@ -575,20 +638,30 @@ public class InterfaceGenerator {
         isb.append("     *\n");
         isb.append("     * @param ").append(objectName).append(" The interface instance\n");
         generics.forEach(gen -> isb.append("     * @param <")
-                                   .append(gen)
-                                   .append("> Generic that corresponds to the same generic on ")
-                                   .appendClass(node.getImplementationClass())
-                                   .append("  \n"));
+                .append(gen)
+                .append("> Generic that corresponds to the same generic on ")
+                .appendClass(node.getImplementationClass())
+                .append("  \n"));
         isb.append("     * @param <E> The type this interface is allowed to throw\n");
         isb.append("     * @return the cast interface\n");
         isb.append("     */\n");
         isb.append("    static ")
-           .append(generateGenerics(generics, true, true))
-           .append(" ").append(className).append(generateGenerics(generics, true, false))
-           .append(" cast").append(className)
-           .append("(final ").append(className).append(generateGenerics(generics, true, false)).append(" ").append(objectName).append(") {\n")
-           .append("        return ").append(objectName).append(";\n")
-           .append("    }");
+                .append(generateGenerics(generics, true, true))
+                .append(" ")
+                .append(className)
+                .append(generateGenerics(generics, true, false))
+                .append(" cast")
+                .append(className)
+                .append("(final ")
+                .append(className)
+                .append(generateGenerics(generics, true, false))
+                .append(" ")
+                .append(objectName)
+                .append(") {\n")
+                .append("        return ")
+                .append(objectName)
+                .append(";\n")
+                .append("    }");
         isb.newlines(2);
 
         Method method = getFunctionalMethod(node.getImplementationClass());
@@ -599,25 +672,35 @@ public class InterfaceGenerator {
         isb.append("     * Utility method to convert ").append(className).append("\n");
         isb.append("     * @param ").append(variableName).append(" The interface instance\n");
         generics.forEach(gen -> isb.append("     * @param <")
-                                   .append(gen)
-                                   .append("> Generic that corresponds to the same generic on ")
-                                   .append(node.getImplementationClass().getSimpleName())
-                                   .append("  \n"));
+                .append(gen)
+                .append("> Generic that corresponds to the same generic on ")
+                .append(node.getImplementationClass().getSimpleName())
+                .append("  \n"));
         isb.append("     * @param <E> The type this interface is allowed to throw\n");
         isb.append("     * @return the cast interface\n");
         isb.append("     */\n");
         isb.append("    static ")
-           .append(generateGenerics(generics, true, true))
-           .append(" ").append(className).append(generateGenerics(generics, true, false))
-           .append(" as").append(className)
-           .append("(final ").appendClass(node.getImplementationClass());
+                .append(generateGenerics(generics, true, true))
+                .append(" ")
+                .append(className)
+                .append(generateGenerics(generics, true, false))
+                .append(" as")
+                .append(className)
+                .append("(final ")
+                .appendClass(node.getImplementationClass());
         if (!generics.isEmpty()) {
             isb.append(generateGenerics(generics, false, false));
         }
 
-        isb.append(" ").append(variableName).append(") {\n")
-           .append("        return ").append(variableName).append("::").append(methodName).append(";\n")
-           .append("    }\n");
+        isb.append(" ")
+                .append(variableName)
+                .append(") {\n")
+                .append("        return ")
+                .append(variableName)
+                .append("::")
+                .append(methodName)
+                .append(";\n")
+                .append("    }\n");
 
         Type returnType = TypeResolver.resolveType(node.getImplementationClass(), method.getGenericReturnType());
         boolean hasReturnType = !returnType.equals(Void.TYPE);
@@ -626,10 +709,10 @@ public class InterfaceGenerator {
 
         isb.append("    /** \n");
         isb.append("     * Overridden method of ")
-           .append(className)
-           .append(" that will call ")
-           .append(methodName)
-           .append("WithThrowable, but catching any exceptions.\n");
+                .append(className)
+                .append(" that will call ")
+                .append(methodName)
+                .append("WithThrowable, but catching any exceptions.\n");
         isb.append("     *\n");
         for (int i = 0; i < method.getGenericParameterTypes().length; i++) {
             isb.append("     * @param v").append(i + 1).append(" parameter to overridden method\n");
@@ -679,18 +762,18 @@ public class InterfaceGenerator {
             if (returnTypeIsPrimitive) {
                 boolean returnTypeInGenerics = generics.stream().anyMatch(returnTypeName::equals);
 
-                isb.newlines(2).setIndent(4);
-                isb.indent().append("/**").newline();
-                isb.indent()
-                   .append(" * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.")
-                   .newline();
-                isb.indent().append(" */").newline();
                 Class<?> optionalReturnType = TypeResolver.getOptionalTypeForPrimitive(returnType);
                 Class<?> optionalFunctionType = TypeResolver.getOptionalFunctionTypeFor(node.getImplementationClass());
                 if (optionalReturnType != null && optionalFunctionType != null) {
-                    List<String> genericsWithOptionalReturn = (returnTypeInGenerics ?
-                            generics.stream().map(gen -> gen.equals(returnTypeName) ? optionalReturnType.getTypeName() : gen) :
-                            Stream.concat(generics.stream(), Stream.of(optionalReturnType.getName()))).collect(toList());
+                    isb.newlines(2).setIndent(4);
+                    isb.indent().append("/**").newline();
+                    isb.indent()
+                            .append(" * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.")
+                            .newline();
+                    isb.indent().append(" */").newline();
+                    List<String> genericsWithOptionalReturn = (returnTypeInGenerics ? generics.stream()
+                            .map(gen -> gen.equals(returnTypeName) ? optionalReturnType.getTypeName() : gen) : Stream.concat(generics.stream(), Stream.of(
+                            optionalReturnType.getName()))).collect(toList());
                     isb.indent().append("default ").appendClass(optionalFunctionType);
                     if (!generics.isEmpty()) {
                         isb.append(generateGenerics(genericsWithOptionalReturn, false, false));
@@ -699,49 +782,22 @@ public class InterfaceGenerator {
                     isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, false));
                     isb.indent().append(" -> {\n");
                     isb.indent().append("    try {\n");
-                    isb.indent().append("      return ").appendClass(optionalReturnType).append(".of(").append(methodName).append("WithThrowable")
-                       .append(getMethodParams(node.getImplementationClass(), method, false))
-                       .append(");\n");
+                    isb.indent()
+                            .append("      return ")
+                            .appendClass(optionalReturnType)
+                            .append(".of(")
+                            .append(methodName)
+                            .append("WithThrowable")
+                            .append(getMethodParams(node.getImplementationClass(), method, false))
+                            .append(");\n");
                     isb.indent().append("    } catch(Throwable throwable) {\n");
                     isb.indent().append("      return ").appendClass(optionalReturnType).append(".empty();\n");
                     isb.indent().append("    }\n");
                     isb.indent().append("  };\n");
                     isb.indent().append("}\n");
                 }
-            } else {
-                List<String> genericsWithOptionalReturn = generics.stream()
-                                                                  .map(gen -> gen.equals(returnTypeName) ? isb.getClassContent(
-                                                                          Optional.class) + "<" + gen + ">" : gen)
-                                                                  .collect(toList());
-                boolean mixedTypes = Arrays.asList(method.getGenericParameterTypes())
-                                           .stream().map(t -> TypeResolver.resolveType(node.getImplementationClass(), t)).anyMatch(returnType::equals);
 
-                if (!mixedTypes) {
-
-                    isb.newlines(2).setIndent(4);
-                    isb.indent().append("/**").newline();
-                    isb.indent()
-                       .append(" * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.")
-                       .newline();
-                    isb.indent().append(" */").newline();
-                    isb.indent().append("default ").appendClass(node.getImplementationClass());
-                    if (!generics.isEmpty()) {
-                        isb.append(generateGenerics(genericsWithOptionalReturn, false, false));
-                    }
-                    isb.indent().append("thatReturnsOptional() {\n");
-                    isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
-                    isb.indent().append(" -> {\n");
-                    isb.indent().append("    try {\n");
-                    isb.indent().append("      return ").appendClass(Optional.class).append(".ofNullable(").append(methodName).append("WithThrowable")
-                       .append(getMethodParams(node.getImplementationClass(), method, false))
-                       .append(");\n");
-                    isb.indent().append("    } catch(Throwable throwable) {\n");
-                    isb.indent().append("      return ").appendClass(Optional.class).append(".empty();\n");
-                    isb.indent().append("    }\n");
-                    isb.indent().append("  };\n");
-                    isb.indent().append("}\n");
-                }
-
+                // thatReturnsOnCatch for primitives
                 isb.newlines(2).setIndent(4);
                 isb.indent().append("/**").newline();
                 isb.indent().append(" * @param defaultReturnValue A value to return if any throwable is caught.").newline();
@@ -755,9 +811,77 @@ public class InterfaceGenerator {
                 isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
                 isb.append(" -> {\n");
                 isb.indent().append("    try {\n");
-                isb.indent().append("      return ").append(methodName).append("WithThrowable")
-                   .append(getMethodParams(node.getImplementationClass(), method, false))
-                   .append(";\n");
+                isb.indent()
+                        .append("      return ")
+                        .append(methodName)
+                        .append("WithThrowable")
+                        .append(getMethodParams(node.getImplementationClass(), method, false))
+                        .append(";\n");
+                isb.indent().append("    } catch(final ").appendClass(Throwable.class).append(" throwable) {\n");
+                isb.indent().append("      return defaultReturnValue;\n");
+                isb.indent().append("    }\n");
+                isb.indent().append("  };\n");
+                isb.indent().append("}\n");
+            } else {
+                List<String> genericsWithOptionalReturn = generics.stream()
+                        .map(gen -> gen.equals(returnTypeName) ? isb.getClassContent(Optional.class) + "<" + gen + ">" : gen)
+                        .collect(toList());
+                boolean mixedTypes = Arrays.asList(method.getGenericParameterTypes())
+                        .stream()
+                        .map(t -> TypeResolver.resolveType(node.getImplementationClass(), t))
+                        .anyMatch(returnType::equals);
+
+                if (!mixedTypes) {
+
+                    isb.newlines(2).setIndent(4);
+                    isb.indent().append("/**").newline();
+                    isb.indent()
+                            .append(" * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.")
+                            .newline();
+                    isb.indent().append(" */").newline();
+                    isb.indent().append("default ").appendClass(node.getImplementationClass());
+                    if (!generics.isEmpty()) {
+                        isb.append(generateGenerics(genericsWithOptionalReturn, false, false));
+                    }
+                    isb.indent().append("thatReturnsOptional() {\n");
+                    isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
+                    isb.indent().append(" -> {\n");
+                    isb.indent().append("    try {\n");
+                    isb.indent()
+                            .append("      return ")
+                            .appendClass(Optional.class)
+                            .append(".ofNullable(")
+                            .append(methodName)
+                            .append("WithThrowable")
+                            .append(getMethodParams(node.getImplementationClass(), method, false))
+                            .append(");\n");
+                    isb.indent().append("    } catch(Throwable throwable) {\n");
+                    isb.indent().append("      return ").appendClass(Optional.class).append(".empty();\n");
+                    isb.indent().append("    }\n");
+                    isb.indent().append("  };\n");
+                    isb.indent().append("}\n");
+                }
+
+                // thatReturnsOnCatch
+                isb.newlines(2).setIndent(4);
+                isb.indent().append("/**").newline();
+                isb.indent().append(" * @param defaultReturnValue A value to return if any throwable is caught.").newline();
+                isb.indent().append(" * @return An interface that returns a default value if any exception occurs.").newline();
+                isb.indent().append(" */").newline();
+                isb.indent().append("default ").appendClass(node.getImplementationClass());
+                if (!generics.isEmpty()) {
+                    isb.append(generateGenerics(generics, false, false));
+                }
+                isb.append(" thatReturnsOnCatch(final ").append(returnTypeName).append(" defaultReturnValue) {\n");
+                isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
+                isb.append(" -> {\n");
+                isb.indent().append("    try {\n");
+                isb.indent()
+                        .append("      return ")
+                        .append(methodName)
+                        .append("WithThrowable")
+                        .append(getMethodParams(node.getImplementationClass(), method, false))
+                        .append(";\n");
                 isb.indent().append("    } catch(final ").appendClass(Throwable.class).append(" throwable) {\n");
                 isb.indent().append("      return defaultReturnValue;\n");
                 isb.indent().append("    }\n");
@@ -777,14 +901,11 @@ public class InterfaceGenerator {
             isb.append(" thatThrowsNothing() {").newline();
 
             isb.setIndent(8);
-            isb.indent().append("return ").append(getMethodParams(node.getImplementationClass(), method, true))
-               .append(" -> {").newline();
+            isb.indent().append("return ").append(getMethodParams(node.getImplementationClass(), method, true)).append(" -> {").newline();
             isb.setIndent(12);
             isb.indent().append("try {").newline();
             isb.setIndent(16);
-            isb.indent().append(methodName).append("WithThrowable")
-               .append(getMethodParams(node.getImplementationClass(), method, false))
-               .append(";").newline();
+            isb.indent().append(methodName).append("WithThrowable").append(getMethodParams(node.getImplementationClass(), method, false)).append(";").newline();
             isb.setIndent(12);
             isb.indent().append("} catch(Throwable ignored) {}").newline();
             isb.setIndent(8);
@@ -801,9 +922,7 @@ public class InterfaceGenerator {
         return isb.toString();
     }
 
-    private void printOnException(IndentStringBuilder isb,
-                                  Class<?> funcInterface,
-                                  String className) {
+    private void printOnException(IndentStringBuilder isb, Class<?> funcInterface, String className) {
 
         final Method method = getFunctionalMethod(funcInterface);
         final List<String> generics = getGenerics(funcInterface);
@@ -817,10 +936,18 @@ public class InterfaceGenerator {
         isb.indents(4).appendReturn("An interface that will log all exceptions to given logger").newline();
         isb.indents(4).closeComment().newline();
         isb.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
-        isb.indents(4).append("default")
-           .append(" ").append(className).append(generateGenerics(generics, true, false))
-           .append(" onException(final ").appendClass(Consumer.class).append("<").appendClass(Throwable.class).append(">").append(" consumer) {")
-           .newline();
+        isb.indents(4)
+                .append("default")
+                .append(" ")
+                .append(className)
+                .append(generateGenerics(generics, true, false))
+                .append(" onException(final ")
+                .appendClass(Consumer.class)
+                .append("<")
+                .appendClass(Throwable.class)
+                .append(">")
+                .append(" consumer) {")
+                .newline();
         isb.indents(8).append("return ").append(getMethodParams(funcInterface, method, true)).append(" -> {").newline();
         isb.indents(12).append("try {").newline();
         isb.indents(16);
@@ -844,12 +971,20 @@ public class InterfaceGenerator {
             isb.indents(4).appendReturn("An interface that will log all exceptions to given logger").newline();
             isb.indents(4).closeComment().newline();
             isb.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
-            isb.indents(4).append("default")
-               .append(" ").append(className).append(generateGenerics(generics, true, false))
-               .append(" onException(final ").appendClass(BiConsumer.class).append("<").appendClass(Throwable.class)
-               .append(", ").append("Object[]")
-               .append(">").append(" consumer) {")
-               .newline();
+            isb.indents(4)
+                    .append("default")
+                    .append(" ")
+                    .append(className)
+                    .append(generateGenerics(generics, true, false))
+                    .append(" onException(final ")
+                    .appendClass(BiConsumer.class)
+                    .append("<")
+                    .appendClass(Throwable.class)
+                    .append(", ")
+                    .append("Object[]")
+                    .append(">")
+                    .append(" consumer) {")
+                    .newline();
             isb.indents(8).append("return ").append(getMethodParams(funcInterface, method, true)).append(" -> {").newline();
             isb.indents(12).append("try {").newline();
             isb.indents(16);
@@ -858,9 +993,11 @@ public class InterfaceGenerator {
             }
             isb.append(methodName).append("WithThrowable").append(getMethodParams(funcInterface, method, false)).append(";").newline();
             isb.indents(12).append("} catch (final Throwable throwable) {").newline();
-            isb.indents(16).append("consumer.accept(throwable, new Object[]{")
-               .append(getMethodParamsStream(funcInterface, method, false).collect(Collectors.joining(", ")))
-               .append("});").newline();
+            isb.indents(16)
+                    .append("consumer.accept(throwable, new Object[]{")
+                    .append(getMethodParamsStream(funcInterface, method, false).collect(Collectors.joining(", ")))
+                    .append("});")
+                    .newline();
             isb.indents(16).append("throw throwable;").newline();
             isb.indents(12).append("}").newline();
             isb.indents(8).append("};").newline();
@@ -868,9 +1005,7 @@ public class InterfaceGenerator {
         }
     }
 
-    private void printWithLoggingMethod(IndentStringBuilder isb,
-                                        Class<?> funcInterface,
-                                        String className) {
+    private void printWithLoggingMethod(IndentStringBuilder isb, Class<?> funcInterface, String className) {
         final Method method = getFunctionalMethod(funcInterface);
         final List<String> generics = getGenerics(funcInterface);
         final String methodName = method.getName();
@@ -885,10 +1020,15 @@ public class InterfaceGenerator {
         isb.indent().append(" * @return An interface that will log all exceptions to given logger").newline();
         isb.indent().append(" */").newline();
         isb.indent().append("@SuppressWarnings(\"Duplicates\")").newline();
-        isb.indent().append("default")
-           .append(" ").append(className).append(generateGenerics(generics, true, false))
-           .append(" withLogging(final ").appendClass(Logger.class).append(" logger, final String message) {")
-           .newline();
+        isb.indent()
+                .append("default")
+                .append(" ")
+                .append(className)
+                .append(generateGenerics(generics, true, false))
+                .append(" withLogging(final ")
+                .appendClass(Logger.class)
+                .append(" logger, final String message) {")
+                .newline();
         isb.setIndent(8);
 
         isb.indent().append("return ").append(getMethodParams(funcInterface, method, true));
@@ -902,8 +1042,7 @@ public class InterfaceGenerator {
         if (hasReturnType) {
             isb.append("return ");
         }
-        isb.append(methodName).append("WithThrowable").append(getMethodParams(funcInterface, method, false))
-           .append(";").newline();
+        isb.append(methodName).append("WithThrowable").append(getMethodParams(funcInterface, method, false)).append(";").newline();
 
         List<String> errorLogObjects = getMethodParamsStream(funcInterface, method, false).collect(toList());
 
@@ -931,9 +1070,15 @@ public class InterfaceGenerator {
         isb.indent().append(" * @param logger The logger instance to log exceptions on").newline();
         isb.indent().append(" * @return An interface that will log exceptions on given logger").newline();
         isb.indent().append(" */").newline();
-        isb.indent().append("default")
-           .append(" ").append(className).append(generateGenerics(generics, true, false))
-           .append(" withLogging(final ").appendClass(Logger.class).append(" logger) {").newline();
+        isb.indent()
+                .append("default")
+                .append(" ")
+                .append(className)
+                .append(generateGenerics(generics, true, false))
+                .append(" withLogging(final ")
+                .appendClass(Logger.class)
+                .append(" logger) {")
+                .newline();
         isb.indents(8).append("return withLogging(logger, \"").append(getErrorMessage(className, errorLogObjects)).append("\");").newline();
         isb.indent().append("}").newline();
 
@@ -943,8 +1088,7 @@ public class InterfaceGenerator {
         isb.indent().append(" * Will log WARNING level exceptions on logger if they occur within the interface").newline();
         isb.indent().append(" * @return An interface that will log exceptions on global logger").newline();
         isb.indent().append(" */").newline();
-        isb.indent().append("default ").append(className).append(generateGenerics(generics, true, false))
-           .append(" withLogging() {").newline();
+        isb.indent().append("default ").append(className).append(generateGenerics(generics, true, false)).append(" withLogging() {").newline();
         isb.indents(8).append("return withLogging(").appendClass(LoggerFactory.class).append(".getLogger(getClass()));\n");
         isb.indent().append("}\n");
 
@@ -964,20 +1108,16 @@ public class InterfaceGenerator {
         return stringBuilder.append(")").toString();
     }
 
-    private String getMethodParams(Class<?> funcClass,
-                                   Method method,
-                                   boolean includeTypes) {
+    private String getMethodParams(Class<?> funcClass, Method method, boolean includeTypes) {
         return getParamBrackets(getMethodParamsStream(funcClass, method, includeTypes).collect(toList()));
     }
 
-    private Stream<String> getMethodParamsStream(Class<?> funcClass,
-                                                 Method method,
-                                                 boolean includeTypes) {
+    private Stream<String> getMethodParamsStream(Class<?> funcClass, Method method, boolean includeTypes) {
         final AtomicInteger atomicInteger = new AtomicInteger(0);
         return Arrays.stream(method.getGenericParameterTypes())
-                     .map(t -> TypeResolver.resolveType(funcClass, t))
-                     .map(resolvedType -> (includeTypes) ? "final " + resolvedType.getTypeName() + " " : "")
-                     .map(prefix -> prefix + "v" + atomicInteger.incrementAndGet());
+                .map(t -> TypeResolver.resolveType(funcClass, t))
+                .map(resolvedType -> (includeTypes) ? "final " + resolvedType.getTypeName() + " " : "")
+                .map(prefix -> prefix + "v" + atomicInteger.incrementAndGet());
     }
 
     private String getErrorMessage(String className, final List<String> errorLogObjects) {
@@ -985,7 +1125,7 @@ public class InterfaceGenerator {
         stringBuilder.append("Exception in ");
         stringBuilder.append(className);
         if (!errorLogObjects.isEmpty()) {
-            if(errorLogObjects.size() > 1) {
+            if (errorLogObjects.size() > 1) {
                 stringBuilder.append(" with the arguments [");
             } else {
                 stringBuilder.append(" with the argument [");
@@ -996,9 +1136,7 @@ public class InterfaceGenerator {
         return stringBuilder.toString();
     }
 
-    private String generateGenerics(List<String> generics,
-                                    boolean includeException,
-                                    boolean includeThrowableExtends) {
+    private String generateGenerics(List<String> generics, boolean includeException, boolean includeThrowableExtends) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<");
         Iterator<String> iterator = generics.iterator();
@@ -1019,54 +1157,6 @@ public class InterfaceGenerator {
     }
 
     private List<String> getGenerics(Class<?> funcInterface) {
-        return Arrays.stream(funcInterface.getTypeParameters())
-                     .map(TypeVariable::getName)
-                     .collect(toList());
-    }
-
-    @SuppressWarnings("deprecation")
-    public static void main(String[] args) throws IOException {
-
-        InterfaceGenerator interfaceGenerator = new InterfaceGenerator("org.slieb.throwables", new File("src/main/java"), new File("src/test/java"));
-        interfaceGenerator.generate(java.util.function.BiConsumer.class);
-        interfaceGenerator.generate(java.util.function.BiFunction.class);
-        interfaceGenerator.generate(java.util.function.BinaryOperator.class);
-        interfaceGenerator.generate(java.util.function.BooleanSupplier.class);
-        interfaceGenerator.generate(java.util.function.Consumer.class);
-        interfaceGenerator.generate(java.util.function.DoubleBinaryOperator.class);
-        interfaceGenerator.generate(java.util.function.DoubleConsumer.class);
-        interfaceGenerator.generate(java.util.function.DoubleFunction.class);
-        interfaceGenerator.generate(java.util.function.DoublePredicate.class);
-        interfaceGenerator.generate(java.util.function.DoubleSupplier.class);
-        interfaceGenerator.generate(java.util.function.DoubleToIntFunction.class);
-        interfaceGenerator.generate(java.util.function.DoubleToLongFunction.class);
-        interfaceGenerator.generate(java.util.function.DoubleUnaryOperator.class);
-        interfaceGenerator.generate(java.util.function.Function.class);
-        interfaceGenerator.generate(java.util.function.IntBinaryOperator.class);
-        interfaceGenerator.generate(java.util.function.IntConsumer.class);
-        interfaceGenerator.generate(java.util.function.IntPredicate.class);
-        interfaceGenerator.generate(java.util.function.IntSupplier.class);
-        interfaceGenerator.generate(java.util.function.IntFunction.class);
-        interfaceGenerator.generate(java.util.function.LongBinaryOperator.class);
-        interfaceGenerator.generate(java.util.function.LongConsumer.class);
-        interfaceGenerator.generate(java.util.function.LongFunction.class);
-        interfaceGenerator.generate(java.util.function.LongPredicate.class);
-        interfaceGenerator.generate(java.util.function.LongSupplier.class);
-        interfaceGenerator.generate(java.util.function.LongToDoubleFunction.class);
-        interfaceGenerator.generate(java.util.function.LongToIntFunction.class);
-        interfaceGenerator.generate(java.util.function.LongUnaryOperator.class);
-        interfaceGenerator.generate(java.util.function.ObjDoubleConsumer.class);
-        interfaceGenerator.generate(java.util.function.ObjIntConsumer.class);
-        interfaceGenerator.generate(java.util.function.ObjLongConsumer.class);
-        interfaceGenerator.generate(java.util.function.Predicate.class);
-        interfaceGenerator.generate(java.util.function.Supplier.class);
-        interfaceGenerator.generate(java.util.function.ToDoubleBiFunction.class);
-        interfaceGenerator.generate(java.util.function.ToDoubleFunction.class);
-        interfaceGenerator.generate(java.util.function.ToIntBiFunction.class);
-        interfaceGenerator.generate(java.util.function.ToIntFunction.class);
-        interfaceGenerator.generate(java.util.function.ToLongBiFunction.class);
-        interfaceGenerator.generate(java.util.function.ToLongFunction.class);
-        interfaceGenerator.generate(UnaryOperator.class);
-        interfaceGenerator.generate(Runnable.class);
+        return Arrays.stream(funcInterface.getTypeParameters()).map(TypeVariable::getName).collect(toList());
     }
 }

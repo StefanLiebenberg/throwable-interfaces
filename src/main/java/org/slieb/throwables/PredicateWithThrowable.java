@@ -68,8 +68,18 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
     boolean testWithThrowable(final T v1) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default Predicate<T> thatReturnsOnCatch(final boolean defaultReturnValue) {
+        return (final T v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

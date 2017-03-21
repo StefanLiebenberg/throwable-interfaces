@@ -23,8 +23,8 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends Boole
      * @param <E>                          The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> BooleanSupplierWithThrowable<E> castBooleanSupplierWithThrowable(
-            final BooleanSupplierWithThrowable<E> booleansupplierwiththrowable) {
+    static <E extends Throwable> BooleanSupplierWithThrowable<E> castBooleanSupplierWithThrowable(final BooleanSupplierWithThrowable<E>
+                                                                                                          booleansupplierwiththrowable) {
         return booleansupplierwiththrowable;
     }
 
@@ -64,8 +64,18 @@ public interface BooleanSupplierWithThrowable<E extends Throwable> extends Boole
     boolean getAsBooleanWithThrowable() throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default BooleanSupplier thatReturnsOnCatch(final boolean defaultReturnValue) {
+        return () -> {
+            try {
+                return getAsBooleanWithThrowable();
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on

@@ -65,8 +65,18 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
     boolean testWithThrowable(final int v1) throws E;
 
     /**
-     * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
+     * @param defaultReturnValue A value to return if any throwable is caught.
+     * @return An interface that returns a default value if any exception occurs.
      */
+    default IntPredicate thatReturnsOnCatch(final boolean defaultReturnValue) {
+        return (final int v1) -> {
+            try {
+                return testWithThrowable(v1);
+            } catch (final Throwable throwable) {
+                return defaultReturnValue;
+            }
+        };
+    }
 
     /**
      * @param logger  The logger to log exceptions on
