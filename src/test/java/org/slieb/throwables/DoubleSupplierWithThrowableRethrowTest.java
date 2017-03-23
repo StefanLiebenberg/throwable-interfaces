@@ -9,13 +9,16 @@ public class DoubleSupplierWithThrowableRethrowTest {
   @Test
   public void testThrowCheckedException() {
     IOException expected = new IOException("EXPECTED ERROR");
+    IOException actual = null;
     try {
       rethrowDoubleSupplier(() -> {
         throw expected;
       }).getAsDouble();
-    } catch (IOException actual) {
-      org.junit.Assert.assertEquals(expected, actual);
+      org.junit.Assert.fail("Exception should have been thrown");
+    } catch (IOException e) {
+      actual=e;
     }
+    org.junit.Assert.assertEquals(expected, actual);
   }
 
 

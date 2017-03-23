@@ -600,6 +600,7 @@ public class InterfaceGenerator {
         isb.indent().append("public void testThrowCheckedException() {\n");
         isb.incrementIndent();
         isb.indent().append("IOException expected = new IOException(\"EXPECTED ERROR\");").newline();
+        isb.indent().append("IOException actual = null;").newline();
         isb.indent().append("try {").newline();
         isb.incrementIndent();
         isb.indent().append("rethrow").append(node.getImplementationClass().getSimpleName()).append("(").append(params).append(" -> {\n");
@@ -607,12 +608,14 @@ public class InterfaceGenerator {
         isb.indent().append("throw expected;\n");
         isb.decrementIndent();
         isb.indent().append("}).").append(getMethodCall(node.getImplementationClass(), method)).append(";\n");
+        isb.indent().append("org.junit.Assert.fail(\"Exception should have been thrown\");").newline();
         isb.decrementIndent();
-        isb.indent().append("} catch (IOException actual) {").newline();
+        isb.indent().append("} catch (IOException e) {").newline();
         isb.incrementIndent();
-        isb.indent().append("org.junit.Assert.assertEquals(expected, actual);").newline();
+        isb.indent().append("actual=e;").newline();
         isb.decrementIndent();
         isb.indent().append("}").newline();
+        isb.indent().append("org.junit.Assert.assertEquals(expected, actual);").newline();
         isb.decrementIndent();
         isb.indent().append("}").newline();
 
