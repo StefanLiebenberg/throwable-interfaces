@@ -23,7 +23,7 @@ public class SuppressedException extends RuntimeException {
      * @param supplier A supplier object which may throw some exception
      * @param <E>      The exception type.
      */
-    public static <T, E extends Throwable> T suppress(SupplierWithThrowable<T, E> supplier) {
+    public static <T, E extends Throwable> T suppress(Supplier<T> supplier) {
         return supplier.get();
     }
 
@@ -31,7 +31,7 @@ public class SuppressedException extends RuntimeException {
      * @param runnable A supplier object which may throw some exception
      * @param <E>      The exception type.
      */
-    public static <E extends Throwable> void suppress(RunnableWithThrowable<E> runnable) {
+    public static <E extends Throwable> void suppress(Runnable runnable) {
         runnable.run();
     }
 
@@ -45,7 +45,7 @@ public class SuppressedException extends RuntimeException {
 
     /**
      * @param supplier       A supplier that will throw SuppressedException
-     * @param exceptionClass The class type to intercept and rethrow.
+     * @param exceptionClass The class type to intercept and withUncheckedThrowable.
      * @param <T>            The generic return type.
      * @param <E>            The exception type.
      * @return The result of the supplier if no exception occurred.
@@ -110,9 +110,13 @@ public class SuppressedException extends RuntimeException {
     }
 
     @SuppressWarnings("unchecked")
-    public static <E extends Throwable> void throwAsUnchecked(Throwable exception) throws E {
-        assert exception != null;
+    static <E extends Throwable> RuntimeException throwUnsafelyAsUnchecked(Throwable exception) throws E {
         throw (E) exception;
+    }
+
+    @SuppressWarnings("unchecked")
+    static <E extends Throwable> RuntimeException asUnchecked(Throwable exception) throws E {
+        return (RuntimeException) exception;
     }
 }
 

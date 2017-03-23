@@ -31,7 +31,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
     }
 
     /**
-     * Utility method to unwrap lambdas of type UnaryOperator and rethrow any Exception
+     * Utility method to unwrap lambdas of type UnaryOperator and withUncheckedThrowable any Exception
      *
      * @param unaryoperatorwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on UnaryOperator  
@@ -39,8 +39,8 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @throws E the original Exception from unaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> UnaryOperator<T> rethrowUnaryOperator(final UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) throws E {
-        return unaryoperatorwiththrowable.rethrow();
+    static <T, E extends Throwable> UnaryOperator<T> aUnaryOperatorThatUnSafelyThrowsUncheckedThrowable(final UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) throws E {
+        return unaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -100,13 +100,13 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default UnaryOperator<T> rethrow() throws E {
+    default UnaryOperator<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1) -> {
         try {
           return applyWithThrowable(v1);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return null;
         }
       };
     }

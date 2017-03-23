@@ -31,7 +31,7 @@ public interface IntFunctionWithThrowable<R, E extends Throwable> extends IntFun
     }
 
     /**
-     * Utility method to unwrap lambdas of type IntFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type IntFunction and withUncheckedThrowable any Exception
      *
      * @param intfunctionwiththrowable The interface instance
      * @param <R> Generic that corresponds to the same generic on IntFunction  
@@ -39,8 +39,8 @@ public interface IntFunctionWithThrowable<R, E extends Throwable> extends IntFun
      * @throws E the original Exception from intfunctionwiththrowable
      * @return the cast interface
      */
-    static <R, E extends Throwable> IntFunction<R> rethrowIntFunction(final IntFunctionWithThrowable<R, E> intfunctionwiththrowable) throws E {
-        return intfunctionwiththrowable.rethrow();
+    static <R, E extends Throwable> IntFunction<R> aIntFunctionThatUnSafelyThrowsUncheckedThrowable(final IntFunctionWithThrowable<R, E> intfunctionwiththrowable) throws E {
+        return intfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -114,13 +114,13 @@ public interface IntFunctionWithThrowable<R, E extends Throwable> extends IntFun
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default IntFunction<R> rethrow() throws E {
+    default IntFunction<R> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final int v1) -> {
         try {
           return applyWithThrowable(v1);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return null;
         }
       };
     }

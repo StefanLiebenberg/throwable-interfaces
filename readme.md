@@ -25,10 +25,10 @@ Using a static import and method reference, we can even make this more streamlin
     
     Stream<String> content = fileStream.map(castFunctionWithThrowable(IOUtils::readFile));
     
-We can also force catching of the checked exception.    
+We can also force catching of the checked exception.     
     
     try {
-        Stream<String> content = fileStream.map(rethrowFunction(IOUtils::readFile));
+        Stream<String> content = fileStream.map(asFunctionWithThrowableThatUnsafelyThrows(IOUtils::readFile));
     } catch (IOException e) {
     }
     

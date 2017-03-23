@@ -31,7 +31,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
     }
 
     /**
-     * Utility method to unwrap lambdas of type DoubleFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type DoubleFunction and withUncheckedThrowable any Exception
      *
      * @param doublefunctionwiththrowable The interface instance
      * @param <R> Generic that corresponds to the same generic on DoubleFunction  
@@ -39,8 +39,8 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @throws E the original Exception from doublefunctionwiththrowable
      * @return the cast interface
      */
-    static <R, E extends Throwable> DoubleFunction<R> rethrowDoubleFunction(final DoubleFunctionWithThrowable<R, E> doublefunctionwiththrowable) throws E {
-        return doublefunctionwiththrowable.rethrow();
+    static <R, E extends Throwable> DoubleFunction<R> aDoubleFunctionThatUnSafelyThrowsUncheckedThrowable(final DoubleFunctionWithThrowable<R, E> doublefunctionwiththrowable) throws E {
+        return doublefunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -114,13 +114,13 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoubleFunction<R> rethrow() throws E {
+    default DoubleFunction<R> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final double v1) -> {
         try {
           return applyWithThrowable(v1);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return null;
         }
       };
     }

@@ -1,12 +1,10 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 /**
  * Generated from BiConsumer
  * Extends java.util.function.BiConsumer to allow for a checked exception.
@@ -23,8 +21,8 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
      * Utility method to mark lambdas of type BiConsumerWithThrowable
      *
      * @param biconsumerwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on BiConsumer  
-     * @param <U> Generic that corresponds to the same generic on BiConsumer  
+     * @param <T> Generic that corresponds to the same generic on BiConsumer
+     * @param <U> Generic that corresponds to the same generic on BiConsumer
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
@@ -33,24 +31,24 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
     }
 
     /**
-     * Utility method to unwrap lambdas of type BiConsumer and rethrow any Exception
+     * Utility method to unwrap lambdas of type BiConsumer and withUncheckedThrowable any Exception
      *
      * @param biconsumerwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on BiConsumer  
-     * @param <U> Generic that corresponds to the same generic on BiConsumer  
+     * @param <T> Generic that corresponds to the same generic on BiConsumer
+     * @param <U> Generic that corresponds to the same generic on BiConsumer
      * @param <E> The type this interface is allowed to throw
      * @throws E the original Exception from biconsumerwiththrowable
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> BiConsumer<T, U> rethrowBiConsumer(final BiConsumerWithThrowable<T, U, E> biconsumerwiththrowable) throws E {
-        return biconsumerwiththrowable.rethrow();
+    static <T, U, E extends Throwable> BiConsumer<T, U> aBiConsumerThatUnSafelyThrowsUncheckedThrowable(final BiConsumerWithThrowable<T, U, E> biconsumerwiththrowable) throws E {
+        return biconsumerwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
      * Utility method to convert BiConsumerWithThrowable
      * @param biconsumer The interface instance
-     * @param <T> Generic that corresponds to the same generic on BiConsumer  
-     * @param <U> Generic that corresponds to the same generic on BiConsumer  
+     * @param <T> Generic that corresponds to the same generic on BiConsumer
+     * @param <U> Generic that corresponds to the same generic on BiConsumer
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
@@ -101,12 +99,12 @@ public interface BiConsumerWithThrowable<T, U, E extends Throwable> extends BiCo
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default BiConsumer<T, U> rethrow() throws E {
+    default BiConsumer<T, U> thatUnSafelyThrowsUncheckedThrowable() throws E {
         return (final T v1, final U v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
             } catch(final Throwable throwable) {
-                SuppressedException.throwAsUnchecked(throwable);
+                SuppressedException.throwUnsafelyAsUnchecked(throwable);
             }
         };
     }

@@ -33,7 +33,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
     }
 
     /**
-     * Utility method to unwrap lambdas of type ToLongBiFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type ToLongBiFunction and withUncheckedThrowable any Exception
      *
      * @param tolongbifunctionwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on ToLongBiFunction  
@@ -42,8 +42,8 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @throws E the original Exception from tolongbifunctionwiththrowable
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToLongBiFunction<T, U> rethrowToLongBiFunction(final ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) throws E {
-        return tolongbifunctionwiththrowable.rethrow();
+    static <T, U, E extends Throwable> ToLongBiFunction<T, U> aToLongBiFunctionThatUnSafelyThrowsUncheckedThrowable(final ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) throws E {
+        return tolongbifunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -120,14 +120,13 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ToLongBiFunction<T, U> rethrow() throws E {
+    default ToLongBiFunction<T, U> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1, final U v2) -> {
         try {
           return applyAsLongWithThrowable(v1, v2);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
-        }
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
       };
     }
 

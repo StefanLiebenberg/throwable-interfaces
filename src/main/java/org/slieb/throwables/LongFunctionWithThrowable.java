@@ -31,7 +31,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
     }
 
     /**
-     * Utility method to unwrap lambdas of type LongFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type LongFunction and withUncheckedThrowable any Exception
      *
      * @param longfunctionwiththrowable The interface instance
      * @param <R> Generic that corresponds to the same generic on LongFunction  
@@ -39,8 +39,8 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      * @throws E the original Exception from longfunctionwiththrowable
      * @return the cast interface
      */
-    static <R, E extends Throwable> LongFunction<R> rethrowLongFunction(final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) throws E {
-        return longfunctionwiththrowable.rethrow();
+    static <R, E extends Throwable> LongFunction<R> aLongFunctionThatUnSafelyThrowsUncheckedThrowable(final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) throws E {
+        return longfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -114,13 +114,13 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongFunction<R> rethrow() throws E {
+    default LongFunction<R> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final long v1) -> {
         try {
           return applyWithThrowable(v1);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return null;
         }
       };
     }

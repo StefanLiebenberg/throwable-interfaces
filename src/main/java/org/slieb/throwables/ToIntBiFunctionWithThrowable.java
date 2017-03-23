@@ -33,7 +33,7 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
     }
 
     /**
-     * Utility method to unwrap lambdas of type ToIntBiFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type ToIntBiFunction and withUncheckedThrowable any Exception
      *
      * @param tointbifunctionwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on ToIntBiFunction  
@@ -42,8 +42,8 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @throws E the original Exception from tointbifunctionwiththrowable
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToIntBiFunction<T, U> rethrowToIntBiFunction(final ToIntBiFunctionWithThrowable<T, U, E> tointbifunctionwiththrowable) throws E {
-        return tointbifunctionwiththrowable.rethrow();
+    static <T, U, E extends Throwable> ToIntBiFunction<T, U> aToIntBiFunctionThatUnSafelyThrowsUncheckedThrowable(final ToIntBiFunctionWithThrowable<T, U, E> tointbifunctionwiththrowable) throws E {
+        return tointbifunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -120,14 +120,13 @@ public interface ToIntBiFunctionWithThrowable<T, U, E extends Throwable> extends
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ToIntBiFunction<T, U> rethrow() throws E {
+    default ToIntBiFunction<T, U> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1, final U v2) -> {
         try {
           return applyAsIntWithThrowable(v1, v2);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
-        }
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
       };
     }
 

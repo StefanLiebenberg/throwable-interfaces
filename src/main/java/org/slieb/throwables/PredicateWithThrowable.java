@@ -31,7 +31,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
     }
 
     /**
-     * Utility method to unwrap lambdas of type Predicate and rethrow any Exception
+     * Utility method to unwrap lambdas of type Predicate and withUncheckedThrowable any Exception
      *
      * @param predicatewiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on Predicate  
@@ -39,8 +39,8 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @throws E the original Exception from predicatewiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> Predicate<T> rethrowPredicate(final PredicateWithThrowable<T, E> predicatewiththrowable) throws E {
-        return predicatewiththrowable.rethrow();
+    static <T, E extends Throwable> Predicate<T> aPredicateThatUnSafelyThrowsUncheckedThrowable(final PredicateWithThrowable<T, E> predicatewiththrowable) throws E {
+        return predicatewiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -100,14 +100,13 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default Predicate<T> rethrow() throws E {
+    default Predicate<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1) -> {
         try {
           return testWithThrowable(v1);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
-        }
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return false;        }
       };
     }
 

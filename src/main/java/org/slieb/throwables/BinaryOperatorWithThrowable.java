@@ -31,7 +31,7 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
     }
 
     /**
-     * Utility method to unwrap lambdas of type BinaryOperator and rethrow any Exception
+     * Utility method to unwrap lambdas of type BinaryOperator and withUncheckedThrowable any Exception
      *
      * @param binaryoperatorwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on BinaryOperator  
@@ -39,8 +39,8 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
      * @throws E the original Exception from binaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> BinaryOperator<T> rethrowBinaryOperator(final BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) throws E {
-        return binaryoperatorwiththrowable.rethrow();
+    static <T, E extends Throwable> BinaryOperator<T> aBinaryOperatorThatUnSafelyThrowsUncheckedThrowable(final BinaryOperatorWithThrowable<T, E> binaryoperatorwiththrowable) throws E {
+        return binaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -102,13 +102,13 @@ public interface BinaryOperatorWithThrowable<T, E extends Throwable> extends Bin
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default BinaryOperator<T> rethrow() throws E {
+    default BinaryOperator<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1, final T v2) -> {
         try {
           return applyWithThrowable(v1, v2);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return null;
         }
       };
     }

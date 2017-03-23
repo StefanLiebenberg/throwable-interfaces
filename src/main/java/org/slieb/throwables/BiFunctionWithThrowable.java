@@ -35,7 +35,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
     }
 
     /**
-     * Utility method to unwrap lambdas of type BiFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type BiFunction and withUncheckedThrowable any Exception
      *
      * @param bifunctionwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on BiFunction  
@@ -45,8 +45,8 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      * @throws E the original Exception from bifunctionwiththrowable
      * @return the cast interface
      */
-    static <T, U, R, E extends Throwable> BiFunction<T, U, R> rethrowBiFunction(final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) throws E {
-        return bifunctionwiththrowable.rethrow();
+    static <T, U, R, E extends Throwable> BiFunction<T, U, R> aBiFunctionThatUnSafelyThrowsUncheckedThrowable(final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) throws E {
+        return bifunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -124,13 +124,13 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default BiFunction<T, U, R> rethrow() throws E {
+    default BiFunction<T, U, R> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1, final U v2) -> {
         try {
           return applyWithThrowable(v1, v2);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return null;
         }
       };
     }

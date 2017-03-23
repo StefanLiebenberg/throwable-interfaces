@@ -1,6 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import static org.slieb.throwables.BiConsumerWithThrowable.castBiConsumerWithThrowable;
+
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class BiConsumerWithThrowableLogableTest {
 

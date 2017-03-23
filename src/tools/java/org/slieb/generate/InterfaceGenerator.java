@@ -137,6 +137,7 @@ public class InterfaceGenerator {
     private void generateUnwrapTest(Class<?> funcInterface, String className, String testName) throws IOException {
         generateFile(testDirectory, packageName, testName, getUnwrapTestContent(funcInterface, className, testName));
     }
+
     private void generateRethrowTest(String className, String testName, FunctionalInterfaceNode node) throws IOException {
         generateFile(testDirectory, packageName, testName, getRethrowTestContent(className, testName, node));
     }
@@ -311,6 +312,7 @@ public class InterfaceGenerator {
 
         isb.append("import static ").append(packageName).append(".").append(className).append(".cast").append(className).append(";\n");
 
+        isb.newline();
         //        isb.annotate(SuppressWarnings.class, "{\"WeakerAccess\", \"deprecation\"}");
         isb.annotate(SuppressWarnings.class, "{\"CodeBlock2Expr\"}");
         isb.indent().append("public class ").append(testName).append(" {").newline();
@@ -585,7 +587,13 @@ public class InterfaceGenerator {
         isb.append("import org.junit.Test;\n");
         isb.appendImport(IOException.class);
 
-        isb.append("import static ").append(packageName).append(".").append(className).append(".rethrow").append(node.getImplementationClass().getSimpleName()).append(";\n");
+        isb.append("import static ")
+                .append(packageName)
+                .append(".")
+                .append(className)
+                .append(".")
+                .append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass()))
+                .append(";\n");
 
         //        isb.annotate(SuppressWarnings.class, "{\"WeakerAccess\", \"deprecation\"}");
         isb.annotate(SuppressWarnings.class, "{\"CodeBlock2Expr\"}");
@@ -603,7 +611,7 @@ public class InterfaceGenerator {
         isb.indent().append("IOException actual = null;").newline();
         isb.indent().append("try {").newline();
         isb.incrementIndent();
-        isb.indent().append("rethrow").append(node.getImplementationClass().getSimpleName()).append("(").append(params).append(" -> {\n");
+        isb.indent().append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass())).append("(").append(params).append(" -> {\n");
         isb.incrementIndent();
         isb.indent().append("throw expected;\n");
         isb.decrementIndent();
@@ -625,7 +633,7 @@ public class InterfaceGenerator {
         isb.incrementIndent();
         isb.indent().append("try {").newline();
         isb.incrementIndent();
-        isb.indent().append("rethrow").append(node.getImplementationClass().getSimpleName()).append("(").append(params).append(" -> {\n");
+        isb.indent().append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass())).append("(").append(params).append(" -> {\n");
         isb.incrementIndent();
         isb.indent().append("if(false) throw new IOException();").newline();
         final Class<?> returnType = method.getReturnType();
@@ -740,8 +748,10 @@ public class InterfaceGenerator {
                 .append("    }");
         isb.newlines(2);
 
-         isb.append("    /**\n");
-        isb.append("     * Utility method to unwrap lambdas of type ").appendClass(node.getImplementationClass()).append(" and rethrow any Exception\n");
+        isb.append("    /**\n");
+        isb.append("     * Utility method to unwrap lambdas of type ")
+                .appendClass(node.getImplementationClass())
+                .append(" and withUncheckedThrowable any Exception\n");
         isb.append("     *\n");
         isb.append("     * @param ").append(objectName).append(" The interface instance\n");
         generics.forEach(gen -> isb.append("     * @param <")
@@ -753,15 +763,11 @@ public class InterfaceGenerator {
         isb.append("     * @throws E the original Exception from ").append(objectName).newline();
         isb.append("     * @return the cast interface\n");
         isb.append("     */\n");
-        isb.append("    static ")
-                .append(generateGenerics(generics, true, true))
-                .append(" ")
-                .append(node.getImplementationClass().getSimpleName());
+        isb.append("    static ").append(generateGenerics(generics, true, true)).append(" ").append(node.getImplementationClass().getSimpleName());
         if (!generics.isEmpty()) {
             isb.append(generateGenerics(generics, false, false));
         }
-        isb.append(" rethrow")
-                .appendClass(node.getImplementationClass())
+        isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass()))
                 .append("(final ")
                 .append(className)
                 .append(generateGenerics(generics, true, false))
@@ -770,7 +776,9 @@ public class InterfaceGenerator {
                 .append(") throws E {\n")
                 .append("        return ")
                 .append(objectName)
-                .append(".rethrow();\n")
+                .append(".")
+                .append(Naming.methodThatUnsafelyThrowsUnchecked())
+                .append("();\n")
                 .append("    }");
         isb.newlines(2);
 
@@ -933,7 +941,7 @@ public class InterfaceGenerator {
                 isb.indent().append("  };\n");
                 isb.indent().append("}\n");
 
-                // rethrow for primitives
+                // withUncheckedThrowable for primitives
                 isb.newlines(2).setIndent(4);
                 isb.indent().append("/**").newline();
                 isb.indent().append(" * @throws E if an exception E has been thrown, it is rethrown by this method").newline();
@@ -943,7 +951,7 @@ public class InterfaceGenerator {
                 if (!generics.isEmpty()) {
                     isb.append(generateGenerics(generics, false, false));
                 }
-                isb.append(" rethrow() throws E {\n");
+                isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked()).append("() throws E {\n");
                 isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
                 isb.append(" -> {\n");
                 isb.indent().append("    try {\n");
@@ -954,8 +962,8 @@ public class InterfaceGenerator {
                         .append(getMethodParams(node.getImplementationClass(), method, false))
                         .append(";\n");
                 isb.indent().append("    } catch(final ").appendClass(Throwable.class).append(" throwable) {\n");
-                isb.indent().append("      SuppressedException.throwAsUnchecked(throwable);\n");
-                isb.indent().append("      throw new RuntimeException(\"Unreachable code.\");\n");
+                isb.indent().append("       SuppressedException.throwUnsafelyAsUnchecked(throwable);\n");
+                isb.indent().append("       return ").append(TypeResolver.getNullTypeFor(returnType)).append(";");
                 isb.indent().append("    }\n");
                 isb.indent().append("  };\n");
                 isb.indent().append("}\n");
@@ -1025,7 +1033,7 @@ public class InterfaceGenerator {
                 isb.indent().append("  };\n");
                 isb.indent().append("}\n");
 
-                // rethrow
+                // withUncheckedThrowable
                 isb.newlines(2).setIndent(4);
                 isb.indent().append("/**").newline();
                 isb.indent().append(" * @throws E if an exception E has been thrown, it is rethrown by this method").newline();
@@ -1035,7 +1043,7 @@ public class InterfaceGenerator {
                 if (!generics.isEmpty()) {
                     isb.append(generateGenerics(generics, false, false));
                 }
-                isb.append(" rethrow() throws E {\n");
+                isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked()).append("() throws E {\n");
                 isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
                 isb.append(" -> {\n");
                 isb.indent().append("    try {\n");
@@ -1046,12 +1054,11 @@ public class InterfaceGenerator {
                         .append(getMethodParams(node.getImplementationClass(), method, false))
                         .append(";\n");
                 isb.indent().append("    } catch(final ").appendClass(Throwable.class).append(" throwable) {\n");
-                isb.indent().append("      SuppressedException.throwAsUnchecked(throwable);\n");
-                isb.indent().append("      throw new RuntimeException(\"Unreachable code.\");\n");
+                isb.indent().append("       SuppressedException.throwUnsafelyAsUnchecked(throwable);\n");
+                isb.indent().append("       return ").append(TypeResolver.getNullTypeFor(returnType)).append(";\n");
                 isb.indent().append("    }\n");
                 isb.indent().append("  };\n");
                 isb.indent().append("}\n");
-
             }
         } else {
 
@@ -1078,7 +1085,7 @@ public class InterfaceGenerator {
             isb.setIndent(4);
             isb.indent().append("}").newline();
 
-            //rethrow
+            //withUncheckedThrowable
             isb.newlines(2).setIndent(4);
             isb.indent().append("/**").newline();
             isb.indent().append(" * @throws E if an exception E has been thrown, it is rethrown by this method").newline();
@@ -1088,7 +1095,8 @@ public class InterfaceGenerator {
             if (!generics.isEmpty()) {
                 isb.append(generateGenerics(generics, false, false));
             }
-            isb.append(" rethrow() throws E {").newline();
+
+            isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked()).append("() throws E {").newline();
 
             isb.setIndent(8);
             isb.indent().append("return ").append(getMethodParams(node.getImplementationClass(), method, true)).append(" -> {").newline();
@@ -1099,7 +1107,7 @@ public class InterfaceGenerator {
             isb.setIndent(12);
             isb.indent().append("} catch(final ").appendClass(Throwable.class).append(" throwable) {").newline();
             isb.setIndent(16);
-            isb.indent().append("SuppressedException.throwAsUnchecked(throwable);").newline();
+            isb.indent().append("SuppressedException.throwUnsafelyAsUnchecked(throwable);").newline();
             isb.setIndent(12);
             isb.indent().append("}").newline();
             isb.setIndent(8);

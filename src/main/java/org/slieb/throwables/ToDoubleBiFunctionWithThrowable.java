@@ -33,7 +33,7 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
     }
 
     /**
-     * Utility method to unwrap lambdas of type ToDoubleBiFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type ToDoubleBiFunction and withUncheckedThrowable any Exception
      *
      * @param todoublebifunctionwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on ToDoubleBiFunction  
@@ -42,8 +42,8 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @throws E the original Exception from todoublebifunctionwiththrowable
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToDoubleBiFunction<T, U> rethrowToDoubleBiFunction(final ToDoubleBiFunctionWithThrowable<T, U, E> todoublebifunctionwiththrowable) throws E {
-        return todoublebifunctionwiththrowable.rethrow();
+    static <T, U, E extends Throwable> ToDoubleBiFunction<T, U> aToDoubleBiFunctionThatUnSafelyThrowsUncheckedThrowable(final ToDoubleBiFunctionWithThrowable<T, U, E> todoublebifunctionwiththrowable) throws E {
+        return todoublebifunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -120,14 +120,13 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ToDoubleBiFunction<T, U> rethrow() throws E {
+    default ToDoubleBiFunction<T, U> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1, final U v2) -> {
         try {
           return applyAsDoubleWithThrowable(v1, v2);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
-        }
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
       };
     }
 

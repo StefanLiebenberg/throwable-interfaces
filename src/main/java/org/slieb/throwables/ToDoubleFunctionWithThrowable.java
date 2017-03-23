@@ -31,7 +31,7 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends T
     }
 
     /**
-     * Utility method to unwrap lambdas of type ToDoubleFunction and rethrow any Exception
+     * Utility method to unwrap lambdas of type ToDoubleFunction and withUncheckedThrowable any Exception
      *
      * @param todoublefunctionwiththrowable The interface instance
      * @param <T> Generic that corresponds to the same generic on ToDoubleFunction  
@@ -39,8 +39,8 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends T
      * @throws E the original Exception from todoublefunctionwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToDoubleFunction<T> rethrowToDoubleFunction(final ToDoubleFunctionWithThrowable<T, E> todoublefunctionwiththrowable) throws E {
-        return todoublefunctionwiththrowable.rethrow();
+    static <T, E extends Throwable> ToDoubleFunction<T> aToDoubleFunctionThatUnSafelyThrowsUncheckedThrowable(final ToDoubleFunctionWithThrowable<T, E> todoublefunctionwiththrowable) throws E {
+        return todoublefunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -114,14 +114,13 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends T
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ToDoubleFunction<T> rethrow() throws E {
+    default ToDoubleFunction<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
       return (final T v1) -> {
         try {
           return applyAsDoubleWithThrowable(v1);
         } catch(final Throwable throwable) {
-          SuppressedException.throwAsUnchecked(throwable);
-          throw new RuntimeException("Unreachable code.");
-        }
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
       };
     }
 

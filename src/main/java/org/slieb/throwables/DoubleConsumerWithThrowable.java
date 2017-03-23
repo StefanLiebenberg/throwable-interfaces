@@ -29,15 +29,15 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
     }
 
     /**
-     * Utility method to unwrap lambdas of type DoubleConsumer and rethrow any Exception
+     * Utility method to unwrap lambdas of type DoubleConsumer and withUncheckedThrowable any Exception
      *
      * @param doubleconsumerwiththrowable The interface instance
      * @param <E> The type this interface is allowed to throw
      * @throws E the original Exception from doubleconsumerwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleConsumer rethrowDoubleConsumer(final DoubleConsumerWithThrowable<E> doubleconsumerwiththrowable) throws E {
-        return doubleconsumerwiththrowable.rethrow();
+    static <E extends Throwable> DoubleConsumer aDoubleConsumerThatUnSafelyThrowsUncheckedThrowable(final DoubleConsumerWithThrowable<E> doubleconsumerwiththrowable) throws E {
+        return doubleconsumerwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
     }
 
     /**
@@ -91,12 +91,12 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoubleConsumer rethrow() throws E {
+    default DoubleConsumer thatUnSafelyThrowsUncheckedThrowable() throws E {
         return (final double v1) -> {
             try {
                 acceptWithThrowable(v1);
             } catch(final Throwable throwable) {
-                SuppressedException.throwAsUnchecked(throwable);
+                SuppressedException.throwUnsafelyAsUnchecked(throwable);
             }
         };
     }
