@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongUnaryOperator;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongUnaryOperator
  * Extends java.util.function.LongUnaryOperator to allow for a checked exception.
@@ -20,19 +21,29 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * Utility method to mark lambdas of type LongUnaryOperatorWithThrowable
      *
      * @param longunaryoperatorwiththrowable The interface instance
-     * @param <E>                            The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(final LongUnaryOperatorWithThrowable<E>
-                                                                                                              longunaryoperatorwiththrowable) {
+    static <E extends Throwable> LongUnaryOperatorWithThrowable<E> castLongUnaryOperatorWithThrowable(final LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) {
         return longunaryoperatorwiththrowable;
     }
 
     /**
-     * Utility method to convert LongUnaryOperatorWithThrowable
+     * Utility method to unwrap lambdas of type LongUnaryOperator and rethrow any Exception
      *
+     * @param longunaryoperatorwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from longunaryoperatorwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> LongUnaryOperator rethrowLongUnaryOperator(final LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) throws E {
+        return longunaryoperatorwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert LongUnaryOperatorWithThrowable
      * @param longunaryoperator The interface instance
-     * @param <E>               The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongUnaryOperatorWithThrowable<E> asLongUnaryOperatorWithThrowable(final LongUnaryOperator longunaryoperator) {
@@ -65,22 +76,40 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      */
     long applyAsLongWithThrowable(final long v1) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default LongUnaryOperator thatReturnsOnCatch(final long defaultReturnValue) {
-        return (final long v1) -> {
-            try {
-                return applyAsLongWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final long v1) -> {
+        try {
+          return applyAsLongWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default LongUnaryOperator rethrow() throws E {
+      return (final long v1) -> {
+        try {
+          return applyAsLongWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          SuppressedException.throwAsUnchecked(throwable);
+          throw new RuntimeException("Unreachable code.");
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -96,9 +125,9 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -106,14 +135,16 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
         return withLogging(logger, "Exception in LongUnaryOperatorWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default LongUnaryOperatorWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -130,6 +161,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleUnaryOperator;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleUnaryOperator
  * Extends java.util.function.DoubleUnaryOperator to allow for a checked exception.
@@ -20,19 +21,29 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      * Utility method to mark lambdas of type DoubleUnaryOperatorWithThrowable
      *
      * @param doubleunaryoperatorwiththrowable The interface instance
-     * @param <E>                              The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(final DoubleUnaryOperatorWithThrowable<E>
-                                                                                                                  doubleunaryoperatorwiththrowable) {
+    static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> castDoubleUnaryOperatorWithThrowable(final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) {
         return doubleunaryoperatorwiththrowable;
     }
 
     /**
-     * Utility method to convert DoubleUnaryOperatorWithThrowable
+     * Utility method to unwrap lambdas of type DoubleUnaryOperator and rethrow any Exception
      *
+     * @param doubleunaryoperatorwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from doubleunaryoperatorwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> DoubleUnaryOperator rethrowDoubleUnaryOperator(final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) throws E {
+        return doubleunaryoperatorwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert DoubleUnaryOperatorWithThrowable
      * @param doubleunaryoperator The interface instance
-     * @param <E>                 The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleUnaryOperatorWithThrowable<E> asDoubleUnaryOperatorWithThrowable(final DoubleUnaryOperator doubleunaryoperator) {
@@ -65,22 +76,40 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      */
     double applyAsDoubleWithThrowable(final double v1) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default DoubleUnaryOperator thatReturnsOnCatch(final double defaultReturnValue) {
-        return (final double v1) -> {
-            try {
-                return applyAsDoubleWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final double v1) -> {
+        try {
+          return applyAsDoubleWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default DoubleUnaryOperator rethrow() throws E {
+      return (final double v1) -> {
+        try {
+          return applyAsDoubleWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          SuppressedException.throwAsUnchecked(throwable);
+          throw new RuntimeException("Unreachable code.");
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -96,9 +125,9 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -106,14 +135,16 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
         return withLogging(logger, "Exception in DoubleUnaryOperatorWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default DoubleUnaryOperatorWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -130,6 +161,7 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

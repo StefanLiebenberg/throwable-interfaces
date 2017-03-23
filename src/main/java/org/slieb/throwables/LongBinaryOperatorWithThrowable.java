@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongBinaryOperator;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongBinaryOperator
  * Extends java.util.function.LongBinaryOperator to allow for a checked exception.
@@ -20,19 +21,29 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
      * Utility method to mark lambdas of type LongBinaryOperatorWithThrowable
      *
      * @param longbinaryoperatorwiththrowable The interface instance
-     * @param <E>                             The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(final LongBinaryOperatorWithThrowable<E>
-                                                                                                                longbinaryoperatorwiththrowable) {
+    static <E extends Throwable> LongBinaryOperatorWithThrowable<E> castLongBinaryOperatorWithThrowable(final LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) {
         return longbinaryoperatorwiththrowable;
     }
 
     /**
-     * Utility method to convert LongBinaryOperatorWithThrowable
+     * Utility method to unwrap lambdas of type LongBinaryOperator and rethrow any Exception
      *
+     * @param longbinaryoperatorwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from longbinaryoperatorwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> LongBinaryOperator rethrowLongBinaryOperator(final LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) throws E {
+        return longbinaryoperatorwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert LongBinaryOperatorWithThrowable
      * @param longbinaryoperator The interface instance
-     * @param <E>                The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongBinaryOperatorWithThrowable<E> asLongBinaryOperatorWithThrowable(final LongBinaryOperator longbinaryoperator) {
@@ -67,22 +78,40 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
      */
     long applyAsLongWithThrowable(final long v1, final long v2) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default LongBinaryOperator thatReturnsOnCatch(final long defaultReturnValue) {
-        return (final long v1, final long v2) -> {
-            try {
-                return applyAsLongWithThrowable(v1, v2);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final long v1, final long v2) -> {
+        try {
+          return applyAsLongWithThrowable(v1, v2);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default LongBinaryOperator rethrow() throws E {
+      return (final long v1, final long v2) -> {
+        try {
+          return applyAsLongWithThrowable(v1, v2);
+        } catch(final Throwable throwable) {
+          SuppressedException.throwAsUnchecked(throwable);
+          throw new RuntimeException("Unreachable code.");
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -98,9 +127,9 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -108,14 +137,16 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
         return withLogging(logger, "Exception in LongBinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default LongBinaryOperatorWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -133,6 +164,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
         };
     }
 
+
     /**
      * @param consumer An exception consumer.
      * @return An interface that will log all exceptions to given logger
@@ -143,10 +175,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{
-                        v1,
-                        v2
-                });
+                consumer.accept(throwable, new Object[]{v1, v2});
                 throw throwable;
             }
         };

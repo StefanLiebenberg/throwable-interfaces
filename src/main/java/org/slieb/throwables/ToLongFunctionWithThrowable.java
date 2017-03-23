@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.ToLongFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from ToLongFunction
  * Extends java.util.function.ToLongFunction to allow for a checked exception.
@@ -21,21 +22,32 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
      * Utility method to mark lambdas of type ToLongFunctionWithThrowable
      *
      * @param tolongfunctionwiththrowable The interface instance
-     * @param <T>                         Generic that corresponds to the same generic on ToLongFunction
-     * @param <E>                         The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on ToLongFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToLongFunctionWithThrowable<T, E> castToLongFunctionWithThrowable(final ToLongFunctionWithThrowable<T, E>
-                                                                                                              tolongfunctionwiththrowable) {
+    static <T, E extends Throwable> ToLongFunctionWithThrowable<T, E> castToLongFunctionWithThrowable(final ToLongFunctionWithThrowable<T, E> tolongfunctionwiththrowable) {
         return tolongfunctionwiththrowable;
     }
 
     /**
-     * Utility method to convert ToLongFunctionWithThrowable
+     * Utility method to unwrap lambdas of type ToLongFunction and rethrow any Exception
      *
+     * @param tolongfunctionwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on ToLongFunction  
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from tolongfunctionwiththrowable
+     * @return the cast interface
+     */
+    static <T, E extends Throwable> ToLongFunction<T> rethrowToLongFunction(final ToLongFunctionWithThrowable<T, E> tolongfunctionwiththrowable) throws E {
+        return tolongfunctionwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert ToLongFunctionWithThrowable
      * @param tolongfunction The interface instance
-     * @param <T>            Generic that corresponds to the same generic on ToLongFunction
-     * @param <E>            The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on ToLongFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ToLongFunctionWithThrowable<T, E> asToLongFunctionWithThrowable(final ToLongFunction<T> tolongfunction) {
@@ -68,35 +80,54 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
      */
     long applyAsLongWithThrowable(final T v1) throws E;
 
+
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.Function<T, java.util.OptionalLong> thatReturnsOptional() {
-        return (v1) -> {
-            try {
-                return java.util.OptionalLong.of(applyAsLongWithThrowable(v1));
-            } catch (Throwable throwable) {
-                return java.util.OptionalLong.empty();
-            }
-        };
+    default java.util.function.Function<T, java.util.OptionalLong>     thatReturnsOptional() {
+      return (v1)     -> {
+        try {
+          return java.util.OptionalLong.of(applyAsLongWithThrowable(v1));
+        } catch(Throwable throwable) {
+          return java.util.OptionalLong.empty();
+        }
+      };
     }
+
 
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default ToLongFunction<T> thatReturnsOnCatch(final long defaultReturnValue) {
-        return (final T v1) -> {
-            try {
-                return applyAsLongWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final T v1) -> {
+        try {
+          return applyAsLongWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default ToLongFunction<T> rethrow() throws E {
+      return (final T v1) -> {
+        try {
+          return applyAsLongWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          SuppressedException.throwAsUnchecked(throwable);
+          throw new RuntimeException("Unreachable code.");
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -112,9 +143,9 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -122,14 +153,16 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
         return withLogging(logger, "Exception in ToLongFunctionWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default ToLongFunctionWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -146,6 +179,7 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

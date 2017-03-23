@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleConsumer
  * Extends java.util.function.DoubleConsumer to allow for a checked exception.
@@ -20,19 +21,29 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
      * Utility method to mark lambdas of type DoubleConsumerWithThrowable
      *
      * @param doubleconsumerwiththrowable The interface instance
-     * @param <E>                         The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleConsumerWithThrowable<E> castDoubleConsumerWithThrowable(final DoubleConsumerWithThrowable<E>
-                                                                                                        doubleconsumerwiththrowable) {
+    static <E extends Throwable> DoubleConsumerWithThrowable<E> castDoubleConsumerWithThrowable(final DoubleConsumerWithThrowable<E> doubleconsumerwiththrowable) {
         return doubleconsumerwiththrowable;
     }
 
     /**
-     * Utility method to convert DoubleConsumerWithThrowable
+     * Utility method to unwrap lambdas of type DoubleConsumer and rethrow any Exception
      *
+     * @param doubleconsumerwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from doubleconsumerwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> DoubleConsumer rethrowDoubleConsumer(final DoubleConsumerWithThrowable<E> doubleconsumerwiththrowable) throws E {
+        return doubleconsumerwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert DoubleConsumerWithThrowable
      * @param doubleconsumer The interface instance
-     * @param <E>            The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleConsumerWithThrowable<E> asDoubleConsumerWithThrowable(final DoubleConsumer doubleconsumer) {
@@ -63,6 +74,7 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
      */
     void acceptWithThrowable(final double v1) throws E;
 
+
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
@@ -70,12 +82,28 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
         return (final double v1) -> {
             try {
                 acceptWithThrowable(v1);
-            } catch (Throwable ignored) {}
+            } catch(Throwable ignored) {}
         };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default DoubleConsumer rethrow() throws E {
+        return (final double v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch(final Throwable throwable) {
+                SuppressedException.throwAsUnchecked(throwable);
+            }
+        };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -91,9 +119,9 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -101,14 +129,16 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
         return withLogging(logger, "Exception in DoubleConsumerWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default DoubleConsumerWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -125,6 +155,7 @@ public interface DoubleConsumerWithThrowable<E extends Throwable> extends Double
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

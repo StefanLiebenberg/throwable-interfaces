@@ -99,6 +99,7 @@ public class InterfaceGenerator {
             generateLogableTest(className, className + "LogableTest", node);
             generateGeneralTest(funcInterface, className, className + "GeneralTest");
             generateUnwrapTest(funcInterface, className, className + "UnwrapTest");
+            generateRethrowTest(className, className + "RethrowTest", node);
         } catch (Exception ignore) {
             ignore.printStackTrace();
         }
@@ -135,6 +136,9 @@ public class InterfaceGenerator {
 
     private void generateUnwrapTest(Class<?> funcInterface, String className, String testName) throws IOException {
         generateFile(testDirectory, packageName, testName, getUnwrapTestContent(funcInterface, className, testName));
+    }
+    private void generateRethrowTest(String className, String testName, FunctionalInterfaceNode node) throws IOException {
+        generateFile(testDirectory, packageName, testName, getRethrowTestContent(className, testName, node));
     }
 
     private void generateFile(File directory, String pkg, String fileName, String content) throws IOException {
@@ -574,6 +578,75 @@ public class InterfaceGenerator {
         return isb.toString();
     }
 
+    private String getRethrowTestContent(String className, String testName, FunctionalInterfaceNode node) {
+        final IndentStringBuilder isb = new IndentStringBuilder();
+
+        isb.append("package ").append(packageName).append(";\n");
+        isb.append("import org.junit.Test;\n");
+        isb.appendImport(IOException.class);
+
+        isb.append("import static ").append(packageName).append(".").append(className).append(".rethrow").append(node.getImplementationClass().getSimpleName()).append(";\n");
+
+        //        isb.annotate(SuppressWarnings.class, "{\"WeakerAccess\", \"deprecation\"}");
+        isb.annotate(SuppressWarnings.class, "{\"CodeBlock2Expr\"}");
+        isb.indent().append("public class ").append(testName).append(" {").newline();
+        isb.incrementIndent();
+
+        Method method = getFunctionalMethod(node.getImplementationClass());
+        String params = getMethodParams(node.getImplementationClass(), method, false);
+
+        isb.newlines(2);
+        isb.indent().append("@Test\n");
+        isb.indent().append("public void testThrowCheckedException() {\n");
+        isb.incrementIndent();
+        isb.indent().append("IOException expected = new IOException(\"EXPECTED ERROR\");").newline();
+        isb.indent().append("try {").newline();
+        isb.incrementIndent();
+        isb.indent().append("rethrow").append(node.getImplementationClass().getSimpleName()).append("(").append(params).append(" -> {\n");
+        isb.incrementIndent();
+        isb.indent().append("throw expected;\n");
+        isb.decrementIndent();
+        isb.indent().append("}).").append(getMethodCall(node.getImplementationClass(), method)).append(";\n");
+        isb.decrementIndent();
+        isb.indent().append("} catch (IOException actual) {").newline();
+        isb.incrementIndent();
+        isb.indent().append("org.junit.Assert.assertEquals(expected, actual);").newline();
+        isb.decrementIndent();
+        isb.indent().append("}").newline();
+        isb.decrementIndent();
+        isb.indent().append("}").newline();
+
+        isb.newlines(2);
+        isb.indent().append("@Test").newline();
+        isb.indent().append("public void testNormalOperation() {\n");
+        isb.incrementIndent();
+        isb.indent().append("try {").newline();
+        isb.incrementIndent();
+        isb.indent().append("rethrow").append(node.getImplementationClass().getSimpleName()).append("(").append(params).append(" -> {\n");
+        isb.incrementIndent();
+        isb.indent().append("if(false) throw new IOException();").newline();
+        final Class<?> returnType = method.getReturnType();
+        if (!returnType.equals(Void.TYPE)) {
+            isb.indent().append("return ").append(TypeResolver.getNullTypeFor(returnType)).append(";\n");
+        }
+        isb.decrementIndent();
+        isb.indent().append("}).").append(getMethodCall(node.getImplementationClass(), method)).append(";\n");
+        isb.decrementIndent();
+        isb.indent().append("} catch (IOException ignored) {").newline();
+        isb.incrementIndent();
+        isb.indent().append("org.junit.Assert.fail(\"\");").newline();
+        isb.decrementIndent();
+        isb.indent().append("}").newline();
+        isb.decrementIndent();
+        isb.indent().append("}").newline();
+
+        isb.newlines(2);
+        isb.decrementIndent();
+        isb.indent().append("}").newline();
+
+        return isb.toString();
+    }
+
     private String getMethodCall(Class funcClass, Method method) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(method.getName());
@@ -664,6 +737,40 @@ public class InterfaceGenerator {
                 .append("    }");
         isb.newlines(2);
 
+         isb.append("    /**\n");
+        isb.append("     * Utility method to unwrap lambdas of type ").appendClass(node.getImplementationClass()).append(" and rethrow any Exception\n");
+        isb.append("     *\n");
+        isb.append("     * @param ").append(objectName).append(" The interface instance\n");
+        generics.forEach(gen -> isb.append("     * @param <")
+                .append(gen)
+                .append("> Generic that corresponds to the same generic on ")
+                .appendClass(node.getImplementationClass())
+                .append("  \n"));
+        isb.append("     * @param <E> The type this interface is allowed to throw\n");
+        isb.append("     * @throws E the original Exception from ").append(objectName).newline();
+        isb.append("     * @return the cast interface\n");
+        isb.append("     */\n");
+        isb.append("    static ")
+                .append(generateGenerics(generics, true, true))
+                .append(" ")
+                .append(node.getImplementationClass().getSimpleName());
+        if (!generics.isEmpty()) {
+            isb.append(generateGenerics(generics, false, false));
+        }
+        isb.append(" rethrow")
+                .appendClass(node.getImplementationClass())
+                .append("(final ")
+                .append(className)
+                .append(generateGenerics(generics, true, false))
+                .append(" ")
+                .append(objectName)
+                .append(") throws E {\n")
+                .append("        return ")
+                .append(objectName)
+                .append(".rethrow();\n")
+                .append("    }");
+        isb.newlines(2);
+
         Method method = getFunctionalMethod(node.getImplementationClass());
         String methodName = method.getName();
 
@@ -707,7 +814,7 @@ public class InterfaceGenerator {
         String returnTypeName = hasReturnType ? returnType.getTypeName() : "void";
         isb.append("\n");
 
-        isb.append("    /** \n");
+        isb.append("    /**\n");
         isb.append("     * Overridden method of ")
                 .append(className)
                 .append(" that will call ")
@@ -741,7 +848,7 @@ public class InterfaceGenerator {
 
         isb.append("\n");
 
-        isb.append("    /** \n");
+        isb.append("    /**\n");
         isb.append("     * Functional method that will throw exceptions.\n");
         isb.append("     *\n");
         for (int i = 0; i < method.getGenericParameterTypes().length; i++) {
@@ -822,6 +929,33 @@ public class InterfaceGenerator {
                 isb.indent().append("    }\n");
                 isb.indent().append("  };\n");
                 isb.indent().append("}\n");
+
+                // rethrow for primitives
+                isb.newlines(2).setIndent(4);
+                isb.indent().append("/**").newline();
+                isb.indent().append(" * @throws E if an exception E has been thrown, it is rethrown by this method").newline();
+                isb.indent().append(" * @return An interface that is only returned if no exception has been thrown.").newline();
+                isb.indent().append(" */").newline();
+                isb.indent().append("default ").appendClass(node.getImplementationClass());
+                if (!generics.isEmpty()) {
+                    isb.append(generateGenerics(generics, false, false));
+                }
+                isb.append(" rethrow() throws E {\n");
+                isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
+                isb.append(" -> {\n");
+                isb.indent().append("    try {\n");
+                isb.indent()
+                        .append("      return ")
+                        .append(methodName)
+                        .append("WithThrowable")
+                        .append(getMethodParams(node.getImplementationClass(), method, false))
+                        .append(";\n");
+                isb.indent().append("    } catch(final ").appendClass(Throwable.class).append(" throwable) {\n");
+                isb.indent().append("      SuppressedException.throwAsUnchecked(throwable);\n");
+                isb.indent().append("      throw new RuntimeException(\"Unreachable code.\");\n");
+                isb.indent().append("    }\n");
+                isb.indent().append("  };\n");
+                isb.indent().append("}\n");
             } else {
                 List<String> genericsWithOptionalReturn = generics.stream()
                         .map(gen -> gen.equals(returnTypeName) ? isb.getClassContent(Optional.class) + "<" + gen + ">" : gen)
@@ -887,6 +1021,34 @@ public class InterfaceGenerator {
                 isb.indent().append("    }\n");
                 isb.indent().append("  };\n");
                 isb.indent().append("}\n");
+
+                // rethrow
+                isb.newlines(2).setIndent(4);
+                isb.indent().append("/**").newline();
+                isb.indent().append(" * @throws E if an exception E has been thrown, it is rethrown by this method").newline();
+                isb.indent().append(" * @return An interface that is only returned if no exception has been thrown.").newline();
+                isb.indent().append(" */").newline();
+                isb.indent().append("default ").appendClass(node.getImplementationClass());
+                if (!generics.isEmpty()) {
+                    isb.append(generateGenerics(generics, false, false));
+                }
+                isb.append(" rethrow() throws E {\n");
+                isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
+                isb.append(" -> {\n");
+                isb.indent().append("    try {\n");
+                isb.indent()
+                        .append("      return ")
+                        .append(methodName)
+                        .append("WithThrowable")
+                        .append(getMethodParams(node.getImplementationClass(), method, false))
+                        .append(";\n");
+                isb.indent().append("    } catch(final ").appendClass(Throwable.class).append(" throwable) {\n");
+                isb.indent().append("      SuppressedException.throwAsUnchecked(throwable);\n");
+                isb.indent().append("      throw new RuntimeException(\"Unreachable code.\");\n");
+                isb.indent().append("    }\n");
+                isb.indent().append("  };\n");
+                isb.indent().append("}\n");
+
             }
         } else {
 
@@ -908,6 +1070,35 @@ public class InterfaceGenerator {
             isb.indent().append(methodName).append("WithThrowable").append(getMethodParams(node.getImplementationClass(), method, false)).append(";").newline();
             isb.setIndent(12);
             isb.indent().append("} catch(Throwable ignored) {}").newline();
+            isb.setIndent(8);
+            isb.indent().append("};").newline();
+            isb.setIndent(4);
+            isb.indent().append("}").newline();
+
+            //rethrow
+            isb.newlines(2).setIndent(4);
+            isb.indent().append("/**").newline();
+            isb.indent().append(" * @throws E if an exception E has been thrown, it is rethrown by this method").newline();
+            isb.indent().append(" * @return An interface that is only returned if no exception has been thrown.").newline();
+            isb.indent().append(" */").newline();
+            isb.indent().append("default ").appendClass(node.getImplementationClass());
+            if (!generics.isEmpty()) {
+                isb.append(generateGenerics(generics, false, false));
+            }
+            isb.append(" rethrow() throws E {").newline();
+
+            isb.setIndent(8);
+            isb.indent().append("return ").append(getMethodParams(node.getImplementationClass(), method, true)).append(" -> {").newline();
+            isb.setIndent(12);
+            isb.indent().append("try {").newline();
+            isb.setIndent(16);
+            isb.indent().append(methodName).append("WithThrowable").append(getMethodParams(node.getImplementationClass(), method, false)).append(";").newline();
+            isb.setIndent(12);
+            isb.indent().append("} catch(final ").appendClass(Throwable.class).append(" throwable) {").newline();
+            isb.setIndent(16);
+            isb.indent().append("SuppressedException.throwAsUnchecked(throwable);").newline();
+            isb.setIndent(12);
+            isb.indent().append("}").newline();
             isb.setIndent(8);
             isb.indent().append("};").newline();
             isb.setIndent(4);
