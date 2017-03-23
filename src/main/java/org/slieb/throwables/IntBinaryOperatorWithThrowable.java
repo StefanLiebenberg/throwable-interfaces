@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.IntBinaryOperator;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from IntBinaryOperator
  * Extends java.util.function.IntBinaryOperator to allow for a checked exception.
@@ -20,19 +21,29 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      * Utility method to mark lambdas of type IntBinaryOperatorWithThrowable
      *
      * @param intbinaryoperatorwiththrowable The interface instance
-     * @param <E>                            The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(final IntBinaryOperatorWithThrowable<E>
-                                                                                                              intbinaryoperatorwiththrowable) {
+    static <E extends Throwable> IntBinaryOperatorWithThrowable<E> castIntBinaryOperatorWithThrowable(final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) {
         return intbinaryoperatorwiththrowable;
     }
 
     /**
-     * Utility method to convert IntBinaryOperatorWithThrowable
+     * Utility method to unwrap lambdas of type IntBinaryOperator and rethrow any Exception
      *
+     * @param intbinaryoperatorwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from intbinaryoperatorwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> IntBinaryOperator rethrowIntBinaryOperator(final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) throws E {
+        return intbinaryoperatorwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert IntBinaryOperatorWithThrowable
      * @param intbinaryoperator The interface instance
-     * @param <E>               The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> IntBinaryOperatorWithThrowable<E> asIntBinaryOperatorWithThrowable(final IntBinaryOperator intbinaryoperator) {
@@ -67,22 +78,40 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      */
     int applyAsIntWithThrowable(final int v1, final int v2) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default IntBinaryOperator thatReturnsOnCatch(final int defaultReturnValue) {
-        return (final int v1, final int v2) -> {
-            try {
-                return applyAsIntWithThrowable(v1, v2);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final int v1, final int v2) -> {
+        try {
+          return applyAsIntWithThrowable(v1, v2);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default IntBinaryOperator rethrow() throws E {
+      return (final int v1, final int v2) -> {
+        try {
+          return applyAsIntWithThrowable(v1, v2);
+        } catch(final Throwable throwable) {
+          SuppressedException.throwAsUnchecked(throwable);
+          throw new RuntimeException("Unreachable code.");
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -98,9 +127,9 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -108,14 +137,16 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
         return withLogging(logger, "Exception in IntBinaryOperatorWithThrowable with the arguments [{}, {}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default IntBinaryOperatorWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -133,6 +164,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
         };
     }
 
+
     /**
      * @param consumer An exception consumer.
      * @return An interface that will log all exceptions to given logger
@@ -143,10 +175,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
             try {
                 return applyAsIntWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{
-                        v1,
-                        v2
-                });
+                consumer.accept(throwable, new Object[]{v1, v2});
                 throw throwable;
             }
         };

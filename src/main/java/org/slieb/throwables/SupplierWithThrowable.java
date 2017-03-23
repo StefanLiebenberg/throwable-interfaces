@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from Supplier
  * Extends java.util.function.Supplier to allow for a checked exception.
@@ -21,8 +22,8 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
      * Utility method to mark lambdas of type SupplierWithThrowable
      *
      * @param supplierwiththrowable The interface instance
-     * @param <T>                   Generic that corresponds to the same generic on Supplier
-     * @param <E>                   The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on Supplier  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> SupplierWithThrowable<T, E> castSupplierWithThrowable(final SupplierWithThrowable<T, E> supplierwiththrowable) {
@@ -30,11 +31,23 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
     }
 
     /**
-     * Utility method to convert SupplierWithThrowable
+     * Utility method to unwrap lambdas of type Supplier and rethrow any Exception
      *
+     * @param supplierwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on Supplier  
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from supplierwiththrowable
+     * @return the cast interface
+     */
+    static <T, E extends Throwable> Supplier<T> rethrowSupplier(final SupplierWithThrowable<T, E> supplierwiththrowable) throws E {
+        return supplierwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert SupplierWithThrowable
      * @param supplier The interface instance
-     * @param <T>      Generic that corresponds to the same generic on Supplier
-     * @param <E>      The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on Supplier  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> SupplierWithThrowable<T, E> asSupplierWithThrowable(final Supplier<T> supplier) {
@@ -65,35 +78,54 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
      */
     T getWithThrowable() throws E;
 
+
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default Supplier<java.util.Optional<T>> thatReturnsOptional() {
-        return () -> {
-            try {
-                return java.util.Optional.ofNullable(getWithThrowable());
-            } catch (Throwable throwable) {
-                return java.util.Optional.empty();
-            }
-        };
+    default Supplier<java.util.Optional<T>>    thatReturnsOptional() {
+      return ()     -> {
+        try {
+          return java.util.Optional.ofNullable(getWithThrowable());
+        } catch(Throwable throwable) {
+          return java.util.Optional.empty();
+        }
+      };
     }
+
 
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default Supplier<T> thatReturnsOnCatch(final T defaultReturnValue) {
-        return () -> {
-            try {
-                return getWithThrowable();
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return () -> {
+        try {
+          return getWithThrowable();
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default Supplier<T> rethrow() throws E {
+      return () -> {
+        try {
+          return getWithThrowable();
+        } catch(final Throwable throwable) {
+          SuppressedException.throwAsUnchecked(throwable);
+          throw new RuntimeException("Unreachable code.");
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -109,9 +141,9 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -119,14 +151,16 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
         return withLogging(logger, "Exception in SupplierWithThrowable");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default SupplierWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.

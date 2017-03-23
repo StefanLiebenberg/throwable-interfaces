@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class PredicateWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.PredicateWithThrowable.castPredicateWithThrowable;
+public class PredicateWithThrowableIgnoresTest {
+}

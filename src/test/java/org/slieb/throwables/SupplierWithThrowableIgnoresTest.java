@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class SupplierWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.SupplierWithThrowable.castSupplierWithThrowable;
+public class SupplierWithThrowableIgnoresTest {
+}

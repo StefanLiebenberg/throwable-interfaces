@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class DoubleToLongFunctionWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.DoubleToLongFunctionWithThrowable.castDoubleToLongFunctionWithThrowable;
+public class DoubleToLongFunctionWithThrowableIgnoresTest {
+}

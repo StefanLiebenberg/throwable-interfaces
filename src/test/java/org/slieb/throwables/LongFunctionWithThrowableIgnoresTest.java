@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class LongFunctionWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.LongFunctionWithThrowable.castLongFunctionWithThrowable;
+public class LongFunctionWithThrowableIgnoresTest {
+}

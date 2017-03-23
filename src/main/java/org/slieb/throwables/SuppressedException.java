@@ -108,5 +108,11 @@ public class SuppressedException extends RuntimeException {
     public static <E extends Throwable> Optional<E> unwrapExceptionCause(final SuppressedException suppressed, final Class<E> exceptionClass) {
         return Optional.of(suppressed).map(Throwable::getCause).flatMap(castFunctionWithThrowable(exceptionClass::cast).thatReturnsOptional());
     }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends Throwable> void throwAsUnchecked(Throwable exception) throws E {
+        assert exception != null;
+        throw (E) exception;
+    }
 }
 

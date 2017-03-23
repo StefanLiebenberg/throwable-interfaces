@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from Function
  * Extends java.util.function.Function to allow for a checked exception.
@@ -22,9 +23,9 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * Utility method to mark lambdas of type FunctionWithThrowable
      *
      * @param functionwiththrowable The interface instance
-     * @param <T>                   Generic that corresponds to the same generic on Function
-     * @param <R>                   Generic that corresponds to the same generic on Function
-     * @param <E>                   The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> castFunctionWithThrowable(final FunctionWithThrowable<T, R, E> functionwiththrowable) {
@@ -32,12 +33,25 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
     }
 
     /**
-     * Utility method to convert FunctionWithThrowable
+     * Utility method to unwrap lambdas of type Function and rethrow any Exception
      *
+     * @param functionwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from functionwiththrowable
+     * @return the cast interface
+     */
+    static <T, R, E extends Throwable> Function<T, R> rethrowFunction(final FunctionWithThrowable<T, R, E> functionwiththrowable) throws E {
+        return functionwiththrowable.rethrow();
+    }
+
+    /**
+     * Utility method to convert FunctionWithThrowable
      * @param function The interface instance
-     * @param <T>      Generic that corresponds to the same generic on Function
-     * @param <R>      Generic that corresponds to the same generic on Function
-     * @param <E>      The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, R, E extends Throwable> FunctionWithThrowable<T, R, E> asFunctionWithThrowable(final Function<T, R> function) {
@@ -70,35 +84,54 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      */
     R applyWithThrowable(final T v1) throws E;
 
+
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default Function<T, java.util.Optional<R>> thatReturnsOptional() {
-        return (final T v1) -> {
-            try {
-                return java.util.Optional.ofNullable(applyWithThrowable(v1));
-            } catch (Throwable throwable) {
-                return java.util.Optional.empty();
-            }
-        };
+    default Function<T, java.util.Optional<R>>    thatReturnsOptional() {
+      return (final T v1)     -> {
+        try {
+          return java.util.Optional.ofNullable(applyWithThrowable(v1));
+        } catch(Throwable throwable) {
+          return java.util.Optional.empty();
+        }
+      };
     }
+
 
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default Function<T, R> thatReturnsOnCatch(final R defaultReturnValue) {
-        return (final T v1) -> {
-            try {
-                return applyWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final T v1) -> {
+        try {
+          return applyWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default Function<T, R> rethrow() throws E {
+      return (final T v1) -> {
+        try {
+          return applyWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          SuppressedException.throwAsUnchecked(throwable);
+          throw new RuntimeException("Unreachable code.");
+        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -114,9 +147,9 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -124,14 +157,16 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
         return withLogging(logger, "Exception in FunctionWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default FunctionWithThrowable<T, R, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -148,6 +183,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.
