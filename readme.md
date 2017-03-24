@@ -149,9 +149,9 @@ Only applicable on interfaces that return non-primitive types.
 
 Returns an interface that will return some defaultValue if an exception occurs. Only applicable on interfaces that specify a return type.
 
-### rethrow()
+### thatUnsafelyThrowsUnchecked()
   
-Rethrows the exception if one has occured.
+Rethrows the exception unsafely if one has occured.
 
     
 ## About the library
