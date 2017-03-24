@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class BiFunctionWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.BiFunctionWithThrowable.castBiFunctionWithThrowable;
+public class BiFunctionWithThrowableIgnoresTest {
+}

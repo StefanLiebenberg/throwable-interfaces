@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class LongPredicateWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.LongPredicateWithThrowable.castLongPredicateWithThrowable;
+public class LongPredicateWithThrowableIgnoresTest {
+}

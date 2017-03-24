@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from IntPredicate
  * Extends java.util.function.IntPredicate to allow for a checked exception.
@@ -20,7 +21,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * Utility method to mark lambdas of type IntPredicateWithThrowable
      *
      * @param intpredicatewiththrowable The interface instance
-     * @param <E>                       The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> IntPredicateWithThrowable<E> castIntPredicateWithThrowable(final IntPredicateWithThrowable<E> intpredicatewiththrowable) {
@@ -28,10 +29,21 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
     }
 
     /**
-     * Utility method to convert IntPredicateWithThrowable
+     * Utility method to unwrap lambdas of type IntPredicate and withUncheckedThrowable any Exception
      *
+     * @param intpredicatewiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from intpredicatewiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> IntPredicate aIntPredicateThatUnsafelyThrowsUnchecked(final IntPredicateWithThrowable<E> intpredicatewiththrowable) throws E {
+        return intpredicatewiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert IntPredicateWithThrowable
      * @param intpredicate The interface instance
-     * @param <E>          The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> IntPredicateWithThrowable<E> asIntPredicateWithThrowable(final IntPredicate intpredicate) {
@@ -64,22 +76,39 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      */
     boolean testWithThrowable(final int v1) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default IntPredicate thatReturnsOnCatch(final boolean defaultReturnValue) {
-        return (final int v1) -> {
-            try {
-                return testWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final int v1) -> {
+        try {
+          return testWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default IntPredicate thatUnsafelyThrowsUnchecked() throws E {
+      return (final int v1) -> {
+        try {
+          return testWithThrowable(v1);
+        } catch(final Throwable throwable) {
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return false;        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -95,9 +124,9 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -105,14 +134,16 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
         return withLogging(logger, "Exception in IntPredicateWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default IntPredicateWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -129,6 +160,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

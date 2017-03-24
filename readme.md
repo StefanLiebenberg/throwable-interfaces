@@ -25,6 +25,13 @@ Using a static import and method reference, we can even make this more streamlin
     
     Stream<String> content = fileStream.map(castFunctionWithThrowable(IOUtils::readFile));
     
+We can also force catching of the checked exception.     
+    
+    try {
+        Stream<String> content = fileStream.map(asFunctionWithThrowableThatUnsafelyThrowsUnchecked(IOUtils::readFile));
+    } catch (IOException e) {
+    }
+    
 ## Interfaces
 
 
@@ -135,14 +142,17 @@ Returns an interface that does nothing on exceptions. Only applicable on interfa
 
 ### thatReturnsOptional()
 
-
 Returns an interface that will return Optional of the return type, which will be empty if there has been an error.
 Only applicable on interfaces that return non-primitive types.
 
 ### thatReturnsOnCatch(defaultValue)
 
 Returns an interface that will return some defaultValue if an exception occurs. Only applicable on interfaces that specify a return type.
-    
+
+### rethrow()
+  
+Rethrows the exception if one has occured.
+
     
 ## About the library
 

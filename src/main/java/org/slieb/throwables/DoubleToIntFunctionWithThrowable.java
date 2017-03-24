@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.DoubleToIntFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from DoubleToIntFunction
  * Extends java.util.function.DoubleToIntFunction to allow for a checked exception.
@@ -20,19 +21,29 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * Utility method to mark lambdas of type DoubleToIntFunctionWithThrowable
      *
      * @param doubletointfunctionwiththrowable The interface instance
-     * @param <E>                              The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> castDoubleToIntFunctionWithThrowable(final DoubleToIntFunctionWithThrowable<E>
-                                                                                                                  doubletointfunctionwiththrowable) {
+    static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> castDoubleToIntFunctionWithThrowable(final DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) {
         return doubletointfunctionwiththrowable;
     }
 
     /**
-     * Utility method to convert DoubleToIntFunctionWithThrowable
+     * Utility method to unwrap lambdas of type DoubleToIntFunction and withUncheckedThrowable any Exception
      *
+     * @param doubletointfunctionwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from doubletointfunctionwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> DoubleToIntFunction aDoubleToIntFunctionThatUnsafelyThrowsUnchecked(final DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) throws E {
+        return doubletointfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert DoubleToIntFunctionWithThrowable
      * @param doubletointfunction The interface instance
-     * @param <E>                 The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> DoubleToIntFunctionWithThrowable<E> asDoubleToIntFunctionWithThrowable(final DoubleToIntFunction doubletointfunction) {
@@ -65,22 +76,39 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      */
     int applyAsIntWithThrowable(final double v1) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default DoubleToIntFunction thatReturnsOnCatch(final int defaultReturnValue) {
-        return (final double v1) -> {
-            try {
-                return applyAsIntWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final double v1) -> {
+        try {
+          return applyAsIntWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default DoubleToIntFunction thatUnsafelyThrowsUnchecked() throws E {
+      return (final double v1) -> {
+        try {
+          return applyAsIntWithThrowable(v1);
+        } catch(final Throwable throwable) {
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -96,9 +124,9 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -106,14 +134,16 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
         return withLogging(logger, "Exception in DoubleToIntFunctionWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default DoubleToIntFunctionWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -130,6 +160,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

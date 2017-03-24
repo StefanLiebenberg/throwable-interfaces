@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class DoubleBinaryOperatorWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.DoubleBinaryOperatorWithThrowable.castDoubleBinaryOperatorWithThrowable;
+public class DoubleBinaryOperatorWithThrowableIgnoresTest {
+}

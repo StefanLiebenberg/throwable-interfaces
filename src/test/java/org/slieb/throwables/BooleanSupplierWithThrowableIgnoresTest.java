@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class BooleanSupplierWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.BooleanSupplierWithThrowable.castBooleanSupplierWithThrowable;
+public class BooleanSupplierWithThrowableIgnoresTest {
+}

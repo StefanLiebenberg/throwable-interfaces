@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongSupplier;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongSupplier
  * Extends java.util.function.LongSupplier to allow for a checked exception.
@@ -20,7 +21,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * Utility method to mark lambdas of type LongSupplierWithThrowable
      *
      * @param longsupplierwiththrowable The interface instance
-     * @param <E>                       The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongSupplierWithThrowable<E> castLongSupplierWithThrowable(final LongSupplierWithThrowable<E> longsupplierwiththrowable) {
@@ -28,10 +29,21 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
     }
 
     /**
-     * Utility method to convert LongSupplierWithThrowable
+     * Utility method to unwrap lambdas of type LongSupplier and withUncheckedThrowable any Exception
      *
+     * @param longsupplierwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from longsupplierwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> LongSupplier aLongSupplierThatUnsafelyThrowsUnchecked(final LongSupplierWithThrowable<E> longsupplierwiththrowable) throws E {
+        return longsupplierwiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert LongSupplierWithThrowable
      * @param longsupplier The interface instance
-     * @param <E>          The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongSupplierWithThrowable<E> asLongSupplierWithThrowable(final LongSupplier longsupplier) {
@@ -62,22 +74,39 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      */
     long getAsLongWithThrowable() throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default LongSupplier thatReturnsOnCatch(final long defaultReturnValue) {
-        return () -> {
-            try {
-                return getAsLongWithThrowable();
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return () -> {
+        try {
+          return getAsLongWithThrowable();
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default LongSupplier thatUnsafelyThrowsUnchecked() throws E {
+      return () -> {
+        try {
+          return getAsLongWithThrowable();
+        } catch(final Throwable throwable) {
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -93,9 +122,9 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -103,14 +132,16 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
         return withLogging(logger, "Exception in LongSupplierWithThrowable");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default LongSupplierWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.

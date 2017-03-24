@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class UnaryOperatorWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.UnaryOperatorWithThrowable.castUnaryOperatorWithThrowable;
+public class UnaryOperatorWithThrowableIgnoresTest {
+}

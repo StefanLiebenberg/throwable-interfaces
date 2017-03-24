@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class LongBinaryOperatorWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.LongBinaryOperatorWithThrowable.castLongBinaryOperatorWithThrowable;
+public class LongBinaryOperatorWithThrowableIgnoresTest {
+}

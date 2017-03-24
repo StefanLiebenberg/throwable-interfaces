@@ -1,10 +1,12 @@
 package org.slieb.throwables;
 
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
+import java.util.function.Consumer;
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Consumer;
-
 /**
  * Generated from Consumer
  * Extends java.util.function.Consumer to allow for a checked exception.
@@ -20,8 +22,8 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
      * Utility method to mark lambdas of type ConsumerWithThrowable
      *
      * @param consumerwiththrowable The interface instance
-     * @param <T>                   Generic that corresponds to the same generic on Consumer
-     * @param <E>                   The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on Consumer  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ConsumerWithThrowable<T, E> castConsumerWithThrowable(final ConsumerWithThrowable<T, E> consumerwiththrowable) {
@@ -29,11 +31,23 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
     }
 
     /**
-     * Utility method to convert ConsumerWithThrowable
+     * Utility method to unwrap lambdas of type Consumer and withUncheckedThrowable any Exception
      *
+     * @param consumerwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on Consumer  
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from consumerwiththrowable
+     * @return the cast interface
+     */
+    static <T, E extends Throwable> Consumer<T> aConsumerThatUnsafelyThrowsUnchecked(final ConsumerWithThrowable<T, E> consumerwiththrowable) throws E {
+        return consumerwiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert ConsumerWithThrowable
      * @param consumer The interface instance
-     * @param <T>      Generic that corresponds to the same generic on Consumer
-     * @param <E>      The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on Consumer  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ConsumerWithThrowable<T, E> asConsumerWithThrowable(final Consumer<T> consumer) {
@@ -64,6 +78,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
      */
     void acceptWithThrowable(final T v1) throws E;
 
+
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
@@ -71,12 +86,28 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
         return (final T v1) -> {
             try {
                 acceptWithThrowable(v1);
-            } catch (Throwable ignored) {}
+            } catch(Throwable ignored) {}
         };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default Consumer<T> thatUnsafelyThrowsUnchecked() throws E {
+        return (final T v1) -> {
+            try {
+                acceptWithThrowable(v1);
+            } catch(final Throwable throwable) {
+                SuppressedException.throwUnsafelyAsUnchecked(throwable);
+            }
+        };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -92,9 +123,9 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -102,14 +133,16 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
         return withLogging(logger, "Exception in ConsumerWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default ConsumerWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -126,6 +159,7 @@ public interface ConsumerWithThrowable<T, E extends Throwable> extends Consumer<
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

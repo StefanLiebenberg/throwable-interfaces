@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.ToLongBiFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from ToLongBiFunction
  * Extends java.util.function.ToLongBiFunction to allow for a checked exception.
@@ -22,23 +23,35 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      * Utility method to mark lambdas of type ToLongBiFunctionWithThrowable
      *
      * @param tolongbifunctionwiththrowable The interface instance
-     * @param <T>                           Generic that corresponds to the same generic on ToLongBiFunction
-     * @param <U>                           Generic that corresponds to the same generic on ToLongBiFunction
-     * @param <E>                           The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <U> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(final ToLongBiFunctionWithThrowable<T, U, E>
-                                                                                                                        tolongbifunctionwiththrowable) {
+    static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> castToLongBiFunctionWithThrowable(final ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) {
         return tolongbifunctionwiththrowable;
     }
 
     /**
-     * Utility method to convert ToLongBiFunctionWithThrowable
+     * Utility method to unwrap lambdas of type ToLongBiFunction and withUncheckedThrowable any Exception
      *
+     * @param tolongbifunctionwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <U> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from tolongbifunctionwiththrowable
+     * @return the cast interface
+     */
+    static <T, U, E extends Throwable> ToLongBiFunction<T, U> aToLongBiFunctionThatUnsafelyThrowsUnchecked(final ToLongBiFunctionWithThrowable<T, U, E> tolongbifunctionwiththrowable) throws E {
+        return tolongbifunctionwiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert ToLongBiFunctionWithThrowable
      * @param tolongbifunction The interface instance
-     * @param <T>              Generic that corresponds to the same generic on ToLongBiFunction
-     * @param <U>              Generic that corresponds to the same generic on ToLongBiFunction
-     * @param <E>              The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <U> Generic that corresponds to the same generic on ToLongBiFunction  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, U, E extends Throwable> ToLongBiFunctionWithThrowable<T, U, E> asToLongBiFunctionWithThrowable(final ToLongBiFunction<T, U> tolongbifunction) {
@@ -73,35 +86,53 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
      */
     long applyAsLongWithThrowable(final T v1, final U v2) throws E;
 
+
     /**
      * @return An interface that will wrap the result in an optional, and return an empty optional when an exception occurs.
      */
-    default java.util.function.BiFunction<T, U, java.util.OptionalLong> thatReturnsOptional() {
-        return (v1, v2) -> {
-            try {
-                return java.util.OptionalLong.of(applyAsLongWithThrowable(v1, v2));
-            } catch (Throwable throwable) {
-                return java.util.OptionalLong.empty();
-            }
-        };
+    default java.util.function.BiFunction<T, U, java.util.OptionalLong>     thatReturnsOptional() {
+      return (v1, v2)     -> {
+        try {
+          return java.util.OptionalLong.of(applyAsLongWithThrowable(v1, v2));
+        } catch(Throwable throwable) {
+          return java.util.OptionalLong.empty();
+        }
+      };
     }
+
 
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default ToLongBiFunction<T, U> thatReturnsOnCatch(final long defaultReturnValue) {
-        return (final T v1, final U v2) -> {
-            try {
-                return applyAsLongWithThrowable(v1, v2);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final T v1, final U v2) -> {
+        try {
+          return applyAsLongWithThrowable(v1, v2);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default ToLongBiFunction<T, U> thatUnsafelyThrowsUnchecked() throws E {
+      return (final T v1, final U v2) -> {
+        try {
+          return applyAsLongWithThrowable(v1, v2);
+        } catch(final Throwable throwable) {
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -117,9 +148,9 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -127,14 +158,16 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
         return withLogging(logger, "Exception in ToLongBiFunctionWithThrowable with the arguments [{}, {}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default ToLongBiFunctionWithThrowable<T, U, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -152,6 +185,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
         };
     }
 
+
     /**
      * @param consumer An exception consumer.
      * @return An interface that will log all exceptions to given logger
@@ -162,10 +196,7 @@ public interface ToLongBiFunctionWithThrowable<T, U, E extends Throwable> extend
             try {
                 return applyAsLongWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{
-                        v1,
-                        v2
-                });
+                consumer.accept(throwable, new Object[]{v1, v2});
                 throw throwable;
             }
         };

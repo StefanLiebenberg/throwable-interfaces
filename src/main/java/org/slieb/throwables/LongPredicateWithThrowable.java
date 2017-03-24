@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongPredicate;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongPredicate
  * Extends java.util.function.LongPredicate to allow for a checked exception.
@@ -20,7 +21,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * Utility method to mark lambdas of type LongPredicateWithThrowable
      *
      * @param longpredicatewiththrowable The interface instance
-     * @param <E>                        The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongPredicateWithThrowable<E> castLongPredicateWithThrowable(final LongPredicateWithThrowable<E> longpredicatewiththrowable) {
@@ -28,10 +29,21 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
     }
 
     /**
-     * Utility method to convert LongPredicateWithThrowable
+     * Utility method to unwrap lambdas of type LongPredicate and withUncheckedThrowable any Exception
      *
+     * @param longpredicatewiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from longpredicatewiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> LongPredicate aLongPredicateThatUnsafelyThrowsUnchecked(final LongPredicateWithThrowable<E> longpredicatewiththrowable) throws E {
+        return longpredicatewiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert LongPredicateWithThrowable
      * @param longpredicate The interface instance
-     * @param <E>           The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongPredicateWithThrowable<E> asLongPredicateWithThrowable(final LongPredicate longpredicate) {
@@ -64,22 +76,39 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      */
     boolean testWithThrowable(final long v1) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default LongPredicate thatReturnsOnCatch(final boolean defaultReturnValue) {
-        return (final long v1) -> {
-            try {
-                return testWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final long v1) -> {
+        try {
+          return testWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default LongPredicate thatUnsafelyThrowsUnchecked() throws E {
+      return (final long v1) -> {
+        try {
+          return testWithThrowable(v1);
+        } catch(final Throwable throwable) {
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return false;        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -95,9 +124,9 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -105,14 +134,16 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
         return withLogging(logger, "Exception in LongPredicateWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default LongPredicateWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -129,6 +160,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

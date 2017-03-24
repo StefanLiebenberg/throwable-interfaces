@@ -23,7 +23,7 @@ public class SuppressedException extends RuntimeException {
      * @param supplier A supplier object which may throw some exception
      * @param <E>      The exception type.
      */
-    public static <T, E extends Throwable> T suppress(SupplierWithThrowable<T, E> supplier) {
+    public static <T, E extends Throwable> T suppress(Supplier<T> supplier) {
         return supplier.get();
     }
 
@@ -31,7 +31,7 @@ public class SuppressedException extends RuntimeException {
      * @param runnable A supplier object which may throw some exception
      * @param <E>      The exception type.
      */
-    public static <E extends Throwable> void suppress(RunnableWithThrowable<E> runnable) {
+    public static <E extends Throwable> void suppress(Runnable runnable) {
         runnable.run();
     }
 
@@ -45,7 +45,7 @@ public class SuppressedException extends RuntimeException {
 
     /**
      * @param supplier       A supplier that will throw SuppressedException
-     * @param exceptionClass The class type to intercept and rethrow.
+     * @param exceptionClass The class type to intercept and withUncheckedThrowable.
      * @param <T>            The generic return type.
      * @param <E>            The exception type.
      * @return The result of the supplier if no exception occurred.
@@ -107,6 +107,19 @@ public class SuppressedException extends RuntimeException {
      */
     public static <E extends Throwable> Optional<E> unwrapExceptionCause(final SuppressedException suppressed, final Class<E> exceptionClass) {
         return Optional.of(suppressed).map(Throwable::getCause).flatMap(castFunctionWithThrowable(exceptionClass::cast).thatReturnsOptional());
+    }
+
+    /**
+     * This method is black magic and should be frowned upon. Therefore it is marked as package local.
+     * See this for what it does -  http://stackoverflow.com/a/27644392/755330
+     *
+     * @param exception The exception to throw unchecked.
+     * @param <E>       The exception type.
+     * @throws E Throws exception.
+     */
+    @SuppressWarnings("unchecked")
+    static <E extends Throwable> void throwUnsafelyAsUnchecked(Throwable exception) throws E {
+        throw (E) exception;
     }
 }
 
