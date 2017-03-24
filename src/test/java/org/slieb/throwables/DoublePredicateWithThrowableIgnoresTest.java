@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class DoublePredicateWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.DoublePredicateWithThrowable.castDoublePredicateWithThrowable;
+public class DoublePredicateWithThrowableIgnoresTest {
+}

@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.ObjLongConsumer;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from ObjLongConsumer
  * Extends java.util.function.ObjLongConsumer to allow for a checked exception.
@@ -21,21 +22,32 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
      * Utility method to mark lambdas of type ObjLongConsumerWithThrowable
      *
      * @param objlongconsumerwiththrowable The interface instance
-     * @param <T>                          Generic that corresponds to the same generic on ObjLongConsumer
-     * @param <E>                          The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on ObjLongConsumer  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(final ObjLongConsumerWithThrowable<T, E>
-                                                                                                                objlongconsumerwiththrowable) {
+    static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> castObjLongConsumerWithThrowable(final ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) {
         return objlongconsumerwiththrowable;
     }
 
     /**
-     * Utility method to convert ObjLongConsumerWithThrowable
+     * Utility method to unwrap lambdas of type ObjLongConsumer and withUncheckedThrowable any Exception
      *
+     * @param objlongconsumerwiththrowable The interface instance
+     * @param <T> Generic that corresponds to the same generic on ObjLongConsumer  
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from objlongconsumerwiththrowable
+     * @return the cast interface
+     */
+    static <T, E extends Throwable> ObjLongConsumer<T> aObjLongConsumerThatUnsafelyThrowsUnchecked(final ObjLongConsumerWithThrowable<T, E> objlongconsumerwiththrowable) throws E {
+        return objlongconsumerwiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert ObjLongConsumerWithThrowable
      * @param objlongconsumer The interface instance
-     * @param <T>             Generic that corresponds to the same generic on ObjLongConsumer
-     * @param <E>             The type this interface is allowed to throw
+     * @param <T> Generic that corresponds to the same generic on ObjLongConsumer  
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <T, E extends Throwable> ObjLongConsumerWithThrowable<T, E> asObjLongConsumerWithThrowable(final ObjLongConsumer<T> objlongconsumer) {
@@ -68,6 +80,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
      */
     void acceptWithThrowable(final T v1, final long v2) throws E;
 
+
     /**
      * @return An interface that completely ignores exceptions. Consider using this method withLogging() as well.
      */
@@ -75,12 +88,28 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         return (final T v1, final long v2) -> {
             try {
                 acceptWithThrowable(v1, v2);
-            } catch (Throwable ignored) {}
+            } catch(Throwable ignored) {}
         };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default ObjLongConsumer<T> thatUnsafelyThrowsUnchecked() throws E {
+        return (final T v1, final long v2) -> {
+            try {
+                acceptWithThrowable(v1, v2);
+            } catch(final Throwable throwable) {
+                SuppressedException.throwUnsafelyAsUnchecked(throwable);
+            }
+        };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -96,9 +125,9 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -106,14 +135,16 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         return withLogging(logger, "Exception in ObjLongConsumerWithThrowable with the arguments [{}, {}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default ObjLongConsumerWithThrowable<T, E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -131,6 +162,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
         };
     }
 
+
     /**
      * @param consumer An exception consumer.
      * @return An interface that will log all exceptions to given logger
@@ -141,10 +173,7 @@ public interface ObjLongConsumerWithThrowable<T, E extends Throwable> extends Ob
             try {
                 acceptWithThrowable(v1, v2);
             } catch (final Throwable throwable) {
-                consumer.accept(throwable, new Object[]{
-                        v1,
-                        v2
-                });
+                consumer.accept(throwable, new Object[]{v1, v2});
                 throw throwable;
             }
         };

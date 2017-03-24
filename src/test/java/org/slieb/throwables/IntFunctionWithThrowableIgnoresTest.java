@@ -1,3 +1,5 @@
 package org.slieb.throwables;
-
-public class IntFunctionWithThrowableIgnoresTest {}
+import org.junit.Test;
+import static org.slieb.throwables.IntFunctionWithThrowable.castIntFunctionWithThrowable;
+public class IntFunctionWithThrowableIgnoresTest {
+}

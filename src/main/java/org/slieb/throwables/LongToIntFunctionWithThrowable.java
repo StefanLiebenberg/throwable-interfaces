@@ -1,11 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.LongToIntFunction;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from LongToIntFunction
  * Extends java.util.function.LongToIntFunction to allow for a checked exception.
@@ -20,19 +21,29 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      * Utility method to mark lambdas of type LongToIntFunctionWithThrowable
      *
      * @param longtointfunctionwiththrowable The interface instance
-     * @param <E>                            The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
-    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(final LongToIntFunctionWithThrowable<E>
-                                                                                                              longtointfunctionwiththrowable) {
+    static <E extends Throwable> LongToIntFunctionWithThrowable<E> castLongToIntFunctionWithThrowable(final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) {
         return longtointfunctionwiththrowable;
     }
 
     /**
-     * Utility method to convert LongToIntFunctionWithThrowable
+     * Utility method to unwrap lambdas of type LongToIntFunction and withUncheckedThrowable any Exception
      *
+     * @param longtointfunctionwiththrowable The interface instance
+     * @param <E> The type this interface is allowed to throw
+     * @throws E the original Exception from longtointfunctionwiththrowable
+     * @return the cast interface
+     */
+    static <E extends Throwable> LongToIntFunction aLongToIntFunctionThatUnsafelyThrowsUnchecked(final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) throws E {
+        return longtointfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
+    }
+
+    /**
+     * Utility method to convert LongToIntFunctionWithThrowable
      * @param longtointfunction The interface instance
-     * @param <E>               The type this interface is allowed to throw
+     * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
     static <E extends Throwable> LongToIntFunctionWithThrowable<E> asLongToIntFunctionWithThrowable(final LongToIntFunction longtointfunction) {
@@ -65,22 +76,39 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      */
     int applyAsIntWithThrowable(final long v1) throws E;
 
+
     /**
      * @param defaultReturnValue A value to return if any throwable is caught.
      * @return An interface that returns a default value if any exception occurs.
      */
     default LongToIntFunction thatReturnsOnCatch(final int defaultReturnValue) {
-        return (final long v1) -> {
-            try {
-                return applyAsIntWithThrowable(v1);
-            } catch (final Throwable throwable) {
-                return defaultReturnValue;
-            }
-        };
+      return (final long v1) -> {
+        try {
+          return applyAsIntWithThrowable(v1);
+        } catch(final Throwable throwable) {
+          return defaultReturnValue;
+        }
+      };
     }
 
+
     /**
-     * @param logger  The logger to log exceptions on
+     * @throws E if an exception E has been thrown, it is rethrown by this method
+     * @return An interface that is only returned if no exception has been thrown.
+     */
+    default LongToIntFunction thatUnsafelyThrowsUnchecked() throws E {
+      return (final long v1) -> {
+        try {
+          return applyAsIntWithThrowable(v1);
+        } catch(final Throwable throwable) {
+           SuppressedException.throwUnsafelyAsUnchecked(throwable);
+           return 0;        }
+      };
+    }
+
+
+    /**
+     * @param logger The logger to log exceptions on
      * @param message A message to use for logging exceptions
      * @return An interface that will log all exceptions to given logger
      */
@@ -96,9 +124,9 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
         };
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @param logger The logger instance to log exceptions on
      * @return An interface that will log exceptions on given logger
      */
@@ -106,14 +134,16 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
         return withLogging(logger, "Exception in LongToIntFunctionWithThrowable with the argument [{}]");
     }
 
+
     /**
      * Will log WARNING level exceptions on logger if they occur within the interface
-     *
      * @return An interface that will log exceptions on global logger
      */
     default LongToIntFunctionWithThrowable<E> withLogging() {
         return withLogging(LoggerFactory.getLogger(getClass()));
     }
+
+
 
     /**
      * @param consumer An exception consumer.
@@ -130,6 +160,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
             }
         };
     }
+
 
     /**
      * @param consumer An exception consumer.

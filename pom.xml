@@ -4,7 +4,7 @@
     <groupId>org.slieb</groupId>
     <name>throwable-interfaces</name>
     <artifactId>throwable-interfaces</artifactId>
-    <version>1.13-SNAPSHOT</version>
+    <version>1.14-SNAPSHOT</version>
     <description>A collection of standard interfaces that throw exceptions</description>
     <packaging>jar</packaging>
     <url>https://stefanliebenberg.github.io/throwable-interfaces</url>
@@ -54,6 +54,14 @@
             <id>s.liebenberg</id>
         </developer>
     </developers>
+
+    <contributors>
+        <contributor>
+            <email>markus@heberling.net</email>
+            <name>Markus Heberling</name>
+            <url>https://markus.heberling.net/</url>
+        </contributor>
+    </contributors>
 
     <distributionManagement>
         <site>
