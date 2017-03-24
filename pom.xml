@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.slieb</groupId>
     <name>throwable-interfaces</name>
     <artifactId>throwable-interfaces</artifactId>
     <version>1.14-SNAPSHOT</version>
     <description>A collection of standard interfaces that throw exceptions</description>
     <packaging>jar</packaging>
     <url>https://stefanliebenberg.github.io/throwable-interfaces</url>
+
+    <parent>
+        <groupId>org.slieb</groupId>
+        <artifactId>slieb-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <github.global.server>github</github.global.server>
         <dep.maven>3.3.1</dep.maven>
         <dep.junit>4.12</dep.junit>
     </properties>
@@ -21,39 +27,6 @@
     <prerequisites>
         <maven>${dep.maven}</maven>
     </prerequisites>
-
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>9</version>
-    </parent>
-    <scm>
-        <url>https://github.com/StefanLiebenberg/throwable-interfaces</url>
-        <connection>
-            scm:git:git://github.com/StefanLiebenberg/throwable-interfaces.git
-        </connection>
-        <developerConnection>
-            scm:git:git@github.com:StefanLiebenberg/throwable-interfaces.git
-        </developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://www.opensource.org/licenses/mit-license.php</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <email>siga.fredo@gmail.com</email>
-            <name>Stefan Liebenberg</name>
-            <url>https://github.com/StefanLiebenberg</url>
-            <id>s.liebenberg</id>
-        </developer>
-    </developers>
 
     <contributors>
         <contributor>
@@ -63,21 +36,6 @@
         </contributor>
     </contributors>
 
-    <distributionManagement>
-        <site>
-            <id>github</id>
-            <name>Deployment through GitHub's site deployment plugin</name>
-            <url>git:ssh://git@github.com/StefanLiebenberg/throwable-interfaces.git?gh-pages#</url>
-        </site>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -98,6 +56,7 @@
         </dependency>
     </dependencies>
 
+    <!--
     <build>
         <plugins>
             <plugin>
@@ -140,7 +99,8 @@
                 <version>1.6</version>
                 <configuration>
                     <gpgArguments>
-                        <arg>--pinentry-mode</arg>
+                     // todo fix by removing spaces
+                        <arg>- - pinentry-mode</arg>
                         <arg>loopback</arg>
                     </gpgArguments>
                 </configuration>
@@ -282,5 +242,6 @@
             </plugin>
         </plugins>
     </reporting>
+    -->
 
 </project>
