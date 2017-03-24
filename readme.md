@@ -28,7 +28,7 @@ Using a static import and method reference, we can even make this more streamlin
 We can also force catching of the checked exception.     
     
     try {
-        Stream<String> content = fileStream.map(asFunctionWithThrowableThatUnsafelyThrows(IOUtils::readFile));
+        Stream<String> content = fileStream.map(asFunctionWithThrowableThatUnsafelyThrowsUnchecked(IOUtils::readFile));
     } catch (IOException e) {
     }
     

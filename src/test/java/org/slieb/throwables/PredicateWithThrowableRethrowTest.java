@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.PredicateWithThrowable.aPredicateThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.PredicateWithThrowable.aPredicateThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class PredicateWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class PredicateWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aPredicateThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aPredicateThatUnsafelyThrowsUnchecked((v1) -> {
         throw expected;
       }).test(null);
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class PredicateWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aPredicateThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aPredicateThatUnsafelyThrowsUnchecked((v1) -> {
         if(false) throw new IOException();
         return false;
       }).test(null);

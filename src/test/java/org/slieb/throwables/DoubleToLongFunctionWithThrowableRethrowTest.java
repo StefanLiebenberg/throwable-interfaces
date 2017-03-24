@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.DoubleToLongFunctionWithThrowable.aDoubleToLongFunctionThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.DoubleToLongFunctionWithThrowable.aDoubleToLongFunctionThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class DoubleToLongFunctionWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class DoubleToLongFunctionWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aDoubleToLongFunctionThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aDoubleToLongFunctionThatUnsafelyThrowsUnchecked((v1) -> {
         throw expected;
       }).applyAsLong(0);
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class DoubleToLongFunctionWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aDoubleToLongFunctionThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aDoubleToLongFunctionThatUnsafelyThrowsUnchecked((v1) -> {
         if(false) throw new IOException();
         return 0;
       }).applyAsLong(0);

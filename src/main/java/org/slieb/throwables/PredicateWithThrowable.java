@@ -39,8 +39,8 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @throws E the original Exception from predicatewiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> Predicate<T> aPredicateThatUnSafelyThrowsUncheckedThrowable(final PredicateWithThrowable<T, E> predicatewiththrowable) throws E {
-        return predicatewiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, E extends Throwable> Predicate<T> aPredicateThatUnsafelyThrowsUnchecked(final PredicateWithThrowable<T, E> predicatewiththrowable) throws E {
+        return predicatewiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -100,7 +100,7 @@ public interface PredicateWithThrowable<T, E extends Throwable> extends Predicat
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default Predicate<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default Predicate<T> thatUnsafelyThrowsUnchecked() throws E {
       return (final T v1) -> {
         try {
           return testWithThrowable(v1);

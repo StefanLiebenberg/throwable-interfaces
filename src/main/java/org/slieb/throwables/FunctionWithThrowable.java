@@ -1,10 +1,12 @@
 package org.slieb.throwables;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.lang.FunctionalInterface;
+import java.lang.SuppressWarnings;
+import java.lang.Throwable;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Generated from Function
  * Extends java.util.function.Function to allow for a checked exception.
@@ -21,8 +23,8 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * Utility method to mark lambdas of type FunctionWithThrowable
      *
      * @param functionwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on Function
-     * @param <R> Generic that corresponds to the same generic on Function
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
@@ -34,21 +36,21 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * Utility method to unwrap lambdas of type Function and withUncheckedThrowable any Exception
      *
      * @param functionwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on Function
-     * @param <R> Generic that corresponds to the same generic on Function
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
      * @param <E> The type this interface is allowed to throw
      * @throws E the original Exception from functionwiththrowable
      * @return the cast interface
      */
-    static <T, R, E extends Throwable> Function<T, R> aFunctionThatUnSafelyThrowsUncheckedThrowable(final FunctionWithThrowable<T, R, E> functionwiththrowable) throws E {
-        return functionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, R, E extends Throwable> Function<T, R> aFunctionThatUnsafelyThrowsUnchecked(final FunctionWithThrowable<T, R, E> functionwiththrowable) throws E {
+        return functionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
      * Utility method to convert FunctionWithThrowable
      * @param function The interface instance
-     * @param <T> Generic that corresponds to the same generic on Function
-     * @param <R> Generic that corresponds to the same generic on Function
+     * @param <T> Generic that corresponds to the same generic on Function  
+     * @param <R> Generic that corresponds to the same generic on Function  
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
@@ -116,7 +118,7 @@ public interface FunctionWithThrowable<T, R, E extends Throwable> extends Functi
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default Function<T, R> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default Function<T, R> thatUnsafelyThrowsUnchecked() throws E {
       return (final T v1) -> {
         try {
           return applyWithThrowable(v1);

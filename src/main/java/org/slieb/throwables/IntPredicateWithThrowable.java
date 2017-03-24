@@ -36,8 +36,8 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @throws E the original Exception from intpredicatewiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> IntPredicate aIntPredicateThatUnSafelyThrowsUncheckedThrowable(final IntPredicateWithThrowable<E> intpredicatewiththrowable) throws E {
-        return intpredicatewiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> IntPredicate aIntPredicateThatUnsafelyThrowsUnchecked(final IntPredicateWithThrowable<E> intpredicatewiththrowable) throws E {
+        return intpredicatewiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface IntPredicateWithThrowable<E extends Throwable> extends IntPredi
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default IntPredicate thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default IntPredicate thatUnsafelyThrowsUnchecked() throws E {
       return (final int v1) -> {
         try {
           return testWithThrowable(v1);

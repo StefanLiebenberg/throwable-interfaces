@@ -36,8 +36,8 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @throws E the original Exception from longpredicatewiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> LongPredicate aLongPredicateThatUnSafelyThrowsUncheckedThrowable(final LongPredicateWithThrowable<E> longpredicatewiththrowable) throws E {
-        return longpredicatewiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> LongPredicate aLongPredicateThatUnsafelyThrowsUnchecked(final LongPredicateWithThrowable<E> longpredicatewiththrowable) throws E {
+        return longpredicatewiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface LongPredicateWithThrowable<E extends Throwable> extends LongPre
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongPredicate thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default LongPredicate thatUnsafelyThrowsUnchecked() throws E {
       return (final long v1) -> {
         try {
           return testWithThrowable(v1);

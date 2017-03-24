@@ -36,8 +36,8 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @throws E the original Exception from doublepredicatewiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> DoublePredicate aDoublePredicateThatUnSafelyThrowsUncheckedThrowable(final DoublePredicateWithThrowable<E> doublepredicatewiththrowable) throws E {
-        return doublepredicatewiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> DoublePredicate aDoublePredicateThatUnsafelyThrowsUnchecked(final DoublePredicateWithThrowable<E> doublepredicatewiththrowable) throws E {
+        return doublepredicatewiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface DoublePredicateWithThrowable<E extends Throwable> extends Doubl
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoublePredicate thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default DoublePredicate thatUnsafelyThrowsUnchecked() throws E {
       return (final double v1) -> {
         try {
           return testWithThrowable(v1);

@@ -36,8 +36,8 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
      * @throws E the original Exception from longconsumerwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> LongConsumer aLongConsumerThatUnSafelyThrowsUncheckedThrowable(final LongConsumerWithThrowable<E> longconsumerwiththrowable) throws E {
-        return longconsumerwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> LongConsumer aLongConsumerThatUnsafelyThrowsUnchecked(final LongConsumerWithThrowable<E> longconsumerwiththrowable) throws E {
+        return longconsumerwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -91,7 +91,7 @@ public interface LongConsumerWithThrowable<E extends Throwable> extends LongCons
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongConsumer thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default LongConsumer thatUnsafelyThrowsUnchecked() throws E {
         return (final long v1) -> {
             try {
                 acceptWithThrowable(v1);

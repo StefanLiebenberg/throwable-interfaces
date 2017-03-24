@@ -36,8 +36,8 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      * @throws E the original Exception from longtointfunctionwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> LongToIntFunction aLongToIntFunctionThatUnSafelyThrowsUncheckedThrowable(final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) throws E {
-        return longtointfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> LongToIntFunction aLongToIntFunctionThatUnsafelyThrowsUnchecked(final LongToIntFunctionWithThrowable<E> longtointfunctionwiththrowable) throws E {
+        return longtointfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface LongToIntFunctionWithThrowable<E extends Throwable> extends Lon
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongToIntFunction thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default LongToIntFunction thatUnsafelyThrowsUnchecked() throws E {
       return (final long v1) -> {
         try {
           return applyAsIntWithThrowable(v1);

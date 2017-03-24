@@ -36,8 +36,8 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * @throws E the original Exception from longsupplierwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> LongSupplier aLongSupplierThatUnSafelyThrowsUncheckedThrowable(final LongSupplierWithThrowable<E> longsupplierwiththrowable) throws E {
-        return longsupplierwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> LongSupplier aLongSupplierThatUnsafelyThrowsUnchecked(final LongSupplierWithThrowable<E> longsupplierwiththrowable) throws E {
+        return longsupplierwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -94,7 +94,7 @@ public interface LongSupplierWithThrowable<E extends Throwable> extends LongSupp
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongSupplier thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default LongSupplier thatUnsafelyThrowsUnchecked() throws E {
       return () -> {
         try {
           return getAsLongWithThrowable();

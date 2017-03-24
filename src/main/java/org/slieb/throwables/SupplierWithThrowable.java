@@ -39,8 +39,8 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
      * @throws E the original Exception from supplierwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> Supplier<T> aSupplierThatUnSafelyThrowsUncheckedThrowable(final SupplierWithThrowable<T, E> supplierwiththrowable) throws E {
-        return supplierwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, E extends Throwable> Supplier<T> aSupplierThatUnsafelyThrowsUnchecked(final SupplierWithThrowable<T, E> supplierwiththrowable) throws E {
+        return supplierwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -112,7 +112,7 @@ public interface SupplierWithThrowable<T, E extends Throwable> extends Supplier<
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default Supplier<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default Supplier<T> thatUnsafelyThrowsUnchecked() throws E {
       return () -> {
         try {
           return getWithThrowable();

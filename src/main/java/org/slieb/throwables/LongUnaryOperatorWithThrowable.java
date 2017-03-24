@@ -36,8 +36,8 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @throws E the original Exception from longunaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> LongUnaryOperator aLongUnaryOperatorThatUnSafelyThrowsUncheckedThrowable(final LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) throws E {
-        return longunaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> LongUnaryOperator aLongUnaryOperatorThatUnsafelyThrowsUnchecked(final LongUnaryOperatorWithThrowable<E> longunaryoperatorwiththrowable) throws E {
+        return longunaryoperatorwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface LongUnaryOperatorWithThrowable<E extends Throwable> extends Lon
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongUnaryOperator thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default LongUnaryOperator thatUnsafelyThrowsUnchecked() throws E {
       return (final long v1) -> {
         try {
           return applyAsLongWithThrowable(v1);

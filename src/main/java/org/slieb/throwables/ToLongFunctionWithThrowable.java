@@ -39,8 +39,8 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
      * @throws E the original Exception from tolongfunctionwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToLongFunction<T> aToLongFunctionThatUnSafelyThrowsUncheckedThrowable(final ToLongFunctionWithThrowable<T, E> tolongfunctionwiththrowable) throws E {
-        return tolongfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, E extends Throwable> ToLongFunction<T> aToLongFunctionThatUnsafelyThrowsUnchecked(final ToLongFunctionWithThrowable<T, E> tolongfunctionwiththrowable) throws E {
+        return tolongfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -114,7 +114,7 @@ public interface ToLongFunctionWithThrowable<T, E extends Throwable> extends ToL
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ToLongFunction<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default ToLongFunction<T> thatUnsafelyThrowsUnchecked() throws E {
       return (final T v1) -> {
         try {
           return applyAsLongWithThrowable(v1);

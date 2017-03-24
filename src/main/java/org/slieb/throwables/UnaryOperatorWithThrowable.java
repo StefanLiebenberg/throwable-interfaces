@@ -1,12 +1,10 @@
 package org.slieb.throwables;
 
-import java.lang.FunctionalInterface;
-import java.lang.SuppressWarnings;
-import java.lang.Throwable;
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 /**
  * Generated from UnaryOperator
  * Extends java.util.function.UnaryOperator to allow for a checked exception.
@@ -22,7 +20,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * Utility method to mark lambdas of type UnaryOperatorWithThrowable
      *
      * @param unaryoperatorwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on UnaryOperator  
+     * @param <T> Generic that corresponds to the same generic on UnaryOperator
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
@@ -34,19 +32,19 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * Utility method to unwrap lambdas of type UnaryOperator and withUncheckedThrowable any Exception
      *
      * @param unaryoperatorwiththrowable The interface instance
-     * @param <T> Generic that corresponds to the same generic on UnaryOperator  
+     * @param <T> Generic that corresponds to the same generic on UnaryOperator
      * @param <E> The type this interface is allowed to throw
      * @throws E the original Exception from unaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> UnaryOperator<T> aUnaryOperatorThatUnSafelyThrowsUncheckedThrowable(final UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) throws E {
-        return unaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, E extends Throwable> UnaryOperator<T> aUnaryOperatorThatUnsafelyThrowsUnchecked(final UnaryOperatorWithThrowable<T, E> unaryoperatorwiththrowable) throws E {
+        return unaryoperatorwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
      * Utility method to convert UnaryOperatorWithThrowable
      * @param unaryoperator The interface instance
-     * @param <T> Generic that corresponds to the same generic on UnaryOperator  
+     * @param <T> Generic that corresponds to the same generic on UnaryOperator
      * @param <E> The type this interface is allowed to throw
      * @return the cast interface
      */
@@ -100,7 +98,7 @@ public interface UnaryOperatorWithThrowable<T, E extends Throwable> extends Unar
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default UnaryOperator<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default UnaryOperator<T> thatUnsafelyThrowsUnchecked() throws E {
       return (final T v1) -> {
         try {
           return applyWithThrowable(v1);

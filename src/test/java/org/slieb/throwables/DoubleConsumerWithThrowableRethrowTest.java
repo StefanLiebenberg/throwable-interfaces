@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.DoubleConsumerWithThrowable.aDoubleConsumerThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.DoubleConsumerWithThrowable.aDoubleConsumerThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class DoubleConsumerWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class DoubleConsumerWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aDoubleConsumerThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aDoubleConsumerThatUnsafelyThrowsUnchecked((v1) -> {
         throw expected;
       }).accept(0);
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class DoubleConsumerWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aDoubleConsumerThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aDoubleConsumerThatUnsafelyThrowsUnchecked((v1) -> {
         if(false) throw new IOException();
       }).accept(0);
     } catch (IOException ignored) {

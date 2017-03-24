@@ -36,8 +36,8 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * @throws E the original Exception from doubletointfunctionwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleToIntFunction aDoubleToIntFunctionThatUnSafelyThrowsUncheckedThrowable(final DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) throws E {
-        return doubletointfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> DoubleToIntFunction aDoubleToIntFunctionThatUnsafelyThrowsUnchecked(final DoubleToIntFunctionWithThrowable<E> doubletointfunctionwiththrowable) throws E {
+        return doubletointfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface DoubleToIntFunctionWithThrowable<E extends Throwable> extends D
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoubleToIntFunction thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default DoubleToIntFunction thatUnsafelyThrowsUnchecked() throws E {
       return (final double v1) -> {
         try {
           return applyAsIntWithThrowable(v1);

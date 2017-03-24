@@ -36,8 +36,8 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      * @throws E the original Exception from doubleunaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleUnaryOperator aDoubleUnaryOperatorThatUnSafelyThrowsUncheckedThrowable(final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) throws E {
-        return doubleunaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> DoubleUnaryOperator aDoubleUnaryOperatorThatUnsafelyThrowsUnchecked(final DoubleUnaryOperatorWithThrowable<E> doubleunaryoperatorwiththrowable) throws E {
+        return doubleunaryoperatorwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface DoubleUnaryOperatorWithThrowable<E extends Throwable> extends D
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoubleUnaryOperator thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default DoubleUnaryOperator thatUnsafelyThrowsUnchecked() throws E {
       return (final double v1) -> {
         try {
           return applyAsDoubleWithThrowable(v1);

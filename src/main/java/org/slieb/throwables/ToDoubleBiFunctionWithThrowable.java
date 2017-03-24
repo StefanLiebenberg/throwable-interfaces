@@ -42,8 +42,8 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @throws E the original Exception from todoublebifunctionwiththrowable
      * @return the cast interface
      */
-    static <T, U, E extends Throwable> ToDoubleBiFunction<T, U> aToDoubleBiFunctionThatUnSafelyThrowsUncheckedThrowable(final ToDoubleBiFunctionWithThrowable<T, U, E> todoublebifunctionwiththrowable) throws E {
-        return todoublebifunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, U, E extends Throwable> ToDoubleBiFunction<T, U> aToDoubleBiFunctionThatUnsafelyThrowsUnchecked(final ToDoubleBiFunctionWithThrowable<T, U, E> todoublebifunctionwiththrowable) throws E {
+        return todoublebifunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -120,7 +120,7 @@ public interface ToDoubleBiFunctionWithThrowable<T, U, E extends Throwable> exte
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ToDoubleBiFunction<T, U> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default ToDoubleBiFunction<T, U> thatUnsafelyThrowsUnchecked() throws E {
       return (final T v1, final U v2) -> {
         try {
           return applyAsDoubleWithThrowable(v1, v2);

@@ -39,8 +39,8 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
      * @throws E the original Exception from objintconsumerwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> ObjIntConsumer<T> aObjIntConsumerThatUnSafelyThrowsUncheckedThrowable(final ObjIntConsumerWithThrowable<T, E> objintconsumerwiththrowable) throws E {
-        return objintconsumerwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, E extends Throwable> ObjIntConsumer<T> aObjIntConsumerThatUnsafelyThrowsUnchecked(final ObjIntConsumerWithThrowable<T, E> objintconsumerwiththrowable) throws E {
+        return objintconsumerwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -97,7 +97,7 @@ public interface ObjIntConsumerWithThrowable<T, E extends Throwable> extends Obj
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ObjIntConsumer<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default ObjIntConsumer<T> thatUnsafelyThrowsUnchecked() throws E {
         return (final T v1, final int v2) -> {
             try {
                 acceptWithThrowable(v1, v2);

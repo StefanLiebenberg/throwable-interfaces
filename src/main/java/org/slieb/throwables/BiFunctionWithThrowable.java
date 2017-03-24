@@ -45,8 +45,8 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      * @throws E the original Exception from bifunctionwiththrowable
      * @return the cast interface
      */
-    static <T, U, R, E extends Throwable> BiFunction<T, U, R> aBiFunctionThatUnSafelyThrowsUncheckedThrowable(final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) throws E {
-        return bifunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, U, R, E extends Throwable> BiFunction<T, U, R> aBiFunctionThatUnsafelyThrowsUnchecked(final BiFunctionWithThrowable<T, U, R, E> bifunctionwiththrowable) throws E {
+        return bifunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -124,7 +124,7 @@ public interface BiFunctionWithThrowable<T, U, R, E extends Throwable> extends B
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default BiFunction<T, U, R> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default BiFunction<T, U, R> thatUnsafelyThrowsUnchecked() throws E {
       return (final T v1, final U v2) -> {
         try {
           return applyWithThrowable(v1, v2);

@@ -36,8 +36,8 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * @throws E the original Exception from intsupplierwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> IntSupplier aIntSupplierThatUnSafelyThrowsUncheckedThrowable(final IntSupplierWithThrowable<E> intsupplierwiththrowable) throws E {
-        return intsupplierwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> IntSupplier aIntSupplierThatUnsafelyThrowsUnchecked(final IntSupplierWithThrowable<E> intsupplierwiththrowable) throws E {
+        return intsupplierwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -94,7 +94,7 @@ public interface IntSupplierWithThrowable<E extends Throwable> extends IntSuppli
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default IntSupplier thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default IntSupplier thatUnsafelyThrowsUnchecked() throws E {
       return () -> {
         try {
           return getAsIntWithThrowable();

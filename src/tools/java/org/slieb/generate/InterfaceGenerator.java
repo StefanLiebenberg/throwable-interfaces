@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static org.slieb.generate.Naming.methodThatUnsafelyThrowsUnchecked;
 import static org.slieb.generate.TypeResolver.getBasicTypeFor;
 import static org.slieb.generate.TypeResolver.getFunctionalMethod;
 import static org.slieb.generate.TypeResolver.getNullTypeFor;
@@ -592,7 +593,7 @@ public class InterfaceGenerator {
                 .append(".")
                 .append(className)
                 .append(".")
-                .append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass()))
+                .append(methodThatUnsafelyThrowsUnchecked(node))
                 .append(";\n");
 
         //        isb.annotate(SuppressWarnings.class, "{\"WeakerAccess\", \"deprecation\"}");
@@ -611,7 +612,7 @@ public class InterfaceGenerator {
         isb.indent().append("IOException actual = null;").newline();
         isb.indent().append("try {").newline();
         isb.incrementIndent();
-        isb.indent().append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass())).append("(").append(params).append(" -> {\n");
+        isb.indent().append(methodThatUnsafelyThrowsUnchecked(node)).append("(").append(params).append(" -> {\n");
         isb.incrementIndent();
         isb.indent().append("throw expected;\n");
         isb.decrementIndent();
@@ -633,7 +634,7 @@ public class InterfaceGenerator {
         isb.incrementIndent();
         isb.indent().append("try {").newline();
         isb.incrementIndent();
-        isb.indent().append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass())).append("(").append(params).append(" -> {\n");
+        isb.indent().append(methodThatUnsafelyThrowsUnchecked(node)).append("(").append(params).append(" -> {\n");
         isb.incrementIndent();
         isb.indent().append("if(false) throw new IOException();").newline();
         final Class<?> returnType = method.getReturnType();
@@ -767,7 +768,8 @@ public class InterfaceGenerator {
         if (!generics.isEmpty()) {
             isb.append(generateGenerics(generics, false, false));
         }
-        isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked(node.getImplementationClass()))
+        isb.append(" ")
+                .append(methodThatUnsafelyThrowsUnchecked(node))
                 .append("(final ")
                 .append(className)
                 .append(generateGenerics(generics, true, false))
@@ -777,7 +779,7 @@ public class InterfaceGenerator {
                 .append("        return ")
                 .append(objectName)
                 .append(".")
-                .append(Naming.methodThatUnsafelyThrowsUnchecked())
+                .append(methodThatUnsafelyThrowsUnchecked())
                 .append("();\n")
                 .append("    }");
         isb.newlines(2);
@@ -951,7 +953,7 @@ public class InterfaceGenerator {
                 if (!generics.isEmpty()) {
                     isb.append(generateGenerics(generics, false, false));
                 }
-                isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked()).append("() throws E {\n");
+                isb.append(" ").append(methodThatUnsafelyThrowsUnchecked()).append("() throws E {\n");
                 isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
                 isb.append(" -> {\n");
                 isb.indent().append("    try {\n");
@@ -1043,7 +1045,7 @@ public class InterfaceGenerator {
                 if (!generics.isEmpty()) {
                     isb.append(generateGenerics(generics, false, false));
                 }
-                isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked()).append("() throws E {\n");
+                isb.append(" ").append(methodThatUnsafelyThrowsUnchecked()).append("() throws E {\n");
                 isb.indent().append("  return ").append(getMethodParams(node.getImplementationClass(), method, true));
                 isb.append(" -> {\n");
                 isb.indent().append("    try {\n");
@@ -1096,7 +1098,7 @@ public class InterfaceGenerator {
                 isb.append(generateGenerics(generics, false, false));
             }
 
-            isb.append(" ").append(Naming.methodThatUnsafelyThrowsUnchecked()).append("() throws E {").newline();
+            isb.append(" ").append(methodThatUnsafelyThrowsUnchecked()).append("() throws E {").newline();
 
             isb.setIndent(8);
             isb.indent().append("return ").append(getMethodParams(node.getImplementationClass(), method, true)).append(" -> {").newline();

@@ -39,8 +39,8 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      * @throws E the original Exception from longfunctionwiththrowable
      * @return the cast interface
      */
-    static <R, E extends Throwable> LongFunction<R> aLongFunctionThatUnSafelyThrowsUncheckedThrowable(final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) throws E {
-        return longfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <R, E extends Throwable> LongFunction<R> aLongFunctionThatUnsafelyThrowsUnchecked(final LongFunctionWithThrowable<R, E> longfunctionwiththrowable) throws E {
+        return longfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -114,7 +114,7 @@ public interface LongFunctionWithThrowable<R, E extends Throwable> extends LongF
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongFunction<R> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default LongFunction<R> thatUnsafelyThrowsUnchecked() throws E {
       return (final long v1) -> {
         try {
           return applyWithThrowable(v1);

@@ -39,8 +39,8 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends T
      * @throws E the original Exception from todoublefunctionwiththrowable
      * @return the cast interface
      */
-    static <T, E extends Throwable> ToDoubleFunction<T> aToDoubleFunctionThatUnSafelyThrowsUncheckedThrowable(final ToDoubleFunctionWithThrowable<T, E> todoublefunctionwiththrowable) throws E {
-        return todoublefunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <T, E extends Throwable> ToDoubleFunction<T> aToDoubleFunctionThatUnsafelyThrowsUnchecked(final ToDoubleFunctionWithThrowable<T, E> todoublefunctionwiththrowable) throws E {
+        return todoublefunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -114,7 +114,7 @@ public interface ToDoubleFunctionWithThrowable<T, E extends Throwable> extends T
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default ToDoubleFunction<T> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default ToDoubleFunction<T> thatUnsafelyThrowsUnchecked() throws E {
       return (final T v1) -> {
         try {
           return applyAsDoubleWithThrowable(v1);

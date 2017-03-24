@@ -39,8 +39,8 @@ public interface IntFunctionWithThrowable<R, E extends Throwable> extends IntFun
      * @throws E the original Exception from intfunctionwiththrowable
      * @return the cast interface
      */
-    static <R, E extends Throwable> IntFunction<R> aIntFunctionThatUnSafelyThrowsUncheckedThrowable(final IntFunctionWithThrowable<R, E> intfunctionwiththrowable) throws E {
-        return intfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <R, E extends Throwable> IntFunction<R> aIntFunctionThatUnsafelyThrowsUnchecked(final IntFunctionWithThrowable<R, E> intfunctionwiththrowable) throws E {
+        return intfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -114,7 +114,7 @@ public interface IntFunctionWithThrowable<R, E extends Throwable> extends IntFun
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default IntFunction<R> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default IntFunction<R> thatUnsafelyThrowsUnchecked() throws E {
       return (final int v1) -> {
         try {
           return applyWithThrowable(v1);

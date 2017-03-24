@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.ToLongBiFunctionWithThrowable.aToLongBiFunctionThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.ToLongBiFunctionWithThrowable.aToLongBiFunctionThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class ToLongBiFunctionWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class ToLongBiFunctionWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aToLongBiFunctionThatUnSafelyThrowsUncheckedThrowable((v1, v2) -> {
+      aToLongBiFunctionThatUnsafelyThrowsUnchecked((v1, v2) -> {
         throw expected;
       }).applyAsLong(null, null);
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class ToLongBiFunctionWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aToLongBiFunctionThatUnSafelyThrowsUncheckedThrowable((v1, v2) -> {
+      aToLongBiFunctionThatUnsafelyThrowsUnchecked((v1, v2) -> {
         if(false) throw new IOException();
         return 0;
       }).applyAsLong(null, null);

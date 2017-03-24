@@ -36,8 +36,8 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @throws E the original Exception from doubletolongfunctionwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleToLongFunction aDoubleToLongFunctionThatUnSafelyThrowsUncheckedThrowable(final DoubleToLongFunctionWithThrowable<E> doubletolongfunctionwiththrowable) throws E {
-        return doubletolongfunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> DoubleToLongFunction aDoubleToLongFunctionThatUnsafelyThrowsUnchecked(final DoubleToLongFunctionWithThrowable<E> doubletolongfunctionwiththrowable) throws E {
+        return doubletolongfunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -96,7 +96,7 @@ public interface DoubleToLongFunctionWithThrowable<E extends Throwable> extends 
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoubleToLongFunction thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default DoubleToLongFunction thatUnsafelyThrowsUnchecked() throws E {
       return (final double v1) -> {
         try {
           return applyAsLongWithThrowable(v1);

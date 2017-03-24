@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.BinaryOperatorWithThrowable.aBinaryOperatorThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.BinaryOperatorWithThrowable.aBinaryOperatorThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class BinaryOperatorWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class BinaryOperatorWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aBinaryOperatorThatUnSafelyThrowsUncheckedThrowable((v1, v2) -> {
+      aBinaryOperatorThatUnsafelyThrowsUnchecked((v1, v2) -> {
         throw expected;
       }).apply(null, null);
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class BinaryOperatorWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aBinaryOperatorThatUnSafelyThrowsUncheckedThrowable((v1, v2) -> {
+      aBinaryOperatorThatUnsafelyThrowsUnchecked((v1, v2) -> {
         if(false) throw new IOException();
         return null;
       }).apply(null, null);

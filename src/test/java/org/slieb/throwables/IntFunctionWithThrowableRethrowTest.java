@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.IntFunctionWithThrowable.aIntFunctionThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.IntFunctionWithThrowable.aIntFunctionThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class IntFunctionWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class IntFunctionWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aIntFunctionThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aIntFunctionThatUnsafelyThrowsUnchecked((v1) -> {
         throw expected;
       }).apply(0);
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class IntFunctionWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aIntFunctionThatUnSafelyThrowsUncheckedThrowable((v1) -> {
+      aIntFunctionThatUnsafelyThrowsUnchecked((v1) -> {
         if(false) throw new IOException();
         return null;
       }).apply(0);

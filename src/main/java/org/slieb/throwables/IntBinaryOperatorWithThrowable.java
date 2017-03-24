@@ -36,8 +36,8 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      * @throws E the original Exception from intbinaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> IntBinaryOperator aIntBinaryOperatorThatUnSafelyThrowsUncheckedThrowable(final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) throws E {
-        return intbinaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> IntBinaryOperator aIntBinaryOperatorThatUnsafelyThrowsUnchecked(final IntBinaryOperatorWithThrowable<E> intbinaryoperatorwiththrowable) throws E {
+        return intbinaryoperatorwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -98,7 +98,7 @@ public interface IntBinaryOperatorWithThrowable<E extends Throwable> extends Int
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default IntBinaryOperator thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default IntBinaryOperator thatUnsafelyThrowsUnchecked() throws E {
       return (final int v1, final int v2) -> {
         try {
           return applyAsIntWithThrowable(v1, v2);

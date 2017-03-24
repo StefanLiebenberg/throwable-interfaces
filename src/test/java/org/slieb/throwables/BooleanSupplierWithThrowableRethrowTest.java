@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.BooleanSupplierWithThrowable.aBooleanSupplierThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.BooleanSupplierWithThrowable.aBooleanSupplierThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class BooleanSupplierWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class BooleanSupplierWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aBooleanSupplierThatUnSafelyThrowsUncheckedThrowable(() -> {
+      aBooleanSupplierThatUnsafelyThrowsUnchecked(() -> {
         throw expected;
       }).getAsBoolean();
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class BooleanSupplierWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aBooleanSupplierThatUnSafelyThrowsUncheckedThrowable(() -> {
+      aBooleanSupplierThatUnsafelyThrowsUnchecked(() -> {
         if(false) throw new IOException();
         return false;
       }).getAsBoolean();

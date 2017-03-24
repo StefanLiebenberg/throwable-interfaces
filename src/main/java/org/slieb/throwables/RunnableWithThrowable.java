@@ -36,8 +36,8 @@ public interface RunnableWithThrowable<E extends Throwable> extends Runnable {
      * @throws E the original Exception from runnablewiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> Runnable aRunnableThatUnSafelyThrowsUncheckedThrowable(final RunnableWithThrowable<E> runnablewiththrowable) throws E {
-        return runnablewiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> Runnable aRunnableThatUnsafelyThrowsUnchecked(final RunnableWithThrowable<E> runnablewiththrowable) throws E {
+        return runnablewiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -89,7 +89,7 @@ public interface RunnableWithThrowable<E extends Throwable> extends Runnable {
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default Runnable thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default Runnable thatUnsafelyThrowsUnchecked() throws E {
         return () -> {
             try {
                 runWithThrowable();

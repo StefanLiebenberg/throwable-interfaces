@@ -36,8 +36,8 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
      * @throws E the original Exception from longbinaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> LongBinaryOperator aLongBinaryOperatorThatUnSafelyThrowsUncheckedThrowable(final LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) throws E {
-        return longbinaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> LongBinaryOperator aLongBinaryOperatorThatUnsafelyThrowsUnchecked(final LongBinaryOperatorWithThrowable<E> longbinaryoperatorwiththrowable) throws E {
+        return longbinaryoperatorwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -98,7 +98,7 @@ public interface LongBinaryOperatorWithThrowable<E extends Throwable> extends Lo
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default LongBinaryOperator thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default LongBinaryOperator thatUnsafelyThrowsUnchecked() throws E {
       return (final long v1, final long v2) -> {
         try {
           return applyAsLongWithThrowable(v1, v2);

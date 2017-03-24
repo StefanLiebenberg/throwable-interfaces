@@ -109,14 +109,17 @@ public class SuppressedException extends RuntimeException {
         return Optional.of(suppressed).map(Throwable::getCause).flatMap(castFunctionWithThrowable(exceptionClass::cast).thatReturnsOptional());
     }
 
+    /**
+     * This method is black magic and should be frowned upon. Therefore it is marked as package local.
+     * See this for what it does -  http://stackoverflow.com/a/27644392/755330
+     *
+     * @param exception The exception to throw unchecked.
+     * @param <E>       The exception type.
+     * @throws E Throws exception.
+     */
     @SuppressWarnings("unchecked")
-    static <E extends Throwable> RuntimeException throwUnsafelyAsUnchecked(Throwable exception) throws E {
+    static <E extends Throwable> void throwUnsafelyAsUnchecked(Throwable exception) throws E {
         throw (E) exception;
-    }
-
-    @SuppressWarnings("unchecked")
-    static <E extends Throwable> RuntimeException asUnchecked(Throwable exception) throws E {
-        return (RuntimeException) exception;
     }
 }
 

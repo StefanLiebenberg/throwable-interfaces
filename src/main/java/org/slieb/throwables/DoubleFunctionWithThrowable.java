@@ -39,8 +39,8 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @throws E the original Exception from doublefunctionwiththrowable
      * @return the cast interface
      */
-    static <R, E extends Throwable> DoubleFunction<R> aDoubleFunctionThatUnSafelyThrowsUncheckedThrowable(final DoubleFunctionWithThrowable<R, E> doublefunctionwiththrowable) throws E {
-        return doublefunctionwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <R, E extends Throwable> DoubleFunction<R> aDoubleFunctionThatUnsafelyThrowsUnchecked(final DoubleFunctionWithThrowable<R, E> doublefunctionwiththrowable) throws E {
+        return doublefunctionwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -114,7 +114,7 @@ public interface DoubleFunctionWithThrowable<R, E extends Throwable> extends Dou
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoubleFunction<R> thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default DoubleFunction<R> thatUnsafelyThrowsUnchecked() throws E {
       return (final double v1) -> {
         try {
           return applyWithThrowable(v1);

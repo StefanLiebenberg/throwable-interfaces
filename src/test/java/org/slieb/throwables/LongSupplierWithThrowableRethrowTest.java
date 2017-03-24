@@ -1,7 +1,7 @@
 package org.slieb.throwables;
 import org.junit.Test;
 import java.io.IOException;
-import static org.slieb.throwables.LongSupplierWithThrowable.aLongSupplierThatUnSafelyThrowsUncheckedThrowable;
+import static org.slieb.throwables.LongSupplierWithThrowable.aLongSupplierThatUnsafelyThrowsUnchecked;
 @java.lang.SuppressWarnings({"CodeBlock2Expr"})
 public class LongSupplierWithThrowableRethrowTest {
 
@@ -11,7 +11,7 @@ public class LongSupplierWithThrowableRethrowTest {
     IOException expected = new IOException("EXPECTED ERROR");
     IOException actual = null;
     try {
-      aLongSupplierThatUnSafelyThrowsUncheckedThrowable(() -> {
+      aLongSupplierThatUnsafelyThrowsUnchecked(() -> {
         throw expected;
       }).getAsLong();
       org.junit.Assert.fail("Exception should have been thrown");
@@ -25,7 +25,7 @@ public class LongSupplierWithThrowableRethrowTest {
   @Test
   public void testNormalOperation() {
     try {
-      aLongSupplierThatUnSafelyThrowsUncheckedThrowable(() -> {
+      aLongSupplierThatUnsafelyThrowsUnchecked(() -> {
         if(false) throw new IOException();
         return 0;
       }).getAsLong();

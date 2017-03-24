@@ -36,8 +36,8 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @throws E the original Exception from doublebinaryoperatorwiththrowable
      * @return the cast interface
      */
-    static <E extends Throwable> DoubleBinaryOperator aDoubleBinaryOperatorThatUnSafelyThrowsUncheckedThrowable(final DoubleBinaryOperatorWithThrowable<E> doublebinaryoperatorwiththrowable) throws E {
-        return doublebinaryoperatorwiththrowable.thatUnSafelyThrowsUncheckedThrowable();
+    static <E extends Throwable> DoubleBinaryOperator aDoubleBinaryOperatorThatUnsafelyThrowsUnchecked(final DoubleBinaryOperatorWithThrowable<E> doublebinaryoperatorwiththrowable) throws E {
+        return doublebinaryoperatorwiththrowable.thatUnsafelyThrowsUnchecked();
     }
 
     /**
@@ -98,7 +98,7 @@ public interface DoubleBinaryOperatorWithThrowable<E extends Throwable> extends 
      * @throws E if an exception E has been thrown, it is rethrown by this method
      * @return An interface that is only returned if no exception has been thrown.
      */
-    default DoubleBinaryOperator thatUnSafelyThrowsUncheckedThrowable() throws E {
+    default DoubleBinaryOperator thatUnsafelyThrowsUnchecked() throws E {
       return (final double v1, final double v2) -> {
         try {
           return applyAsDoubleWithThrowable(v1, v2);
