@@ -57,6 +57,7 @@
     </dependencies>
 
     <!--
+     this is now in slieb-parent
     <build>
         <plugins>
             <plugin>
